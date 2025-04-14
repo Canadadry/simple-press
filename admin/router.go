@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"app/admin/assets"
 	"app/admin/controller"
 	"app/admin/repository"
 	"app/pkg/clock"
@@ -24,6 +25,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Use(middleware.AutoCloseRequestBody)
 	r.Use(middleware.NoCache)
 	r.Use(middleware.Recoverer())
+	r.Mount("/public/", http.FileServer(http.FS(assets.GetPublicFiles())))
 	r.Error(HandleError(true))
 
 	c, err := controller.New(repository.Repository{
