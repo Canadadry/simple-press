@@ -1,0 +1,20 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    schema: "cmd/migration/migrations/"
+    queries: "model/queries/admin"
+    gen:
+      go:
+        package: "adminmodel"
+        out: "model/adminmodel"
+    rules:
+      - sqlc/db-prepare
+  - engine: "sqlite"
+    schema: "cmd/migration/migrations/"
+    queries: "model/queries/public"
+    gen:
+      go:
+        package: "publicmodel"
+        out: "model/publicmodel"
+    rules:
+      - sqlc/db-prepare
