@@ -9,20 +9,36 @@ import (
 	"context"
 )
 
-const downloadFile = `-- name: DownloadFile :one
+const downloadFile = `-- name: DownloadFile :many
 SELECT
     content
 FROM
     files
 WHERE
-    uuid = ?
+    name = ?
 LIMIT
     1
 `
 
-func (q *Queries) DownloadFile(ctx context.Context, uuid string) ([]byte, error) {
-	row := q.db.QueryRowContext(ctx, downloadFile, uuid)
-	var content []byte
-	err := row.Scan(&content)
-	return content, err
+func (q *Queries) DownloadFile(ctx context.Context, name string) ([][]byte, error) {
+	rows, err := q.db.QueryContext(ctx, downloadFile, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items [][]byte
+	for rows.Next() {
+		var content []byte
+		if err := rows.Scan(&content); err != nil {
+			return nil, err
+		}
+		items = append(items, content)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

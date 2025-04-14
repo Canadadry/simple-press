@@ -17,6 +17,5 @@ CREATE TABLE layouts (
 CREATE TABLE files (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    content BLOB NOT NULL,
-    uuid TEXT UNIQUE NOT NULL
+    content BLOB NOT NULL
 );

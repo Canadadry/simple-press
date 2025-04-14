@@ -23,7 +23,6 @@ type File struct {
 	ID      int64
 	Name    string
 	Content []byte
-	Uuid    string
 }
 
 type Layout struct {

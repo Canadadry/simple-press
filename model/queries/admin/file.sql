@@ -1,27 +1,26 @@
 -- name: UploadFile :execlastid
 INSERT INTO
-    files (name, content, uuid)
+    files (name, content)
 VALUES
-    (?, ?, ?);
+    (?, ?);
 
--- name: DownloadFile :one
+-- name: DownloadFile :many
 SELECT
     content
 FROM
     files
 WHERE
-    uuid = ?
+    name = ?
 LIMIT
     1;
 
 -- name: DeleteFile :exec
 DELETE FROM files
 WHERE
-    uuid = ?;
+    name = ?;
 
 -- name: GetFileList :many
 SELECT
-    uuid,
     name
 FROM
     files

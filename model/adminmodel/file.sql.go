@@ -12,35 +12,50 @@ import (
 const deleteFile = `-- name: DeleteFile :exec
 DELETE FROM files
 WHERE
-    uuid = ?
+    name = ?
 `
 
-func (q *Queries) DeleteFile(ctx context.Context, uuid string) error {
-	_, err := q.db.ExecContext(ctx, deleteFile, uuid)
+func (q *Queries) DeleteFile(ctx context.Context, name string) error {
+	_, err := q.db.ExecContext(ctx, deleteFile, name)
 	return err
 }
 
-const downloadFile = `-- name: DownloadFile :one
+const downloadFile = `-- name: DownloadFile :many
 SELECT
     content
 FROM
     files
 WHERE
-    uuid = ?
+    name = ?
 LIMIT
     1
 `
 
-func (q *Queries) DownloadFile(ctx context.Context, uuid string) ([]byte, error) {
-	row := q.db.QueryRowContext(ctx, downloadFile, uuid)
-	var content []byte
-	err := row.Scan(&content)
-	return content, err
+func (q *Queries) DownloadFile(ctx context.Context, name string) ([][]byte, error) {
+	rows, err := q.db.QueryContext(ctx, downloadFile, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items [][]byte
+	for rows.Next() {
+		var content []byte
+		if err := rows.Scan(&content); err != nil {
+			return nil, err
+		}
+		items = append(items, content)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getFileList = `-- name: GetFileList :many
 SELECT
-    uuid,
     name
 FROM
     files
@@ -57,24 +72,19 @@ type GetFileListParams struct {
 	Offset int64
 }
 
-type GetFileListRow struct {
-	Uuid string
-	Name string
-}
-
-func (q *Queries) GetFileList(ctx context.Context, arg GetFileListParams) ([]GetFileListRow, error) {
+func (q *Queries) GetFileList(ctx context.Context, arg GetFileListParams) ([]string, error) {
 	rows, err := q.db.QueryContext(ctx, getFileList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetFileListRow
+	var items []string
 	for rows.Next() {
-		var i GetFileListRow
-		if err := rows.Scan(&i.Uuid, &i.Name); err != nil {
+		var name string
+		if err := rows.Scan(&name); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		items = append(items, name)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
@@ -87,19 +97,18 @@ func (q *Queries) GetFileList(ctx context.Context, arg GetFileListParams) ([]Get
 
 const uploadFile = `-- name: UploadFile :execlastid
 INSERT INTO
-    files (name, content, uuid)
+    files (name, content)
 VALUES
-    (?, ?, ?)
+    (?, ?)
 `
 
 type UploadFileParams struct {
 	Name    string
 	Content []byte
-	Uuid    string
 }
 
 func (q *Queries) UploadFile(ctx context.Context, arg UploadFileParams) (int64, error) {
-	result, err := q.db.ExecContext(ctx, uploadFile, arg.Name, arg.Content, arg.Uuid)
+	result, err := q.db.ExecContext(ctx, uploadFile, arg.Name, arg.Content)
 	if err != nil {
 		return 0, err
 	}

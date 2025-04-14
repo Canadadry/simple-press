@@ -1,9 +1,9 @@
--- name: DownloadFile :one
+-- name: DownloadFile :many
 SELECT
     content
 FROM
     files
 WHERE
-    uuid = ?
+    name = ?
 LIMIT
     1;
