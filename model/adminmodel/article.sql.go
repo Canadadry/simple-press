@@ -11,6 +11,20 @@ import (
 	"time"
 )
 
+const countArticles = `-- name: CountArticles :one
+SELECT
+    count(*)
+FROM
+    articles
+`
+
+func (q *Queries) CountArticles(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countArticles)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createArticle = `-- name: CreateArticle :execlastid
 INSERT INTO
     articles (title, date, author, content, slug, draft)

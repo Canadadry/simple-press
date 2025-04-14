@@ -1,3 +1,9 @@
+-- name: CountArticles :one
+SELECT
+    count(*)
+FROM
+    articles;
+
 -- name: CreateArticle :execlastid
 INSERT INTO
     articles (title, date, author, content, slug, draft)

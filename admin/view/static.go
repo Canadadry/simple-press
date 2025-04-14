@@ -24,28 +24,5 @@ func PageNotFound(firstname string) func(w io.Writer, tr func(string) string, ms
 }
 
 func InternalServerError(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/static/internal_server_error.tmpl", nil)
-}
-
-func GetTOU(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/information/tou.tmpl", nil)
-}
-
-func GetLegal(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/information/legal.tmpl", nil)
-}
-
-func GetCookie(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/information/cookie.tmpl", nil)
-}
-
-func GetData(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/information/data.tmpl", nil)
-}
-func GetFaq(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/information/faq.tmpl", nil)
-}
-
-func GetAppointmentTaken(w io.Writer, tr func(string) string, msg flash.Message) error {
-	return render(w, tr, "template/static/appointment_taken.tmpl", nil)
+	return renderStatic(w, tr, "template/static/internal_server_error.tmpl")
 }

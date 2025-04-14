@@ -17,6 +17,11 @@ type Article struct {
 	Draft  bool
 }
 
+func (r *Repository) CountArticles(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.db).CountArticles(ctx)
+	return int(c), err
+}
+
 func (r *Repository) CreateArticle(ctx context.Context, a Article) error {
 	_, err := adminmodel.New(r.db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:  a.Title,

@@ -1,0 +1,25 @@
+{{define "body"}}
+    <section class="wrapper bg-reverse-primary">
+        <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+            <div class="row">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Auteur</th>
+                        <th>Date</th>
+                    </tr>
+                    {{ range $idx, $article := .Articles }}
+                    <tr>
+                        <td>{{$idx}}</td>
+                        <td>{{$article.Title}}</td>
+                        <td>{{$article.AUthor}}</td>
+                        <td>{{$article.Date | DateFormat}}</td>
+                    </tr>
+                    {{end}}
+                </table>
+                 {{template "pagination" .Pages}}
+            </div>
+        </div>
+    </section>
+{{end}}

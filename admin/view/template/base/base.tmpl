@@ -5,9 +5,7 @@
         <div class="content-wrapper">
             {{template "header" .}}
             <main id="content" role="main">
-                {{if .LoggedUser}}
-                    {{template "breadcrumb" .}}
-                {{end}}
+                {{template "breadcrumb" .}}
 				{{ template "flash" . }}
                 {{template "body" .}}
             </main>

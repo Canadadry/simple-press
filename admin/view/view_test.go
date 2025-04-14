@@ -11,7 +11,9 @@ func fakeTr(key string) string {
 }
 
 func TestView(t *testing.T) {
-	tests := map[string]ViewFunc{}
+	tests := map[string]ViewFunc{
+		"article_list": ArticlesList(ArticlesListData{}),
+	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			buf := &bytes.Buffer{}

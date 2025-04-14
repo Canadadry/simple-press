@@ -18,13 +18,17 @@ const (
 	baseTemplatesPath = "template/base/*"
 )
 
-type BasePage struct {
+type BasePage[T any] struct {
 	Version  string
 	Flash    flash.Message
-	PageData interface{}
+	PageData T
 }
 
-func render(w io.Writer, tr func(string) string, pageTemplatePath string, pageData interface{}) error {
+func renderStatic(w io.Writer, tr func(string) string, pageTemplatePath string) error {
+	return render[any](w, tr, pageTemplatePath, nil)
+}
+
+func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string, pageData T) error {
 	allFiles := []string{
 		baseTemplatesPath,
 		pageTemplatePath,
@@ -50,8 +54,8 @@ func render(w io.Writer, tr func(string) string, pageTemplatePath string, pageDa
 	return templates.ExecuteTemplate(w, baseTemplate, pageData)
 }
 
-func TemplateData(msg flash.Message, pageData interface{}) BasePage {
-	bp := BasePage{
+func TemplateData[T any](msg flash.Message, pageData T) BasePage[T] {
+	bp := BasePage[T]{
 		Version:  version,
 		PageData: pageData,
 		Flash:    msg,
