@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/cmd/admin"
+	"app/cmd/public"
 	"app/config"
 	"fmt"
 	"os"
@@ -18,7 +19,8 @@ func main() {
 func run(args []string) error {
 
 	actions := map[string]func(config.Parameters) error{
-		admin.Action: admin.Run,
+		admin.Action:  admin.Run,
+		public.Action: public.Run,
 	}
 
 	c, err := config.New(args)
