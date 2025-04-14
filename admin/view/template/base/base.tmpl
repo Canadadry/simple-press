@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+    {{template "head" .}}
+    <body>
+        <div class="content-wrapper">
+            {{template "header" .}}
+            <main id="content" role="main">
+                {{if .LoggedUser}}
+                    {{template "breadcrumb" .}}
+                {{end}}
+				{{ template "flash" . }}
+                {{template "body" .}}
+            </main>
+        </div>
+        {{template "progress"}}
+        {{template "footer" .}}
+        {{template "script" .}}
+    </body>
+</html>

@@ -1,0 +1,7 @@
+,en_US,fr_FR
+404.GoBack,Go back to the landing page,Revenir à la page de destination
+404.Message,Page not found...,Page non trouvée...
+404.PageNotExist,The page you asked does not exist.,La page que vous avez demandée n'existe pas.
+500.GoBack,"Go to Homepage","Aller à l'accueil"
+500.Message,"Oops! An error occured...","Oups ! Un problème est survenu..."
+500.TryAgain,"An error occured while loading the page. Please try again later.","Un problème est survenu lors du chargement de la page. Veuillez réessayer plus tard."

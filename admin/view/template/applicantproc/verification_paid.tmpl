@@ -1,0 +1,65 @@
+{{define "body"}}
+<section class="wrapper bg-light">
+    <div class="container py-8 py-md-4">
+        <div class="row">
+            <div class="col">
+                {{range $idx, $err := .Errors }}
+                    <div class="alert alert-danger alert-icon" role="alert" data-test="error">
+                        <i class="uil uil-times-circle"></i>
+                        {{ $err }}
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div class="pricing card text-center">
+                    <div class="card-body">
+                        <img src="/public/img/svg/mitrust.svg" class="svg-inject icon-svg icon-svg-sm text-primary mb-2" style="width: 150px;" alt="" />
+                        <h4 class="card-title">{{ Trans "VERIFICATION.Method3.Title" }}</h4>
+                        <ul class="icon-list bullet-bg bullet-soft-primary mt-7 mb-8 text-start">
+                            <li><i class="uil uil-check"></i><span>{{ Trans "VERIFICATION.Method3.Check1" }}</span></li>
+                            <li><i class="uil uil-check"></i><span>{{ Trans "VERIFICATION.Method3.Check2" }}</span></li>
+                            <li><i class="uil uil-check"></i><span>{{ Trans "VERIFICATION.Method3.Check3" }}</span></li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="display-4" data-test="page-title">
+                            {{ Trans "VERIFICATION_PAID.Title" }}
+                        </h1>
+                        <p>
+                            <a href="/review/free">({{ Trans "VERIFICATION_PAID.FreeLink" }})</a>
+                        </p>
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6 mt-6 mb-4">
+                                <form method="post" name="paiement">
+                                    <div class="mb-3">
+                                        <label class="form-label">Informations de la carte</label>
+                                        <input type="text" class="form-control" placeholder="1234 1234 1234 1234" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nom du titulaire</label>
+                                        <input type="text" class="form-control" placeholder="Nom complet" required>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary rounded-pill">
+                                            {{Trans "VERIFICATION_FREE.Button"}}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{end}}

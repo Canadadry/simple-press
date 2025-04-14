@@ -1,0 +1,17 @@
+{{define "body"}}
+    <section class="wrapper bg-light">
+      <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+        <div class="row">
+          <div class="col-lg-9 col-xl-8 mx-auto">
+            <figure class="mb-10"><img class="img-fluid" src="/public/img/illustrations/404.png" alt=""></figure>
+          </div>
+          <!-- /column -->
+          <div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto text-center">
+            <h1 data-test="page-message" class="mb-3">{{ Trans "404.message" }}</h1>
+            <p data-test="not-found" class="lead mb-7 px-md-12 px-lg-5 px-xl-7">{{ Trans "404.page_not_exist" }}</p>
+            <a data-test="back-to-homepage" href="/" class="btn btn-primary rounded-pill">{{ Trans "404.go_back" }}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+{{end}}

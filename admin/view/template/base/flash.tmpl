@@ -1,0 +1,21 @@
+{{define "flash"}}
+    {{ if .Flash.Valid }}
+        {{$icon := "info-circle"}}
+        {{if eq .Flash.Type "success"}}
+            {{$icon = "check-circle"}}
+        {{end}}
+        {{if eq .Flash.Type "danger"}}
+            {{$icon = "exclamation-circle"}}
+        {{end}}
+        <div id="flash" class="alert alert-{{ .Flash.Type }} alert-icon alert-dismissible fade show position-absolute top-0 end-0 mt-6" style="z-index: 1051;" role="alert" data-test='flash-message'>
+            <i class="uil uil-{{$icon}}"></i>  {{ Trans .Flash.Message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <script>
+        setTimeout(() => {
+          const elem = document.getElementById("flash");
+          elem.parentNode.removeChild(elem);
+        }, {{ .Flash.Duration}});
+        </script>
+    {{ end }}
+{{ end }}
