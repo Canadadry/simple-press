@@ -13,7 +13,7 @@ type File struct {
 }
 
 func (r *Repository) UploadFile(ctx context.Context, f File) error {
-	_, err := adminmodel.New(r.db).UploadFile(ctx, adminmodel.UploadFileParams{
+	_, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
 		Name:    f.Name,
 		Content: f.Content,
 	})
@@ -24,7 +24,7 @@ func (r *Repository) UploadFile(ctx context.Context, f File) error {
 }
 
 func (r *Repository) DeleteFile(ctx context.Context, name string) error {
-	err := adminmodel.New(r.db).DeleteFile(ctx, name)
+	err := adminmodel.New(r.Db).DeleteFile(ctx, name)
 	if err != nil {
 		return stacktrace.From(err)
 	}
@@ -32,7 +32,7 @@ func (r *Repository) DeleteFile(ctx context.Context, name string) error {
 }
 
 func (r *Repository) GetFileList(ctx context.Context, limit, offset int) ([]File, error) {
-	list, err := adminmodel.New(r.db).GetFileList(ctx, adminmodel.GetFileListParams{
+	list, err := adminmodel.New(r.Db).GetFileList(ctx, adminmodel.GetFileListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
@@ -47,7 +47,7 @@ func (r *Repository) GetFileList(ctx context.Context, limit, offset int) ([]File
 }
 
 func (r *Repository) DownloadFile(ctx context.Context, name string) (File, bool, error) {
-	list, err := adminmodel.New(r.db).DownloadFile(ctx, name)
+	list, err := adminmodel.New(r.Db).DownloadFile(ctx, name)
 	if err != nil {
 		return File{}, false, stacktrace.From(err)
 	}

@@ -6,13 +6,6 @@ import (
 )
 
 type Repository struct {
-	db    sqlutil.DBTX
-	clock clock.Clock
-}
-
-func New(db sqlutil.DBTX, clock clock.Clock) *Repository {
-	return &Repository{
-		db:    db,
-		clock: clock,
-	}
+	Db    sqlutil.DBTX
+	Clock clock.Clock
 }

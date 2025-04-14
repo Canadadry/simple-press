@@ -11,3 +11,10 @@ sqlc: ## run sqlc
 
 sqlc-auto-reload: ## run sqlc if a .sql file change to keep go code up to date
 	reflex -r '^model.+\.sql$$' sqlc generate
+
+init-db: ## init database
+	rm blog.sqlite
+	go run main.go migration
+
+unit-test: ## unit test
+	go test ./...

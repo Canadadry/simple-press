@@ -19,9 +19,10 @@ const (
 )
 
 type BasePage[T any] struct {
-	Version  string
-	Flash    flash.Message
-	PageData T
+	Version         string
+	BreadcrumbItems any
+	Flash           flash.Message
+	PageData        T
 }
 
 func renderStatic(w io.Writer, tr func(string) string, pageTemplatePath string) error {

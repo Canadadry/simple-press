@@ -13,7 +13,7 @@ type Layout struct {
 }
 
 func (r *Repository) CreateLayout(ctx context.Context, l Layout) error {
-	_, err := adminmodel.New(r.db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
+	_, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
 		Name:    l.Name,
 		Content: l.Content,
 	})
@@ -24,7 +24,7 @@ func (r *Repository) CreateLayout(ctx context.Context, l Layout) error {
 }
 
 func (r *Repository) DeleteLayout(ctx context.Context, name string) error {
-	err := adminmodel.New(r.db).DeleteLayout(ctx, name)
+	err := adminmodel.New(r.Db).DeleteLayout(ctx, name)
 	if err != nil {
 		return stacktrace.From(err)
 	}
@@ -32,7 +32,7 @@ func (r *Repository) DeleteLayout(ctx context.Context, name string) error {
 }
 
 func (r *Repository) GeLayoutList(ctx context.Context, limit, offset int) ([]Layout, error) {
-	list, err := adminmodel.New(r.db).GeLayoutList(ctx, adminmodel.GeLayoutListParams{
+	list, err := adminmodel.New(r.Db).GeLayoutList(ctx, adminmodel.GeLayoutListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
@@ -47,7 +47,7 @@ func (r *Repository) GeLayoutList(ctx context.Context, limit, offset int) ([]Lay
 }
 
 func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, bool, error) {
-	list, err := adminmodel.New(r.db).SelectLayout(ctx, name)
+	list, err := adminmodel.New(r.Db).SelectLayout(ctx, name)
 	if err != nil {
 		return Layout{}, false, stacktrace.From(err)
 	}
@@ -64,7 +64,7 @@ func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, boo
 }
 
 func (r *Repository) UpdateLayout(ctx context.Context, name string, l Layout) error {
-	err := adminmodel.New(r.db).UpdateLayout(ctx, adminmodel.UpdateLayoutParams{
+	err := adminmodel.New(r.Db).UpdateLayout(ctx, adminmodel.UpdateLayoutParams{
 		Name:    l.Name,
 		Content: l.Content,
 		Name_2:  name,

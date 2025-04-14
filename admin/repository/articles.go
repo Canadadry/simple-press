@@ -18,14 +18,14 @@ type Article struct {
 }
 
 func (r *Repository) CountArticles(ctx context.Context) (int, error) {
-	c, err := adminmodel.New(r.db).CountArticles(ctx)
+	c, err := adminmodel.New(r.Db).CountArticles(ctx)
 	return int(c), err
 }
 
 func (r *Repository) CreateArticle(ctx context.Context, a Article) error {
-	_, err := adminmodel.New(r.db).CreateArticle(ctx, adminmodel.CreateArticleParams{
+	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:  a.Title,
-		Date:   a.Date,
+		Date:   r.Clock.Now(),
 		Author: a.Author,
 		Slug:   a.Slug,
 		Draft:  sql.NullInt64{Int64: 1, Valid: a.Draft},
@@ -37,7 +37,7 @@ func (r *Repository) CreateArticle(ctx context.Context, a Article) error {
 }
 
 func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
-	err := adminmodel.New(r.db).DeleteArticle(ctx, slug)
+	err := adminmodel.New(r.Db).DeleteArticle(ctx, slug)
 	if err != nil {
 		return stacktrace.From(err)
 	}
@@ -45,7 +45,7 @@ func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
 }
 
 func (r *Repository) GetArticlesList(ctx context.Context, limit, offset int) ([]Article, error) {
-	list, err := adminmodel.New(r.db).GetArticlesList(ctx, adminmodel.GetArticlesListParams{
+	list, err := adminmodel.New(r.Db).GetArticlesList(ctx, adminmodel.GetArticlesListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
@@ -64,7 +64,7 @@ func (r *Repository) GetArticlesList(ctx context.Context, limit, offset int) ([]
 }
 
 func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Article, bool, error) {
-	list, err := adminmodel.New(r.db).SelectArticleBySlug(ctx, slug)
+	list, err := adminmodel.New(r.Db).SelectArticleBySlug(ctx, slug)
 	if err != nil {
 		return Article{}, false, stacktrace.From(err)
 	}
@@ -84,9 +84,9 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 }
 
 func (r *Repository) UpdateArticle(ctx context.Context, slug string, a Article) error {
-	err := adminmodel.New(r.db).UpdateArticle(ctx, adminmodel.UpdateArticleParams{
+	err := adminmodel.New(r.Db).UpdateArticle(ctx, adminmodel.UpdateArticleParams{
 		Title:  a.Title,
-		Date:   a.Date,
+		Date:   r.Clock.Now(),
 		Author: a.Author,
 		Slug:   a.Slug,
 		Draft:  sql.NullInt64{Int64: 1, Valid: a.Draft},

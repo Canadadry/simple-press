@@ -23,7 +23,7 @@ func Run(c config.Parameters) error {
 
 	var out io.Writer
 	out = os.Stdout
-	if c.Out != "stdout" {
+	if c.Out != "" {
 		f, err := os.OpenFile(c.Out, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		if err != nil {
 			return fmt.Errorf("cant open out : %w", err)

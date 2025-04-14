@@ -1,10 +1,13 @@
 package admin
 
 import (
+	"app/admin/controller"
+	"app/admin/repository"
 	"app/pkg/clock"
 	"app/pkg/middleware"
 	"app/pkg/router"
 	"app/pkg/sqlutil"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -22,6 +25,16 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Use(middleware.NoCache)
 	r.Use(middleware.Recoverer())
 	r.Error(HandleError(true))
+
+	c, err := controller.New(repository.Repository{
+		Db:    services.Db,
+		Clock: services.Clock,
+	}, services.Clock)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create admin controller : %w", err)
+	}
+
+	r.Get("/admin/articles", c.GetArticleList)
 
 	return r.ServeHTTP, nil
 }

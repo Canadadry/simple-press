@@ -6,10 +6,9 @@
 				<div class="align-items-center d-flex flex-fill">
 					<nav class="d-inline-block" aria-label="breadcrumb">
 						<ol class="breadcrumb mb-0">
-							{{ $AuthorizationSigned := .Study.AuthorizationSigned }}
 							{{range $idx, $item := .BreadcrumbItems}}
-								<li class="breadcrumb-item d-md-flex {{if $item.Active}}active-menu text-muted{{else}}d-none text-ash{{end}} align-items-center">			
-									<a {{ if and ($AuthorizationSigned) (not (eq $item.Route ""))}} href="{{$item.Route}}" {{end}} data-test="breadcrumb-link-{{$idx}}">
+								<li class="breadcrumb-item d-md-flex {{if $item.Active}}active-menu text-muted{{else}}d-none text-ash{{end}} align-items-center">
+									<a href="{{$item.Route}}" data-test="breadcrumb-link-{{$idx}}">
 										<i class="uil uil-{{$item.Icon}}"></i>
 										{{Trans (print "BREADCRUMB." $item.Title)}}
 									</a>
