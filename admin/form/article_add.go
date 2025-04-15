@@ -1,13 +1,18 @@
 package form
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 )
 
 const (
-	sendEmailField = "email"
+	articleAddTitle        = "title"
+	articleAddAuthor       = "author"
+	articleAddDraft        = "draft"
+	errorTageCannotBeEmpty = "empty"
+	errorTagetToBig        = "too_big"
+	maxTitleLen            = 255
+	maxAuthorLen           = 255
 )
 
 type Article struct {
@@ -24,22 +29,39 @@ type ArticleError struct {
 
 func (ae ArticleError) HasError() bool {
 	if ae.Title == "" {
-		return true
+		return false
 	}
 	if ae.Author == "" {
-		return true
+		return false
 	}
 	if ae.Draft == "" {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
-func ParseArticleAdd(r *http.Request, countBySlug func(context.Context, string) (int, error)) (Article, ArticleError, error) {
-	a := Article{}
+func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
 	err := r.ParseForm()
 	if err != nil {
-		return a, ArticleError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Article{}, ArticleError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	return Article{}, ArticleError{}, fmt.Errorf("ParseArticleAdd not impl")
+	a := Article{
+		Title:  r.PostForm.Get(articleAddTitle),
+		Author: r.PostForm.Get(articleAddAuthor),
+		Draft:  r.PostForm.Get(articleAddDraft) != "",
+	}
+	errors := ArticleError{}
+	if a.Title == "" {
+		errors.Title = errorTageCannotBeEmpty
+	}
+	if a.Author == "" {
+		errors.Author = errorTageCannotBeEmpty
+	}
+	if len(a.Author) > maxTitleLen {
+		errors.Author = errorTagetToBig
+	}
+	if len(a.Author) > maxTitleLen {
+		errors.Author = errorTagetToBig
+	}
+	return a, errors, nil
 }

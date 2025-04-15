@@ -14,7 +14,7 @@ func (c *Controller) GeArticleAdd(w http.ResponseWriter, r *http.Request) error 
 
 func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) error {
 
-	a, errors, err := form.ParseArticleAdd(r, c.Repository.CountArticlesBySlug)
+	a, errors, err := form.ParseArticleAdd(r)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}

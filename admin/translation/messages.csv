@@ -5,6 +5,7 @@
 500.GoBack,"Go to Homepage","Aller à l'accueil"
 500.Message,"Oops! An error occured...","Oups ! Un problème est survenu..."
 500.TryAgain,"An error occured while loading the page. Please try again later.","Un problème est survenu lors du chargement de la page. Veuillez réessayer plus tard."
+FORM.field_requiered,These fields are required.,These fields are required.
 PAGE.title,title,title
 HEADER.title,title,title
 HEADER.home,home,home
@@ -20,3 +21,11 @@ footer.address,address,address
 footer.address_value,address_value,address_value
 footer.copyright,copyright,copyright
 ARTICLE.add,add,add
+ARTICLE_ADD.title_placeholder,title_placeholder,title_placeholder
+ARTICLE_ADD.title,title,title
+ARTICLE_ADD.author_placeholder,author_placeholder,author_placeholder
+ARTICLE_ADD.author,author,author
+ARTICLE_ADD.draft,draft,draft
+ARTICLE_ADD.submit,submit,submit
+ARTICLE_ADD.errors.empty,cannot be empty,cannot be empty
+ARTICLE_ADD.errors.too_big,Too big,Too big
