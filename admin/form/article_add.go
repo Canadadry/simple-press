@@ -6,13 +6,9 @@ import (
 )
 
 const (
-	articleAddTitle        = "title"
-	articleAddAuthor       = "author"
-	articleAddDraft        = "draft"
-	errorTageCannotBeEmpty = "empty"
-	errorTagetToBig        = "too_big"
-	maxTitleLen            = 255
-	maxAuthorLen           = 255
+	articleAddTitle  = "title"
+	articleAddAuthor = "author"
+	articleAddDraft  = "draft"
 )
 
 type Article struct {
@@ -24,7 +20,6 @@ type Article struct {
 type ArticleError struct {
 	Title  string
 	Author string
-	Draft  string
 }
 
 func (ae ArticleError) HasError() bool {
@@ -32,9 +27,6 @@ func (ae ArticleError) HasError() bool {
 		return false
 	}
 	if ae.Author == "" {
-		return false
-	}
-	if ae.Draft == "" {
 		return false
 	}
 	return true
@@ -57,10 +49,10 @@ func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
 	if a.Author == "" {
 		errors.Author = errorTageCannotBeEmpty
 	}
-	if len(a.Author) > maxTitleLen {
-		errors.Author = errorTagetToBig
+	if len(a.Title) > maxTitleLen {
+		errors.Title = errorTagetToBig
 	}
-	if len(a.Author) > maxTitleLen {
+	if len(a.Author) > maxAuthorLen {
 		errors.Author = errorTagetToBig
 	}
 	return a, errors, nil

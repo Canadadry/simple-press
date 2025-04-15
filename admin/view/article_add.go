@@ -14,7 +14,6 @@ type ArticleAddData struct {
 type ArticleAddError struct {
 	Title  string
 	Author string
-	Draft  string
 }
 
 func ArticleAdd(a ArticleAddData, errors ArticleAddError) ViewFunc {

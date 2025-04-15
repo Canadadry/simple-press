@@ -10,10 +10,9 @@
                         <th>Date</th>
                     </tr>
                     {{ range $idx, $article := .Articles }}
-                    <tr>
-                        <td>{{$idx}}</td>
+                    <tr onclick="window.location='/admin/articles/{{$article.Slug}}/edit'" style="cursor: pointer;">                        <td>{{$idx}}</td>
                         <td>{{$article.Title}}</td>
-                        <td>{{$article.AUthor}}</td>
+                        <td>{{$article.Author}}</td>
                         <td>{{$article.Date | DateFormat}}</td>
                     </tr>
                     {{end}}

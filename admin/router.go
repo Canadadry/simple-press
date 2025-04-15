@@ -39,6 +39,8 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Get("/admin/articles", c.GetArticleList)
 	r.Get("/admin/article/add", c.GeArticleAdd)
 	r.Post("/admin/article/add", c.PostArticleAdd)
+	r.Get("/admin/articles/:slug/edit", c.GeArticleEdit)
+	r.Post("/admin/articles/:slug/edit", c.PostArticleEdit)
 
 	return r.ServeHTTP, nil
 }
