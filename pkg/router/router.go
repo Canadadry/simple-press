@@ -11,15 +11,15 @@ import (
 )
 
 const (
-	digitRegExp      = "([0-9]+)"
-	uuidV4Regexp     = "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})"
-	emailRegexp      = "(\\S+@\\S+\\.\\S+)"
-	stringRegExp     = "([^/]+)"
-	tokenRegexp      = "([a-zA-Z0-9]+)"
-	multiTokenRegexp = "((?:[a-zA-Z0-9_]+)(?:;(?:[a-zA-Z0-9_]+))*)"
-	slugRegexp       = "([_a-zA-Z0-9\\.]+)"
-	jwtRegexp        = "([a-zA-Z0-9_=]+\\.[a-zA-Z0-9_=]+\\.[a-zA-Z0-9_\\-\\+\\/=]*)"
-	base64Regexp     = "((?:[A-Za-z\\d+/]{4})*(?:[A-Za-z\\d+/]{3}=|[A-Za-z\\d+/]{2}==)?)"
+	DigitRegExp      = "([0-9]+)"
+	UuidV4Regexp     = "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})"
+	EmailRegexp      = "(\\S+@\\S+\\.\\S+)"
+	StringRegExp     = "([^/]+)"
+	TokenRegexp      = "([a-zA-Z0-9]+)"
+	MultiTokenRegexp = "((?:[a-zA-Z0-9_]+)(?:;(?:[a-zA-Z0-9_]+))*)"
+	SlugRegexp       = "([-_a-zA-Z0-9\\.]+)"
+	JwtRegexp        = "([a-zA-Z0-9_=]+\\.[a-zA-Z0-9_=]+\\.[a-zA-Z0-9_\\-\\+\\/=]*)"
+	Base64Regexp     = "((?:[A-Za-z\\d+/]{4})*(?:[A-Za-z\\d+/]{3}=|[A-Za-z\\d+/]{2}==)?)"
 )
 
 type HandlerFunc func(w http.ResponseWriter, r *http.Request) error
@@ -39,15 +39,15 @@ type Route struct {
 
 func newRoute(method, pattern string, handler HandlerFunc) Route {
 	tags := map[string]string{
-		":digit":    digitRegExp,
-		":string":   stringRegExp,
-		":uuid":     uuidV4Regexp,
-		":email":    emailRegexp,
-		":token":    tokenRegexp,
-		":multitok": multiTokenRegexp,
-		":slug":     slugRegexp,
-		":jwt":      jwtRegexp,
-		":b64":      base64Regexp,
+		":digit":    DigitRegExp,
+		":string":   StringRegExp,
+		":uuid":     UuidV4Regexp,
+		":email":    EmailRegexp,
+		":token":    TokenRegexp,
+		":multitok": MultiTokenRegexp,
+		":slug":     SlugRegexp,
+		":jwt":      JwtRegexp,
+		":b64":      Base64Regexp,
 	}
 	for k, v := range tags {
 		pattern = strings.ReplaceAll(pattern, k, v)
@@ -164,8 +164,8 @@ func GetPatternFromURL(url string, replace map[string]string) string {
 	}
 
 	tags := map[string]string{
-		":digit": digitRegExp,
-		":uuid":  uuidV4Regexp,
+		":digit": DigitRegExp,
+		":uuid":  UuidV4Regexp,
 	}
 	seg := strings.Split(url, "/")
 	for ks, s := range seg {

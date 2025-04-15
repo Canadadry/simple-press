@@ -4,7 +4,7 @@ import (
 	"app/admin"
 	"app/config"
 	"app/pkg/clock"
-	"app/pkg/dbconn"
+	"app/pkg/sqlutil"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,7 +16,7 @@ const (
 )
 
 func Run(c config.Parameters) error {
-	db, err := dbconn.Open(c.DatabaseUrl)
+	db, err := sqlutil.NewAutoCloseConn(c.DatabaseUrl, true)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func Run(c config.Parameters) error {
 	}
 
 	rt, err := admin.GetRouter(admin.Services{
-		Db:    db,
+		Db:    sqlutil.NewLogger(db),
 		Clock: clock.Real{},
 		Out:   out,
 	})

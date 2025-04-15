@@ -1,8 +1,10 @@
 package form
 
 import (
+	"app/pkg/router"
 	"fmt"
 	"net/http"
+	"regexp"
 )
 
 const (
@@ -10,7 +12,7 @@ const (
 	articleEditAuthor  = "author"
 	articleEditDraft   = "draft"
 	articleEditContent = "content"
-	articleEditSlug    = "Slug"
+	articleEditSlug    = "slug"
 )
 
 type ArticleEdit struct {
@@ -29,19 +31,19 @@ type ArticleEditError struct {
 }
 
 func (ae ArticleEditError) HasError() bool {
-	if ae.Title == "" {
-		return false
+	if ae.Title != "" {
+		return true
 	}
-	if ae.Author == "" {
-		return false
+	if ae.Author != "" {
+		return true
 	}
-	if ae.Content == "" {
-		return false
+	if ae.Content != "" {
+		return true
 	}
-	if ae.Slug == "" {
-		return false
+	if ae.Slug != "" {
+		return true
 	}
-	return true
+	return false
 }
 
 func ParseArticleEdit(r *http.Request) (ArticleEdit, ArticleEditError, error) {
@@ -58,16 +60,16 @@ func ParseArticleEdit(r *http.Request) (ArticleEdit, ArticleEditError, error) {
 	}
 	errors := ArticleEditError{}
 	if a.Title == "" {
-		errors.Title = errorTageCannotBeEmpty
+		errors.Title = errorCannotBeEmpty
 	}
 	if a.Content == "" {
-		errors.Content = errorTageCannotBeEmpty
+		errors.Content = errorCannotBeEmpty
 	}
 	if a.Slug == "" {
-		errors.Slug = errorTageCannotBeEmpty
+		errors.Slug = errorCannotBeEmpty
 	}
 	if a.Author == "" {
-		errors.Author = errorTageCannotBeEmpty
+		errors.Author = errorCannotBeEmpty
 	}
 	if len(a.Title) > maxTitleLen {
 		errors.Title = errorTagetToBig
@@ -80,6 +82,10 @@ func ParseArticleEdit(r *http.Request) (ArticleEdit, ArticleEditError, error) {
 	}
 	if len(a.Content) > maxContentLen {
 		errors.Author = errorTagetToBig
+	}
+	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
+	if !re.Match([]byte(a.Slug)) {
+		errors.Slug = errorNotASlug
 	}
 	return a, errors, nil
 }

@@ -1,10 +1,11 @@
 package form
 
 const (
-	errorTageCannotBeEmpty = "empty"
-	errorTagetToBig        = "too_big"
-	maxTitleLen            = 255
-	maxAuthorLen           = 255
-	maxSlugLen             = 255
-	maxContentLen          = 255
+	errorCannotBeEmpty = "empty"
+	errorTagetToBig    = "too_big"
+	errorNotASlug      = "not_a_slug"
+	maxTitleLen        = 255
+	maxAuthorLen       = 255
+	maxSlugLen         = 255
+	maxContentLen      = 255
 )

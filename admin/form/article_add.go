@@ -23,13 +23,13 @@ type ArticleError struct {
 }
 
 func (ae ArticleError) HasError() bool {
-	if ae.Title == "" {
-		return false
+	if ae.Title != "" {
+		return true
 	}
-	if ae.Author == "" {
-		return false
+	if ae.Author != "" {
+		return true
 	}
-	return true
+	return false
 }
 
 func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
@@ -44,10 +44,10 @@ func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
 	}
 	errors := ArticleError{}
 	if a.Title == "" {
-		errors.Title = errorTageCannotBeEmpty
+		errors.Title = errorCannotBeEmpty
 	}
 	if a.Author == "" {
-		errors.Author = errorTageCannotBeEmpty
+		errors.Author = errorCannotBeEmpty
 	}
 	if len(a.Title) > maxTitleLen {
 		errors.Title = errorTagetToBig

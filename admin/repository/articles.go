@@ -6,7 +6,10 @@ import (
 	"app/pkg/stacktrace"
 	"context"
 	"database/sql"
+	"regexp"
+	"strings"
 	"time"
+	"unicode"
 )
 
 type Article struct {
@@ -35,7 +38,7 @@ type CreateArticleParams struct {
 }
 
 func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (string, error) {
-	slug := slugFromTitle(a.Title)
+	slug := slugify(a.Title)
 	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:  a.Title,
 		Date:   r.Clock.Now(),
@@ -49,8 +52,43 @@ func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (
 	return slug, nil
 }
 
-func slugFromTitle(title string) string {
-	return title
+func slugify(title string) string {
+	slug := strings.ToLower(title)
+	slug = removeAccents(slug)
+	re := regexp.MustCompile(`[^a-z0-9]+`)
+	slug = re.ReplaceAllString(slug, "-")
+	slug = strings.Trim(slug, "-")
+
+	return slug
+}
+
+func removeAccents(s string) string {
+	var result []rune
+	for _, r := range s {
+		switch r {
+		case 'à', 'á', 'â', 'ã', 'ä', 'å':
+			result = append(result, 'a')
+		case 'è', 'é', 'ê', 'ë':
+			result = append(result, 'e')
+		case 'ì', 'í', 'î', 'ï':
+			result = append(result, 'i')
+		case 'ò', 'ó', 'ô', 'õ', 'ö':
+			result = append(result, 'o')
+		case 'ù', 'ú', 'û', 'ü':
+			result = append(result, 'u')
+		case 'ç':
+			result = append(result, 'c')
+		case 'ñ':
+			result = append(result, 'n')
+		default:
+			if unicode.IsLetter(r) || unicode.IsDigit(r) {
+				result = append(result, r)
+			} else {
+				result = append(result, ' ')
+			}
+		}
+	}
+	return string(result)
 }
 
 func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
