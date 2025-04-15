@@ -1,0 +1,22 @@
+{{define "body"}}
+    <section class="wrapper bg-reverse-primary">
+        <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+            <div class="row">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                    </tr>
+                    {{ range $idx, $layout := .Layouts }}
+                    <tr onclick="window.location='/admin/layouts/{{$layout.Name}}/edit'" style="cursor: pointer;">
+                        <td>{{$idx}}</td>
+                        <td>{{$layout.Name}}</td>
+                    </tr>
+                    {{end}}
+                </table>
+                <a href="/admin/layout/add" class="btn btn-primary rounded-pill">{{Trans "LAYOUT.add"}}</a>
+                {{template "pagination" .Pages}}
+            </div>
+        </div>
+    </section>
+{{end}}

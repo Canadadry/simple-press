@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GeArticleAdd(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetArticleAdd(w http.ResponseWriter, r *http.Request) error {
 	return c.render(w, r, view.ArticleAdd(view.ArticleAddData{}, view.ArticleAddError{}))
 }
 

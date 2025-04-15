@@ -19,6 +19,11 @@ func TestView(t *testing.T) {
 		"article_add with error":  ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
 		"article_edit":            ArticleEdit(ArticleEditData{}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4"}),
+		"layout_list": LayoutsList(LayoutsListData{
+			Layouts: []LayoutListData{LayoutListData{}},
+		}),
+		"layout_add":            LayoutAdd(LayoutAddData{}, LayoutAddError{}),
+		"layout_add with error": LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {

@@ -9,6 +9,36 @@ import (
 	"context"
 )
 
+const countLayout = `-- name: CountLayout :one
+SELECT
+    count(*)
+FROM
+    layouts
+`
+
+func (q *Queries) CountLayout(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countLayout)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countLayoutByName = `-- name: CountLayoutByName :one
+SELECT
+    count(*)
+FROM
+    layouts
+WHERE
+    name = ?
+`
+
+func (q *Queries) CountLayoutByName(ctx context.Context, name string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countLayoutByName, name)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createLayout = `-- name: CreateLayout :execlastid
 INSERT INTO
     layouts (name, content)

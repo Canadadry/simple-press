@@ -12,10 +12,23 @@ type Layout struct {
 	Content string
 }
 
-func (r *Repository) CreateLayout(ctx context.Context, l Layout) error {
+func (r *Repository) CountLayouts(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.Db).CountLayout(ctx)
+	return int(c), err
+}
+
+func (r *Repository) CountLayoutByName(ctx context.Context, name string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountLayoutByName(ctx, name)
+	return int(c), err
+}
+
+type CreateLayoutParams struct {
+	Name string
+}
+
+func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) error {
 	_, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
-		Name:    l.Name,
-		Content: l.Content,
+		Name: l.Name,
 	})
 	if err != nil {
 		return stacktrace.From(err)

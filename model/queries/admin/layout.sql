@@ -1,3 +1,17 @@
+-- name: CountLayout :one
+SELECT
+    count(*)
+FROM
+    layouts;
+
+-- name: CountLayoutByName :one
+SELECT
+    count(*)
+FROM
+    layouts
+WHERE
+    name = ?;
+
 -- name: CreateLayout :execlastid
 INSERT INTO
     layouts (name, content)
