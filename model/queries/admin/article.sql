@@ -4,6 +4,14 @@ SELECT
 FROM
     articles;
 
+-- name: CountArticlesBySlug :one
+SELECT
+    count(*)
+FROM
+    articles
+WHERE
+    slug = ?;
+
 -- name: CreateArticle :execlastid
 INSERT INTO
     articles (title, date, author, content, slug, draft)

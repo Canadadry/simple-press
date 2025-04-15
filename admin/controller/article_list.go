@@ -29,9 +29,15 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 		return nil
 	}
 
-	articles := []view.ArticleData{}
+	articles := []view.ArticleListData{}
 	for _, a := range list {
-		articles = append(articles, view.ArticleData(a))
+		articles = append(articles, view.ArticleListData{
+			Title:  a.Title,
+			Date:   a.Date,
+			Author: a.Author,
+			Slug:   a.Slug,
+			Draft:  a.Draft,
+		})
 	}
 
 	l := view.ArticlesListData{

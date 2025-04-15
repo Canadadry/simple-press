@@ -18,7 +18,8 @@
                     </tr>
                     {{end}}
                 </table>
-                 {{template "pagination" .Pages}}
+                <a href="/admin/articles/add" class="btn btn-primary rounded-pill">{{Trans "ARTICLE.add"}}</a>
+                {{template "pagination" .Pages}}
             </div>
         </div>
     </section>

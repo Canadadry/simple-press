@@ -13,13 +13,13 @@ const (
 )
 
 type ArticlesListData struct {
-	Articles []ArticleData
+	Articles []ArticleListData
 	Total    int
 	Page     int
 	Limit    int
 }
 
-type ArticleData struct {
+type ArticleListData struct {
 	Title  string
 	Date   time.Time
 	Author string
@@ -31,7 +31,7 @@ func ArticlesList(data ArticlesListData) ViewFunc {
 	type viewData struct {
 		Total    int
 		Pages    paginator.Pages
-		Articles []ArticleData
+		Articles []ArticleListData
 	}
 	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
 		return render(w, tr,

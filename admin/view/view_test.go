@@ -12,7 +12,9 @@ func fakeTr(key string) string {
 
 func TestView(t *testing.T) {
 	tests := map[string]ViewFunc{
-		"article_list": ArticlesList(ArticlesListData{}),
+		"article_list":           ArticlesList(ArticlesListData{}),
+		"article_add":            ArticleAdd(ArticleAddData{}, ArticleAddError{}),
+		"article_add with error": ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test32", "test3", "test4", "test5"}),
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {

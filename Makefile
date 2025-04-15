@@ -16,7 +16,8 @@ init: ## init database
 	rm blog.sqlite
 	go run main.go -action=migration
 
-admin: ## run admin server
+run: ## run admin server
+	go test ./...
 	go run main.go -action=admin
 
 unit-test: ## unit test

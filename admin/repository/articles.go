@@ -10,11 +10,12 @@ import (
 )
 
 type Article struct {
-	Title  string
-	Date   time.Time
-	Author string
-	Slug   string
-	Draft  bool
+	Title   string
+	Date    time.Time
+	Author  string
+	Slug    string
+	Content string
+	Draft   bool
 }
 
 func (r *Repository) CountArticles(ctx context.Context) (int, error) {
@@ -22,18 +23,34 @@ func (r *Repository) CountArticles(ctx context.Context) (int, error) {
 	return int(c), err
 }
 
-func (r *Repository) CreateArticle(ctx context.Context, a Article) error {
+func (r *Repository) CountArticlesBySlug(ctx context.Context, slug string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountArticlesBySlug(ctx, slug)
+	return int(c), err
+}
+
+type CreateArticleParams struct {
+	Title  string
+	Author string
+	Draft  bool
+}
+
+func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (string, error) {
+	slug := slugFromTitle(a.Title)
 	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:  a.Title,
 		Date:   r.Clock.Now(),
 		Author: a.Author,
-		Slug:   a.Slug,
+		Slug:   slug,
 		Draft:  sql.NullInt64{Int64: 1, Valid: a.Draft},
 	})
 	if err != nil {
-		return stacktrace.From(err)
+		return "", stacktrace.From(err)
 	}
-	return nil
+	return slug, nil
+}
+
+func slugFromTitle(title string) string {
+	return title
 }
 
 func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
@@ -73,11 +90,12 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 	}
 	fromModel := func(a adminmodel.Article) Article {
 		return Article{
-			Title:  a.Title,
-			Date:   a.Date,
-			Author: a.Author,
-			Slug:   a.Slug,
-			Draft:  a.Draft.Valid,
+			Title:   a.Title,
+			Date:    a.Date,
+			Author:  a.Author,
+			Content: a.Content,
+			Slug:    a.Slug,
+			Draft:   a.Draft.Valid,
 		}
 	}
 	return fromModel(list[0]), true, nil
@@ -85,12 +103,13 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 
 func (r *Repository) UpdateArticle(ctx context.Context, slug string, a Article) error {
 	err := adminmodel.New(r.Db).UpdateArticle(ctx, adminmodel.UpdateArticleParams{
-		Title:  a.Title,
-		Date:   r.Clock.Now(),
-		Author: a.Author,
-		Slug:   a.Slug,
-		Draft:  sql.NullInt64{Int64: 1, Valid: a.Draft},
-		Slug_2: slug,
+		Title:   a.Title,
+		Date:    r.Clock.Now(),
+		Author:  a.Author,
+		Content: a.Content,
+		Slug:    a.Slug,
+		Draft:   sql.NullInt64{Int64: 1, Valid: a.Draft},
+		Slug_2:  slug,
 	})
 	if err != nil {
 		return stacktrace.From(err)

@@ -25,6 +25,22 @@ func (q *Queries) CountArticles(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const countArticlesBySlug = `-- name: CountArticlesBySlug :one
+SELECT
+    count(*)
+FROM
+    articles
+WHERE
+    slug = ?
+`
+
+func (q *Queries) CountArticlesBySlug(ctx context.Context, slug string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countArticlesBySlug, slug)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createArticle = `-- name: CreateArticle :execlastid
 INSERT INTO
     articles (title, date, author, content, slug, draft)
