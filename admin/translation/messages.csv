@@ -5,3 +5,17 @@
 500.GoBack,"Go to Homepage","Aller à l'accueil"
 500.Message,"Oops! An error occured...","Oups ! Un problème est survenu..."
 500.TryAgain,"An error occured while loading the page. Please try again later.","Un problème est survenu lors du chargement de la page. Veuillez réessayer plus tard."
+PAGE.title,title,title
+HEADER.title,title,title
+HEADER.home,home,home
+HEADER.articles,articles,articles
+HEADER.layout,layout,layout
+HEADER.current_language,current_language,current_language
+HEADER.change_language,change_language,change_language
+footer.tagline,tagline,tagline
+footer.legal,legal,legal
+footer.phone,phone,phone
+footer.phone_value,phone_value,phone_value
+footer.address,address,address
+footer.address_value,address_value,address_value
+footer.copyright,copyright,copyright

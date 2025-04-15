@@ -4,12 +4,12 @@
             <div class="container flex-lg-row flex-nowrap align-items-center">
                 <div class="navbar-brand w-100 h-100">
                     <a href="/" data-test="logo-link">
-                        <img src="public/img/logo-green.svg" alt="aqua" height="40px;"/>
+                        <img src="public/img/logo.svg" alt="aqua" height="40px;"/>
                     </a>
                 </div>
                 <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
                     <div class="offcanvas-header d-lg-none">
-                        <h3 class="text-white fs-30 mb-0">Locafirst</h3>
+                        <h3 class="text-white fs-30 mb-0">{{ Trans "HEADER.title" }}</h3>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
@@ -21,12 +21,12 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/visits" data-test='visit'>
-                                    {{ Trans "HEADER.visit" }}
+                                    {{ Trans "HEADER.articles" }}
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/validation" data-test='my-files'>
-                                    {{ Trans "HEADER.myfiles" }}
+                                    {{ Trans "HEADER.layout" }}
                                 </a>
                             </li>
                         </ul>
@@ -35,12 +35,6 @@
                 <!-- /.navbar-collapse -->
                 <div class="navbar-nav ms-lg-4 w-100 d-flex ms-auto">
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
-                        <li class="nav-item d-flex flex-shrink-0">
-                            <a class="nav-link d-flex align-items-center" href="/information/faq" data-test='faq'>
-                                <i class="uil uil-question-circle fs-lg-15 fs-20"></i>
-                                <span class="d-none d-lg-inline-block ps-2">{{ Trans "FOOTER.Faq" }}</span>
-                            </a>
-                        </li>
                         <li class="nav-item dropdown language-select text-uppercase">
                             <a class="nav-link dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{Trans "HEADER.current_language" }}</a>
                             <ul class="dropdown-menu">
