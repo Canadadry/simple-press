@@ -32,3 +32,12 @@ ARTICLE_ADD.errors.too_big,Too big,Too big
 ARTICLE_EDIT.slug,slug,slug
 ARTICLE_EDIT.content,content,content
 ARTICLE_EDIT.submit,submit,submit
+LAYOUT.add,add,add
+LAYOUT_ADD.name_placeholder,name_placeholder,name_placeholder
+LAYOUT_ADD.name,name,name
+LAYOUT_ADD.submit,submit,submit
+LAYOUT_ADD.errors.empty,cannot be empty,cannot be empty
+LAYOUT_ADD.errors.too_big,Too big,Too big
+LAYOUT_EDIT.name,name,name
+LAYOUT_EDIT.content,content,content
+LAYOUT_EDIT.submit,submit,submit

@@ -1,8 +1,10 @@
 package form
 
 import (
+	"app/pkg/router"
 	"fmt"
 	"net/http"
+	"regexp"
 )
 
 const (
@@ -41,6 +43,10 @@ func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
 	}
 	if len(l.Name) > maxTitleLen {
 		errors.Name = errorTagetToBig
+	}
+	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
+	if !re.Match([]byte(l.Name)) {
+		errors.Name = errorNotASlug
 	}
 	return l, errors, nil
 }
