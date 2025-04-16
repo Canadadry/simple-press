@@ -2,7 +2,6 @@ package view
 
 import (
 	"app/pkg/eval"
-	"app/pkg/flash"
 	"embed"
 	"html/template"
 	"io"
@@ -11,18 +10,21 @@ import (
 //go:embed template
 var templates embed.FS
 
-var version = "dev"
-
 const (
 	baseTemplate      = "base.html"
 	baseTemplatesPath = "template/base/*"
 )
 
+type MenuItem struct {
+	Name string
+	Path string
+	Icon string
+}
+
 type BasePage[T any] struct {
-	Version         string
-	BreadcrumbItems any
-	Flash           flash.Message
-	PageData        T
+	PageTitle string
+	Menu      []MenuItem
+	PageData  T
 }
 
 func renderStatic(w io.Writer, tr func(string) string, pageTemplatePath string) error {
@@ -55,11 +57,15 @@ func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string,
 	return templates.ExecuteTemplate(w, baseTemplate, pageData)
 }
 
-func TemplateData[T any](msg flash.Message, pageData T) BasePage[T] {
+func TemplateData[T any](pageTitle string, pageData T) BasePage[T] {
 	bp := BasePage[T]{
-		Version:  version,
-		PageData: pageData,
-		Flash:    msg,
+		PageTitle: pageTitle,
+		PageData:  pageData,
+		Menu: []MenuItem{
+			{Name: "MENU.articles", Path: "/admin/articles", Icon: "bi bi-body-text"},
+			{Name: "MENU.layouts", Path: "/admin/layouts", Icon: "bi bi-grid-1x2"},
+			{Name: "MENU.files", Path: "/admin/files", Icon: "bi bi-file-image"},
+		},
 	}
 	return bp
 }

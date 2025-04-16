@@ -1,7 +1,6 @@
 package view
 
 import (
-	"app/pkg/flash"
 	"io"
 )
 
@@ -25,10 +24,10 @@ func ArticleEdit(a ArticleEditData, errors ArticleEditError) ViewFunc {
 		Article ArticleEditData
 		Errors  ArticleEditError
 	}
-	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
+	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/article_edit.html",
-			TemplateData(msg, viewData{a, errors}),
+			TemplateData("ARTICLE_EDIT.page_title", viewData{a, errors}),
 		)
 	}
 }

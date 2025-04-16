@@ -5,7 +5,6 @@ import (
 	"app/admin/translation"
 	"app/admin/view"
 	"app/pkg/clock"
-	"app/pkg/flash"
 	"app/pkg/i18n"
 	"fmt"
 	"net/http"
@@ -32,14 +31,9 @@ func (c *Controller) render(w http.ResponseWriter, r *http.Request, fn view.View
 func (c *Controller) renderWithStatus(w http.ResponseWriter, r *http.Request, st int, fn view.ViewFunc) error {
 	lang := translation.GetLocal(w, r)
 	tr := func(key string) string { return c.tr.Trans(key, lang) }
-	f, err := flash.Get(w, r)
-	if err != nil {
-		return fmt.Errorf("cannot get flash : %w", err)
-	}
-
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(st)
-	return fn(w, tr, f)
+	return fn(w, tr)
 }
 
 func (c *Controller) redirect(w http.ResponseWriter, r *http.Request, url string) error {

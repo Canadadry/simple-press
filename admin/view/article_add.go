@@ -1,7 +1,6 @@
 package view
 
 import (
-	"app/pkg/flash"
 	"io"
 )
 
@@ -21,10 +20,10 @@ func ArticleAdd(a ArticleAddData, errors ArticleAddError) ViewFunc {
 		Article ArticleAddData
 		Errors  ArticleAddError
 	}
-	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
+	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/article_add.html",
-			TemplateData(msg, viewData{a, errors}),
+			TemplateData("ARTICLE_ADD.page_title", viewData{a, errors}),
 		)
 	}
 }

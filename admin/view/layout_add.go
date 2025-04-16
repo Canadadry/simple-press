@@ -1,7 +1,6 @@
 package view
 
 import (
-	"app/pkg/flash"
 	"io"
 )
 
@@ -18,10 +17,10 @@ func LayoutAdd(a LayoutAddData, errors LayoutAddError) ViewFunc {
 		Layout LayoutAddData
 		Errors LayoutAddError
 	}
-	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
+	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/layout_add.html",
-			TemplateData(msg, viewData{a, errors}),
+			TemplateData("LAYOUT_ADD.page_title", viewData{a, errors}),
 		)
 	}
 }

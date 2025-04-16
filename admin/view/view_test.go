@@ -1,7 +1,6 @@
 package view
 
 import (
-	"app/pkg/flash"
 	"bytes"
 	"testing"
 )
@@ -30,7 +29,7 @@ func TestView(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			buf := &bytes.Buffer{}
-			err := tt(buf, fakeTr, flash.Message{})
+			err := tt(buf, fakeTr)
 			if err != nil {
 				t.Fatalf("failed : %v", err)
 			}

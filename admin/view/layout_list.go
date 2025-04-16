@@ -1,7 +1,6 @@
 package view
 
 import (
-	"app/pkg/flash"
 	"app/pkg/paginator"
 	"io"
 	"math"
@@ -28,12 +27,12 @@ func LayoutsList(data LayoutsListData) ViewFunc {
 		Pages   paginator.Pages
 		Layouts []LayoutListData
 	}
-	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
+	return func(w io.Writer, tr func(string) string) error {
 		lastPage := int(math.Ceil(float64(data.Total) / float64(data.Limit)))
 		p := paginator.New(data.Page, lastPage, MaxMayoutPaginationItem, "/layouts?page=%page%")
 		return render(w, tr,
 			"template/pages/layout_list.html",
-			TemplateData(msg, viewData{
+			TemplateData("LAYOUT_LIST.page_title", viewData{
 				Total:   data.Total,
 				Pages:   p,
 				Layouts: data.Layouts,
