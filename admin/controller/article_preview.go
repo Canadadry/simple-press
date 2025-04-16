@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"app/admin/repository"
 	"app/pkg/router"
 	"bytes"
 	"fmt"
@@ -37,10 +38,10 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot found page layout %s : %w", pageLayoutName, err)
 	}
 	files[pageLayoutName] = pageLayout.Content
-	return renderPreview(w, files, a.Content)
+	return renderPreview(w, files, a)
 }
 
-func renderPreview(w io.Writer, files map[string]string, pageData string) error {
+func renderPreview(w io.Writer, files map[string]string, pageData repository.Article) error {
 	const baseTemplate = "baseof.html"
 	if _, ok := files[baseTemplate]; !ok {
 		return fmt.Errorf("base template %s not defined in _layout/", baseTemplate)
@@ -69,7 +70,11 @@ func renderPreview(w io.Writer, files map[string]string, pageData string) error 
 		return err
 	}
 	type PageData struct {
+		Title   string
 		Content string
 	}
-	return tmpl.ExecuteTemplate(w, baseTemplate, PageData{Content: pageData})
+	return tmpl.ExecuteTemplate(w, baseTemplate, PageData{
+		Content: pageData.Content,
+		Title:   pageData.Title,
+	})
 }
