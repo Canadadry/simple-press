@@ -65,6 +65,7 @@ func TemplateData[T any](pageTitle string, pageData T) BasePage[T] {
 			{Name: "MENU.articles", Path: "/admin/articles", Icon: "bi bi-body-text"},
 			{Name: "MENU.layouts", Path: "/admin/layouts", Icon: "bi bi-grid-1x2"},
 			{Name: "MENU.files", Path: "/admin/files", Icon: "bi bi-file-image"},
+			{Name: "MENU.settings", Path: "/admin/settings", Icon: "bi bi-gear-wide"},
 		},
 	}
 	return bp
