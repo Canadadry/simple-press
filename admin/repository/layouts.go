@@ -5,6 +5,7 @@ import (
 	"app/pkg/sqlutil"
 	"app/pkg/stacktrace"
 	"context"
+	"strings"
 )
 
 type Layout struct {
@@ -55,6 +56,20 @@ func (r *Repository) GeLayoutList(ctx context.Context, limit, offset int) ([]Lay
 	return sqlutil.Map(list, func(name string) Layout {
 		return Layout{
 			Name: name,
+		}
+	}), nil
+}
+
+func (r *Repository) SelectBaseLayout(ctx context.Context) ([]Layout, error) {
+	list, err := adminmodel.New(r.Db).SelectBaseLayout(ctx)
+	if err != nil {
+		return nil, stacktrace.From(err)
+	}
+	return sqlutil.Map(list, func(l adminmodel.Layout) Layout {
+		name, _ := strings.CutPrefix(l.Name, "_layout/")
+		return Layout{
+			Name:    name,
+			Content: l.Content,
 		}
 	}), nil
 }

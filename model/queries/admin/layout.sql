@@ -41,6 +41,14 @@ WHERE
 LIMIT
     1;
 
+-- name: SelectBaseLayout :many
+SELECT
+    *
+FROM
+    layouts
+WHERE
+    name like "_layout/%";
+
 -- name: GeLayoutList :many
 SELECT
     name
