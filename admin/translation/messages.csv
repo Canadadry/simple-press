@@ -36,6 +36,10 @@ ARTICLE_EDIT.slug,slug,slug
 ARTICLE_EDIT.content,content,content
 ARTICLE_EDIT.submit,submit,submit
 ARTICLE_LIST.page_title,page title,page title
+ARTICLE_LIST.column_name,name,name
+ARTICLE_LIST.column_author,author,author
+ARTICLE_LIST.column_date,date,date
+ARTICLE_LIST.column_action,action,action
 LAYOUT.add,add,add
 LAYOUT_ADD.page_title,page title, page title
 LAYOUT_ADD.name_placeholder,name_placeholder,name_placeholder
@@ -52,7 +56,21 @@ LAYOUT_EDIT.name,name,name
 LAYOUT_EDIT.content,content,content
 LAYOUT_EDIT.submit,submit,submit
 LAYOUT_LIST.page_title, page title, page title
+LAYOUT_LIST.column_name,name,name
+LAYOUT_LIST.column_action,action,action
 MENU.articles,articles,articles
 MENU.layouts,layouts,layouts
 MENU.files,files,files
 MENU.settings,settings,settings
+month.short.Jan,Jan,Jan
+month.short.Feb,Feb,Feb
+month.short.Mar,Mar,Mar
+month.short.Apr,Apr,Apr
+month.short.May,May,May
+month.short.Jun,Jun,Jun
+month.short.Jul,Jul,Jul
+month.short.Aug,Aug,Aug
+month.short.Sep,Sep,Sep
+month.short.Oct,Oct,Oct
+month.short.Nov,Nov,Nov
+month.short.Dec,Dec,Dec

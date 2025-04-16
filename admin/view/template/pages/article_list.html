@@ -1,25 +1,43 @@
 {{define "body"}}
-    <section class="wrapper bg-reverse-primary">
-        <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
-            <div class="row">
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <th>#</th>
-                        <th>Nom</th>
-                        <th>Auteur</th>
-                        <th>Date</th>
-                    </tr>
-                    {{ range $idx, $article := .Articles }}
-                    <tr onclick="window.location='/admin/articles/{{$article.Slug}}/edit'" style="cursor: pointer;">                        <td>{{$idx}}</td>
-                        <td>{{$article.Title}}</td>
-                        <td>{{$article.Author}}</td>
-                        <td>{{$article.Date | DateFormat}}</td>
-                    </tr>
-                    {{end}}
-                </table>
-                <a href="/admin/article/add" class="btn btn-primary rounded-pill">{{Trans "ARTICLE.add"}}</a>
-                {{template "pagination" .Pages}}
-            </div>
+<section class="wrapper bg-reverse-primary">
+    <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+        <div class="row">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>{{Trans "ARTICLE_LIST.column_name"}}</th>
+                    <th>{{Trans "ARTICLE_LIST.column_author"}}</th>
+                    <th>{{Trans "ARTICLE_LIST.column_date"}}</th>
+                    <th>{{Trans "ARTICLE_LIST.column_action"}}</th>
+                </tr>
+                {{ range $idx, $article := .Articles }}
+                <tr>
+                    <td>{{$idx}}</td>
+                    <td>{{$article.Title}}</td>
+                    <td>{{$article.Author}}</td>
+                    <td>{{$article.Date | DateFormat}}</td>
+                    <td>
+                        <a href="/admin/articles/{{$article.Slug}}/edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a
+                            href="/admin/articles/{{$article.Slug}}/preview"
+                            target="_blank"
+                        >
+                            <i class="bi bi-eye-fill"></i>
+                        </a>
+                        <a href="/admin/articles/{{$article.Slug}}/delete">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+                {{end}}
+            </table>
+            <a href="/admin/article/add" class="btn btn-primary rounded-pill"
+                >{{Trans "ARTICLE.add"}}</a
+            >
+            {{template "pagination" .Pages}}
         </div>
-    </section>
+    </div>
+</section>
 {{end}}
