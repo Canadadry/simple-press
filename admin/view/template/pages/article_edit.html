@@ -1,4 +1,11 @@
 {{define "body"}}
+<!-- https://github.com/sparksuite/simplemde-markdown-editor?tab=readme-ov-file -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+var simplemde = new SimpleMDE({ element: document.getElementById("form_content") });
+</script>
+
 <section class="wrapper">
   <div class="container py-14 py-md-16">
     <div class="row">
