@@ -44,9 +44,9 @@ func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
 	if len(l.Name) > maxTitleLen {
 		errors.Name = errorTagetToBig
 	}
-	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
+	re := regexp.MustCompile("^" + router.PathRegexp + "$")
 	if !re.Match([]byte(l.Name)) {
-		errors.Name = errorNotASlug
+		errors.Name = errorNotAPath
 	}
 	return l, errors, nil
 }

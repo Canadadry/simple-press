@@ -54,9 +54,10 @@ func ParseLayoutEdit(r *http.Request) (LayoutEdit, LayoutEditError, error) {
 	if len(a.Content) > maxContentLen {
 		errors.Content = errorTagetToBig
 	}
-	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
+	re := regexp.MustCompile("^" + router.PathRegexp + "$")
 	if !re.Match([]byte(a.Name)) {
-		errors.Name = errorNotASlug
+		errors.Name = errorNotAPath
 	}
+	fmt.Println("content submited -", a.Content, "-")
 	return a, errors, nil
 }

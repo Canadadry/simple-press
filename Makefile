@@ -12,11 +12,10 @@ sqlc: ## run sqlc
 sqlc-auto-reload: ## run sqlc if a .sql file change to keep go code up to date
 	reflex -r '^model.+\.sql$$' sqlc generate
 
-init: ## init database
-	rm blog.sqlite
+blog.sqlite: ## init database
 	go run main.go -action=migration
 
-run: ## run admin server
+run: blog.sqlite ## run admin server
 	go test ./...
 	go run main.go -action=admin
 

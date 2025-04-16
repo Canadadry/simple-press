@@ -10,7 +10,7 @@
                     <input id="form_name" type="text" name="name" class="form-control" placeholder="{{Trans "LAYOUT_ADD.name_placeholder"}}" value="{{.Layout.Name}}" required>
                     <label for="form_name">{{Trans "LAYOUT_ADD.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback d-block">
                         {{Trans (print "LAYOUT_ADD.errors." .Errors.Name)}}
                     </div>
                     {{ end }}

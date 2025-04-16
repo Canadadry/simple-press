@@ -10,7 +10,7 @@
                     <input id="form_name" type="text" name="name" class="form-control" value="{{.Layout.Name}}" required>
                     <label for="form_name">{{Trans "LAYOUT_EDIT.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback  d-block">
                         {{Trans (print "LAYOUT_EDIT.errors." .Errors.Name)}}
                     </div>
                     {{ end }}
@@ -22,7 +22,7 @@
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px" required>{{.Layout.Content}}</textarea>
                     <label for="form_message">{{Trans "LAYOUT_EDIT.content"}} *</label>
                     {{if not (eq .Errors.Content "") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback  d-block">
                         {{Trans (print "LAYOUT_EDIT.errors." .Errors.Content)}}
                     </div>
                     {{ end }}

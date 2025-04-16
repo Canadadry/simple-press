@@ -10,7 +10,7 @@
                     <input id="form_title" type="text" name="title" class="form-control" placeholder="{{Trans "ARTICLE_ADD.title_placeholder"}}" value="{{.Article.Title}}" required>
                     <label for="form_title">{{Trans "ARTICLE_ADD.title"}} *</label>
                     {{if not (eq .Errors.Title "") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback  d-block">
                         {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
                     </div>
                     {{ end }}
@@ -22,7 +22,7 @@
                     <input id="form_author" type="text" name="author" class="form-control" placeholder="{{Trans "ARTICLE_ADD.author_placeholder"}}" value="{{.Article.Author}}" required>
                     <label for="form_author">{{Trans "ARTICLE_ADD.author"}} *</label>
                     {{if not (eq .Errors.Author "") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback  d-block">
                         {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
                     </div>
                     {{ end }}

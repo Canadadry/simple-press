@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type Services struct {
@@ -21,7 +22,9 @@ type Services struct {
 
 func GetRouter(services Services) (http.HandlerFunc, error) {
 	r := router.Group{}
-	r.Use(middleware.Logger(services.Out, services.Clock))
+	r.Use(middleware.Logger(services.Out, services.Clock, func(path string) bool {
+		return strings.HasPrefix(path, "/public/")
+	}))
 	r.Use(middleware.AutoCloseRequestBody)
 	r.Use(middleware.NoCache)
 	r.Use(middleware.Recoverer())
@@ -44,8 +47,8 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Get("/admin/layouts", c.GetLayoutList)
 	r.Get("/admin/layout/add", c.GetLayoutAdd)
 	r.Post("/admin/layout/add", c.PostLayoutAdd)
-	r.Get("/admin/layouts/:slug/edit", c.GeLayoutEdit)
-	r.Post("/admin/layouts/:slug/edit", c.PostLayoutEdit)
+	r.Get("/admin/layouts/:path/edit", c.GeLayoutEdit)
+	r.Post("/admin/layouts/:path/edit", c.PostLayoutEdit)
 
 	return r.ServeHTTP, nil
 }

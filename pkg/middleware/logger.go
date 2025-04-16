@@ -41,7 +41,7 @@ type queryLogLine struct {
 	Params   []interface{}
 }
 
-func Logger(w io.Writer, clock clock.Clock) func(next router.HandlerFunc) router.HandlerFunc {
+func Logger(w io.Writer, clock clock.Clock, exclude func(string) bool) func(next router.HandlerFunc) router.HandlerFunc {
 	marshal := json.Marshal
 	if PrettyPrint {
 		marshal = func(p interface{}) ([]byte, error) {
@@ -57,6 +57,9 @@ func Logger(w io.Writer, clock clock.Clock) func(next router.HandlerFunc) router
 			})
 			startedAt := clock.Now()
 			err := next(ww, r.WithContext(ctx))
+			if err == nil && exclude != nil && exclude(r.URL.String()) {
+				return nil
+			}
 			endedAt := clock.Now()
 			logLine := struct {
 				At           time.Time

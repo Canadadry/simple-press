@@ -29,6 +29,7 @@ ARTICLE_ADD.draft,draft,draft
 ARTICLE_ADD.submit,submit,submit
 ARTICLE_ADD.errors.empty,cannot be empty,cannot be empty
 ARTICLE_ADD.errors.too_big,Too big,Too big
+ARTICLE_ADD.errors.errorNotASlug,Not a slug,Not a slug
 ARTICLE_EDIT.slug,slug,slug
 ARTICLE_EDIT.content,content,content
 ARTICLE_EDIT.submit,submit,submit
@@ -38,6 +39,10 @@ LAYOUT_ADD.name,name,name
 LAYOUT_ADD.submit,submit,submit
 LAYOUT_ADD.errors.empty,cannot be empty,cannot be empty
 LAYOUT_ADD.errors.too_big,Too big,Too big
+LAYOUT_ADD.errors.not_a_path,Not a path,Not a path
+LAYOUT_EDIT.errors.empty,cannot be empty,cannot be empty
+LAYOUT_EDIT.errors.too_big,Too big,Too big
+LAYOUT_EDIT.errors.not_a_path,Not a path,Not a path
 LAYOUT_EDIT.name,name,name
 LAYOUT_EDIT.content,content,content
 LAYOUT_EDIT.submit,submit,submit
