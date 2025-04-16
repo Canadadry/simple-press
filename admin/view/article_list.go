@@ -35,7 +35,7 @@ func ArticlesList(data ArticlesListData) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
 		return render(w, tr,
-			"template/pages/article_list.tmpl",
+			"template/pages/article_list.html",
 			TemplateData(msg, viewData{
 				Total:    data.Total,
 				Pages:    paginator.New(data.Page, int(math.Ceil(float64(data.Total)/float64(data.Limit))), MaxPaginationItem, "/articles?page=%page%"),

@@ -23,7 +23,7 @@ func ArticleAdd(a ArticleAddData, errors ArticleAddError) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
 		return render(w, tr,
-			"template/pages/article_add.tmpl",
+			"template/pages/article_add.html",
 			TemplateData(msg, viewData{a, errors}),
 		)
 	}

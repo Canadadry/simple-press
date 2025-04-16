@@ -22,7 +22,7 @@ func LayoutEdit(a LayoutEditData, errors LayoutEditError) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string, msg flash.Message) error {
 		return render(w, tr,
-			"template/pages/layout_edit.tmpl",
+			"template/pages/layout_edit.html",
 			TemplateData(msg, viewData{a, errors}),
 		)
 	}

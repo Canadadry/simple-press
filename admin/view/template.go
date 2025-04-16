@@ -14,7 +14,7 @@ var templates embed.FS
 var version = "dev"
 
 const (
-	baseTemplate      = "base.tmpl"
+	baseTemplate      = "base.html"
 	baseTemplatesPath = "template/base/*"
 )
 
