@@ -2,10 +2,13 @@ package controller
 
 import (
 	"app/pkg/router"
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
 	"net/http"
+
+	"github.com/yuin/goldmark"
 )
 
 func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) error {
@@ -40,10 +43,17 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 func renderPreview(w io.Writer, files map[string]string, pageData string) error {
 	const baseTemplate = "baseof.html"
 	if _, ok := files[baseTemplate]; !ok {
-		fmt.Println("files", files)
 		return fmt.Errorf("base template %s not defined in _layout/", baseTemplate)
 	}
-	funcMap := template.FuncMap{}
+	funcMap := template.FuncMap{
+		"markdownify": func(source string) template.HTML {
+			var buf bytes.Buffer
+			if err := goldmark.Convert([]byte(source), &buf); err != nil {
+				return template.HTML(err.Error())
+			}
+			return template.HTML(buf.String())
+		},
+	}
 	tmpl := template.New("").Funcs(funcMap)
 	for name, content := range files {
 		if name == baseTemplate {
