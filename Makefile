@@ -15,9 +15,12 @@ sqlc-auto-reload: ## run sqlc if a .sql file change to keep go code up to date
 blog.sqlite: ## init database
 	go run main.go -action=migration
 
+demo: ## run admin server with demo blog
+	go run main.go -action=admin -db-url=example/starter.blog
+
 run: blog.sqlite ## run admin server
 	go test ./...
-	go run main.go -action=admin
+	go run main.go -action=admin -db-url=example/starter.blog
 
 unit-test: ## unit test
 	go test ./...
