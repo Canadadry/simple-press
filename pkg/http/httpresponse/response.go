@@ -96,7 +96,7 @@ func Deleted(w http.ResponseWriter) error {
 }
 
 func MethodNotAllowed(w http.ResponseWriter) error {
-	return Json(w, http.StatusMethodNotAllowed, map[string]string{})
+	return Error(w, http.StatusMethodNotAllowed, "method not allowed")
 }
 
 func NoContent(w http.ResponseWriter) error {

@@ -38,14 +38,25 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 }
 
 func renderPreview(w io.Writer, files map[string]string, pageData string) error {
-	const baseTemplate = "root"
+	const baseTemplate = "baseof.html"
+	if _, ok := files[baseTemplate]; !ok {
+		fmt.Println("files", files)
+		return fmt.Errorf("base template %s not defined in _layout/", baseTemplate)
+	}
 	funcMap := template.FuncMap{}
-	tmpl := template.New(baseTemplate).Funcs(funcMap)
+	tmpl := template.New("").Funcs(funcMap)
 	for name, content := range files {
+		if name == baseTemplate {
+			continue
+		}
 		_, err := tmpl.New(name).Parse(content)
 		if err != nil {
 			return err
 		}
+	}
+	_, err := tmpl.New(baseTemplate).Parse(files[baseTemplate])
+	if err != nil {
+		return err
 	}
 	type PageData struct {
 		Content string

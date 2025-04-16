@@ -44,7 +44,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Post("/admin/article/add", c.PostArticleAdd)
 	r.Get("/admin/articles/:slug/edit", c.GeArticleEdit)
 	r.Post("/admin/articles/:slug/edit", c.PostArticleEdit)
-	r.Post("/admin/articles/:slug/preview", c.GetArticlePreview)
+	r.Get("/admin/articles/:slug/preview", c.GetArticlePreview)
 	r.Get("/admin/layouts", c.GetLayoutList)
 	r.Get("/admin/layout/add", c.GetLayoutAdd)
 	r.Post("/admin/layout/add", c.PostLayoutAdd)
