@@ -27,8 +27,8 @@ type BasePage[T any] struct {
 	PageData  T
 }
 
-func renderStatic(w io.Writer, tr func(string) string, pageTemplatePath string) error {
-	return render[any](w, tr, pageTemplatePath, nil)
+func renderStatic(w io.Writer, tr func(string) string, pageTemplatePath, pageTitle string) error {
+	return render(w, tr, pageTemplatePath, TemplateData(pageTitle, struct{}{}))
 }
 
 func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string, pageData T) error {

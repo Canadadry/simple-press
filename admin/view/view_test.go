@@ -30,6 +30,8 @@ func TestView(t *testing.T) {
 		}),
 		"file_add":            FileAdd(FileAddError{}),
 		"file_add with error": FileAdd(FileAddError{"test1"}),
+		"404":                 PageNotFound,
+		"500":                 InternalServerError,
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {

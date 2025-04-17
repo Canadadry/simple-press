@@ -73,6 +73,10 @@ MENU.articles,articles,articles
 MENU.layouts,layouts,layouts
 MENU.files,files,files
 MENU.settings,settings,settings
+404.page_title,page_title,page_title
+404.message,message,message
+404.page_not_exist,page_not_exist,page_not_exist
+404.go_back,go_back,go_back
 month.short.Jan,Jan,Jan
 month.short.Feb,Feb,Feb
 month.short.Mar,Mar,Mar

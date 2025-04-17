@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"app/admin/view"
 	"app/pkg/http/httpresponse"
 	"app/pkg/router"
 	"fmt"
@@ -14,7 +15,7 @@ func (c *Controller) GetFile(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("cannot select file : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/files", http.StatusSeeOther)
+		return c.render(w, r, view.PageNotFound)
 	}
 
 	return httpresponse.Bytes(w, f.Content)

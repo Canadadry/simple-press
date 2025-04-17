@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/admin/repository"
+	"app/admin/view"
 	"app/pkg/router"
 	"bytes"
 	"fmt"
@@ -19,7 +20,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return c.render(w, r, view.PageNotFound)
 	}
 	baseLayouts, err := c.Repository.SelectBaseLayout(r.Context())
 	if err != nil {
