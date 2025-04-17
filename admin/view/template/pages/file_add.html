@@ -3,19 +3,19 @@
   <div class="container py-14 py-md-16">
     <div class="row">
       <div class="col-xl-10 mx-auto">
-        <form method="post" action="">
+        <form method="post" action="" enctype="multipart/form-data">
             <div class="row gx-4">
                 <div class="col-md-8">
-                    <div class="form-floating mb-4">
-                    <input id="form_name" type="text" name="name" class="form-control" placeholder="{{Trans "FILE_ADD.name_placeholder"}}" value="{{.File.Name}}" required>
-                    <label for="form_name">{{Trans "FILE_ADD.name"}} *</label>
-                    {{if not (eq .Errors.Name "") }}
-                    <div class="invalid-feedback d-block">
-                        {{Trans (print "FILE_ADD.errors." .Errors.Name)}}
-                    </div>
-                    {{ end }}
-                    </div>
-                </div>
+                     <div class="mb-4">
+                         <label for="formFile" class="form-label">{{Trans "FILE_ADD.file"}} *</label>
+                         <input class="form-control" name="content" type="file" id="formFile"  required>
+                         {{if not (eq .Errors.Content "") }}
+                         <div class="invalid-feedback d-block">
+                             {{Trans (print "FILE_ADD.errors." .Errors.Content)}}
+                         </div>
+                         {{ end }}
+                     </div>
+                 </div>
                 <!-- /column -->
                 <div class="col-12">
                     <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "FILE_ADD.submit"}}">

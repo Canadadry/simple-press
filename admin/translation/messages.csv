@@ -64,7 +64,7 @@ FILE_LIST.column_action,action,action
 FILE.add,add,add
 FILE_ADD.page_title,page title, page title
 FILE_ADD.name_placeholder,name_placeholder,name_placeholder
-FILE_ADD.name,name,name
+FILE_ADD.file,file,file
 FILE_ADD.submit,submit,submit
 FILE_ADD.errors.empty,cannot be empty,cannot be empty
 FILE_ADD.errors.too_big,Too big,Too big

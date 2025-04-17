@@ -9,7 +9,7 @@ import (
 )
 
 func (c *Controller) GetFileAdd(w http.ResponseWriter, r *http.Request) error {
-	return c.render(w, r, view.FileAdd(view.FileAddData{}, view.FileAddError{}))
+	return c.render(w, r, view.FileAdd(view.FileAddError{}))
 }
 
 func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
@@ -21,8 +21,7 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 
 	if errors.HasError() {
 		return c.render(w, r, view.FileAdd(
-			view.FileAddData{Name: l.Name},
-			view.FileAddError{Name: errors.Name},
+			view.FileAddError{Content: errors.Content},
 		))
 	}
 
