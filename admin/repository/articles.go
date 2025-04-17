@@ -5,7 +5,6 @@ import (
 	"app/pkg/sqlutil"
 	"app/pkg/stacktrace"
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -35,13 +34,17 @@ type CreateArticleParams struct {
 }
 
 func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (string, error) {
+	var draft int64
+	if a.Draft {
+		draft = 1
+	}
 	slug := slugify(a.Title)
 	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:  a.Title,
 		Date:   r.Clock.Now(),
 		Author: a.Author,
 		Slug:   slug,
-		Draft:  sql.NullInt64{Int64: 1, Valid: a.Draft},
+		Draft:  draft,
 	})
 	if err != nil {
 		return "", stacktrace.From(err)
@@ -71,7 +74,7 @@ func (r *Repository) GetArticlesList(ctx context.Context, limit, offset int) ([]
 			Date:   a.Date,
 			Author: a.Author,
 			Slug:   a.Slug,
-			Draft:  a.Draft.Valid,
+			Draft:  a.Draft == 1,
 		}
 	}), nil
 }
@@ -91,20 +94,24 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 			Author:  a.Author,
 			Content: a.Content,
 			Slug:    a.Slug,
-			Draft:   a.Draft.Valid,
+			Draft:   a.Draft == 1,
 		}
 	}
 	return fromModel(list[0]), true, nil
 }
 
 func (r *Repository) UpdateArticle(ctx context.Context, slug string, a Article) error {
+	var draft int64
+	if a.Draft {
+		draft = 1
+	}
 	err := adminmodel.New(r.Db).UpdateArticle(ctx, adminmodel.UpdateArticleParams{
 		Title:   a.Title,
 		Date:    r.Clock.Now(),
 		Author:  a.Author,
 		Content: a.Content,
 		Slug:    a.Slug,
-		Draft:   sql.NullInt64{Int64: 1, Valid: a.Draft},
+		Draft:   draft,
 		Slug_2:  slug,
 	})
 	if err != nil {

@@ -7,7 +7,6 @@ package publicmodel
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -40,7 +39,7 @@ type GetArticlesListRow struct {
 	Date   time.Time
 	Author string
 	Slug   string
-	Draft  sql.NullInt64
+	Draft  int64
 }
 
 func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams) ([]GetArticlesListRow, error) {

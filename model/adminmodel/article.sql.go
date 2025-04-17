@@ -7,7 +7,6 @@ package adminmodel
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -54,7 +53,7 @@ type CreateArticleParams struct {
 	Author  string
 	Content string
 	Slug    string
-	Draft   sql.NullInt64
+	Draft   int64
 }
 
 func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (int64, error) {
@@ -110,7 +109,7 @@ type GetArticlesListRow struct {
 	Date   time.Time
 	Author string
 	Slug   string
-	Draft  sql.NullInt64
+	Draft  int64
 }
 
 func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams) ([]GetArticlesListRow, error) {
@@ -203,7 +202,7 @@ type UpdateArticleParams struct {
 	Author  string
 	Content string
 	Slug    string
-	Draft   sql.NullInt64
+	Draft   int64
 	Slug_2  string
 }
 

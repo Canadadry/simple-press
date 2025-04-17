@@ -5,7 +5,6 @@
 package adminmodel
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -16,7 +15,7 @@ type Article struct {
 	Author  string
 	Content string
 	Slug    string
-	Draft   sql.NullInt64
+	Draft   int64
 }
 
 type File struct {

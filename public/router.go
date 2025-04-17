@@ -20,6 +20,9 @@ type Services struct {
 
 func GetRouter(services Services) (http.HandlerFunc, error) {
 	r := router.Group{}
+	r.Use(middleware.Logger(services.Out, services.Clock, func(path string) bool {
+		return false
+	}))
 	r.Use(middleware.AutoCloseRequestBody)
 	r.Use(middleware.NoCache)
 	r.Use(middleware.Recoverer())

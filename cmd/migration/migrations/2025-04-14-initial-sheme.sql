@@ -5,7 +5,7 @@ CREATE TABLE articles (
     author TEXT NOT NULL,
     content TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    draft INTEGER DEFAULT 0
+    draft INTEGER NOT NULL
 );
 
 CREATE TABLE layouts (
