@@ -22,5 +22,9 @@ run: blog.sqlite ## run admin server
 	go test ./...
 	go run main.go -action=admin
 
+runp: blog.sqlite ## run public server
+	go test ./...
+	go run main.go
+
 unit-test: ## unit test
 	go test ./...

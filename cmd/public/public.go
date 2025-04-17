@@ -3,7 +3,7 @@ package public
 import (
 	"app/config"
 	"app/pkg/clock"
-	"app/pkg/dbconn"
+	"app/pkg/sqlutil"
 	"app/public"
 	"fmt"
 	"io"
@@ -16,14 +16,14 @@ const (
 )
 
 func Run(c config.Parameters) error {
-	db, err := dbconn.Open(c.DatabaseUrl)
+	db, err := sqlutil.NewAutoCloseConn(c.DatabaseUrl, true)
 	if err != nil {
 		return err
 	}
 
 	var out io.Writer
 	out = os.Stdout
-	if c.Out != "stdout" {
+	if c.Out != "" {
 		f, err := os.OpenFile(c.Out, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		if err != nil {
 			return fmt.Errorf("cant open out : %w", err)
@@ -33,7 +33,7 @@ func Run(c config.Parameters) error {
 	}
 
 	rt, err := public.GetRouter(public.Services{
-		Db:    db,
+		Db:    sqlutil.NewLogger(db),
 		Clock: clock.Real{},
 		Out:   out,
 	})
@@ -46,7 +46,7 @@ func Run(c config.Parameters) error {
 		Handler: rt,
 	}
 
-	fmt.Println("starting admin server", "endpoint", fmt.Sprintf(":%d", c.Port))
+	fmt.Println("starting public server", "endpoint", fmt.Sprintf(":%d", c.Port))
 
 	return server.ListenAndServe()
 }
