@@ -62,6 +62,13 @@ FILE_LIST.page_title,page_title,page_title
 FILE_LIST.column_name,name,name
 FILE_LIST.column_action,action,action
 FILE.add,add,add
+FILE_ADD.page_title,page title, page title
+FILE_ADD.name_placeholder,name_placeholder,name_placeholder
+FILE_ADD.name,name,name
+FILE_ADD.submit,submit,submit
+FILE_ADD.errors.empty,cannot be empty,cannot be empty
+FILE_ADD.errors.too_big,Too big,Too big
+FILE_ADD.errors.not_a_path,Not a path,Not a path
 MENU.articles,articles,articles
 MENU.layouts,layouts,layouts
 MENU.files,files,files

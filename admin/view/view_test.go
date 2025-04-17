@@ -28,6 +28,8 @@ func TestView(t *testing.T) {
 		"file_list": FilesList(FilesListData{
 			Files: []FileListData{FileListData{}},
 		}),
+		"file_add":            FileAdd(FileAddData{}, FileAddError{}),
+		"file_add with error": FileAdd(FileAddData{}, FileAddError{"test1"}),
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
