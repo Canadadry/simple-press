@@ -1,4 +1,6 @@
 {{define "body"}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+
 <section class="wrapper">
   <div class="container py-14 py-md-16">
     <div class="row">
@@ -20,7 +22,6 @@
                 <div class="col-12">
                   <div class="form-floating mb-4">
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px" required>{{.Layout.Content}}</textarea>
-                    <label for="form_message">{{Trans "LAYOUT_EDIT.content"}} *</label>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
                         {{Trans (print "LAYOUT_EDIT.errors." .Errors.Content)}}
@@ -47,4 +48,14 @@
   <!-- /.container -->
 </section>
 <!-- /section -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+<script>
+  const editor = CodeMirror.fromTextArea(document.getElementById("form_content"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "default", // ou 'dracula' par ex. (si tu ajoutes le CSS)
+    tabSize: 2,
+  });
+</script>
 {{end}}
