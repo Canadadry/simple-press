@@ -58,6 +58,10 @@ LAYOUT_EDIT.submit,submit,submit
 LAYOUT_LIST.page_title, page title, page title
 LAYOUT_LIST.column_name,name,name
 LAYOUT_LIST.column_action,action,action
+FILE_LIST.page_title,page_title,page_title
+FILE_LIST.column_name,name,name
+FILE_LIST.column_action,action,action
+FILE.add,add,add
 MENU.articles,articles,articles
 MENU.layouts,layouts,layouts
 MENU.files,files,files

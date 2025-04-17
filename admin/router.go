@@ -50,6 +50,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Post("/admin/layout/add", c.PostLayoutAdd)
 	r.Get("/admin/layouts/:path/edit", c.GeLayoutEdit)
 	r.Post("/admin/layouts/:path/edit", c.PostLayoutEdit)
+	r.Get("/admin/files", c.GetFileList)
 
 	return r.ServeHTTP, nil
 }

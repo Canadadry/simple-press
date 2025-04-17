@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	MaxMayoutPaginationItem = 5
+	MaxLayoutPaginationItem = 5
 )
 
 type LayoutsListData struct {
@@ -29,7 +29,7 @@ func LayoutsList(data LayoutsListData) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		lastPage := int(math.Ceil(float64(data.Total) / float64(data.Limit)))
-		p := paginator.New(data.Page, lastPage, MaxMayoutPaginationItem, "/layouts?page=%page%")
+		p := paginator.New(data.Page, lastPage, MaxLayoutPaginationItem, "/layouts?page=%page%")
 		return render(w, tr,
 			"template/pages/layout_list.html",
 			TemplateData("LAYOUT_LIST.page_title", viewData{

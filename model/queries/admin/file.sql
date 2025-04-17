@@ -1,3 +1,17 @@
+-- name: CountFile :one
+SELECT
+    count(*)
+FROM
+    files;
+
+-- name: CountFileByName :one
+SELECT
+    count(*)
+FROM
+    files
+WHERE
+    name = ?;
+
 -- name: UploadFile :execlastid
 INSERT INTO
     files (name, content)

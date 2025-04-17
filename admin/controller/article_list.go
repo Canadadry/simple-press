@@ -7,10 +7,9 @@ import (
 	"net/http"
 )
 
-const MinPage = 0
-const MinLimit = 10
-
 func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) error {
+	const MinPage = 0
+	const MinLimit = 10
 	page := paginator.PageFromRequest(r, "page", MinPage)
 	limit := paginator.PageFromRequest(r, "limit", MinLimit)
 

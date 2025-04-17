@@ -9,6 +9,36 @@ import (
 	"context"
 )
 
+const countFile = `-- name: CountFile :one
+SELECT
+    count(*)
+FROM
+    files
+`
+
+func (q *Queries) CountFile(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countFile)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countFileByName = `-- name: CountFileByName :one
+SELECT
+    count(*)
+FROM
+    files
+WHERE
+    name = ?
+`
+
+func (q *Queries) CountFileByName(ctx context.Context, name string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countFileByName, name)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const deleteFile = `-- name: DeleteFile :exec
 DELETE FROM files
 WHERE

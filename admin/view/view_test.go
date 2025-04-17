@@ -25,6 +25,9 @@ func TestView(t *testing.T) {
 		"layout_add with error":  LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),
 		"layout_edit":            LayoutEdit(LayoutEditData{}, LayoutEditError{}),
 		"layout_edit with error": LayoutEdit(LayoutEditData{}, LayoutEditError{"test1", "test2"}),
+		"file_list": FilesList(FilesListData{
+			Files: []FileListData{FileListData{}},
+		}),
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {

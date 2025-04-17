@@ -7,18 +7,18 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 	const MinPage = 0
 	const MinLimit = 10
 	page := paginator.PageFromRequest(r, "page", MinPage)
 	limit := paginator.PageFromRequest(r, "limit", MinLimit)
 
-	count, err := c.Repository.CountLayouts(r.Context())
+	count, err := c.Repository.CountFiles(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot count layouts : %w", err)
 	}
 
-	list, err := c.Repository.GetLayoutList(r.Context(), limit, page*limit)
+	list, err := c.Repository.GetFileList(r.Context(), limit, page*limit)
 	if err != nil {
 		return fmt.Errorf("cannot list layouts : %w", err)
 	}
@@ -28,19 +28,19 @@ func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error
 		return nil
 	}
 
-	layouts := []view.LayoutListData{}
+	layouts := []view.FileListData{}
 	for _, a := range list {
-		layouts = append(layouts, view.LayoutListData{
+		layouts = append(layouts, view.FileListData{
 			Name: a.Name,
 		})
 	}
 
-	l := view.LayoutsListData{
-		Total:   count,
-		Limit:   limit,
-		Page:    page,
-		Layouts: layouts,
+	l := view.FilesListData{
+		Total: count,
+		Limit: limit,
+		Page:  page,
+		Files: layouts,
 	}
 
-	return c.render(w, r, view.LayoutsList(l))
+	return c.render(w, r, view.FilesList(l))
 }

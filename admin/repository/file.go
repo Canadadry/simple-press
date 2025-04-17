@@ -12,6 +12,16 @@ type File struct {
 	Content []byte
 }
 
+func (r *Repository) CountFiles(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.Db).CountFile(ctx)
+	return int(c), err
+}
+
+func (r *Repository) CountFileByName(ctx context.Context, name string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountFileByName(ctx, name)
+	return int(c), err
+}
+
 func (r *Repository) UploadFile(ctx context.Context, f File) error {
 	_, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
 		Name:    f.Name,
