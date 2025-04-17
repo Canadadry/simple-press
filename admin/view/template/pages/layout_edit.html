@@ -54,8 +54,11 @@
   const editor = CodeMirror.fromTextArea(document.getElementById("form_content"), {
     lineNumbers: true,
     mode: "htmlmixed",
-    theme: "default", // ou 'dracula' par ex. (si tu ajoutes le CSS)
+    theme: "default",
     tabSize: 2,
+  });
+  document.querySelector("form").addEventListener("submit", function () {
+    document.getElementById("form_content").value = editor.getValue();
   });
 </script>
 {{end}}

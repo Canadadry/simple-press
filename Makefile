@@ -20,7 +20,7 @@ demo: ## run admin server with demo blog
 
 run: blog.sqlite ## run admin server
 	go test ./...
-	go run main.go -action=admin -db-url=example/starter.blog
+	go run main.go -action=admin
 
 unit-test: ## unit test
 	go test ./...
