@@ -24,7 +24,7 @@ func (r *Repository) CountFileByName(ctx context.Context, name string) (int, err
 
 func (r *Repository) UploadFile(ctx context.Context, f File) error {
 	_, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
-		Name:    f.Name,
+		Name:    slugify(f.Name),
 		Content: f.Content,
 	})
 	if err != nil {

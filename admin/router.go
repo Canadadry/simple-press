@@ -53,6 +53,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Get("/admin/files", c.GetFileList)
 	r.Get("/admin/file/add", c.GetFileAdd)
 	r.Post("/admin/file/add", c.PostFileAdd)
+	r.Get("/admin/files/:slug", c.GetFile)
 
 	return r.ServeHTTP, nil
 }
