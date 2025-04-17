@@ -1,10 +1,6 @@
 {{define "body"}}
 <!-- https://github.com/sparksuite/simplemde-markdown-editor?tab=readme-ov-file -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script>
-var simplemde = new SimpleMDE({ element: document.getElementById("form_content") });
-</script>
 
 <section class="wrapper">
   <div class="container py-14 py-md-16">
@@ -51,7 +47,6 @@ var simplemde = new SimpleMDE({ element: document.getElementById("form_content")
                 <div class="col-12">
                   <div class="form-floating mb-4">
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px" required>{{.Article.Content}}</textarea>
-                    <label for="form_message">{{Trans "ARTICLE_EDIT.content"}} *</label>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
                         {{Trans (print "ARTICLE_EDIT.errors." .Errors.Content)}}
@@ -87,4 +82,21 @@ var simplemde = new SimpleMDE({ element: document.getElementById("form_content")
   <!-- /.container -->
 </section>
 <!-- /section -->
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+var simplemde = new SimpleMDE({
+  element: document.getElementById("form_content"),
+  promptURLs:true,
+  spellChecker:false,
+  autosave: {
+    enabled: true,
+    uniqueId: "{{.Article.Slug}}-editor-autosave",
+    delay: 1000
+  },
+  hideIcons: ["preview", "fullscreen","side-by-side"]
+});
+</script>
+
+
 {{end}}
