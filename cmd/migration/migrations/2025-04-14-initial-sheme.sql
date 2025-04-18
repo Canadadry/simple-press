@@ -14,6 +14,12 @@ CREATE TABLE layouts (
     content TEXT NOT NULL
 );
 
+CREATE TABLE pages (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    content TEXT NOT NULL
+);
+
 CREATE TABLE files (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,

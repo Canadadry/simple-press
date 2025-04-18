@@ -1,0 +1,66 @@
+{{define "body"}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+
+<section class="wrapper">
+  <div class="container py-14 py-md-16">
+    <div class="row">
+      <div class="col-xl-10 mx-auto">
+        <form method="post" action="">
+            <div class="row gx-4">
+                <div class="col-md-12">
+                    <div class="form-floating mb-4">
+                    <input id="form_name" type="text" name="name" class="form-control" value="{{.Page.Name}}" required>
+                    <label for="form_name">{{Trans "PAGE_EDIT.name"}} *</label>
+                    {{if not (eq .Errors.Name "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "PAGE_EDIT.errors." .Errors.Name)}}
+                    </div>
+                    {{ end }}
+                    </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                  <div class="mb-4">
+                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Page.Content}}</textarea>
+                    {{if not (eq .Errors.Content "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "PAGE_EDIT.errors." .Errors.Content)}}
+                    </div>
+                    {{ end }}
+
+                  </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "PAGE_EDIT.submit"}}">
+                    <p class="text-muted"><strong>*</strong>{{Trans "FORM.field_requiered"}}</p>
+                </div>
+                <!-- /column -->
+            </div>
+            <!-- /.row -->
+        </form>
+        <!-- /form -->
+      </div>
+      <!-- /column -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+<!-- /section -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const editor = CodeMirror.fromTextArea(document.getElementById("form_content"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "default",
+    tabSize: 2,
+  });
+  document.querySelector("form").addEventListener("submit", function () {
+    document.getElementById("form_content").value = editor.getValue();
+  });
+});
+</script>
+{{end}}

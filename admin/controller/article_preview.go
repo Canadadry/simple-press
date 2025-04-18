@@ -22,7 +22,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 	if !ok {
 		return c.render(w, r, view.PageNotFound)
 	}
-	baseLayouts, err := c.Repository.SelectBaseLayout(r.Context())
+	baseLayouts, err := c.Repository.SelectAllLayout(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select base layouts : %w", err)
 	}
@@ -31,7 +31,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		files[l.Name] = l.Content
 	}
 	pageLayoutName := "page/single.html"
-	pageLayout, ok, err := c.Repository.SelectLayout(r.Context(), pageLayoutName)
+	pageLayout, ok, err := c.Repository.SelectPage(r.Context(), pageLayoutName)
 	if err != nil {
 		return fmt.Errorf("cannot select page layout %s : %w", pageLayoutName, err)
 	}

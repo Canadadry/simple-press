@@ -25,6 +25,13 @@ func TestView(t *testing.T) {
 		"layout_add with error":  LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),
 		"layout_edit":            LayoutEdit(LayoutEditData{}, LayoutEditError{}),
 		"layout_edit with error": LayoutEdit(LayoutEditData{}, LayoutEditError{"test1", "test2"}),
+		"page_list": PagesList(PagesListData{
+			Pages: []PageListData{PageListData{}},
+		}),
+		"page_add":             PageAdd(PageAddData{}, PageAddError{}),
+		"page_add with error":  PageAdd(PageAddData{}, PageAddError{"test1"}),
+		"page_edit":            PageEdit(PageEditData{}, PageEditError{}),
+		"page_edit with error": PageEdit(PageEditData{}, PageEditError{"test1", "test2"}),
 		"file_list": FilesList(FilesListData{
 			Files: []FileListData{FileListData{}},
 		}),

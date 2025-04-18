@@ -111,17 +111,15 @@ func (q *Queries) GeLayoutList(ctx context.Context, arg GeLayoutListParams) ([]s
 	return items, nil
 }
 
-const selectBaseLayout = `-- name: SelectBaseLayout :many
+const selectAllLayout = `-- name: SelectAllLayout :many
 SELECT
     id, name, content
 FROM
     layouts
-WHERE
-    name like "_layout/%"
 `
 
-func (q *Queries) SelectBaseLayout(ctx context.Context) ([]Layout, error) {
-	rows, err := q.db.QueryContext(ctx, selectBaseLayout)
+func (q *Queries) SelectAllLayout(ctx context.Context) ([]Layout, error) {
+	rows, err := q.db.QueryContext(ctx, selectAllLayout)
 	if err != nil {
 		return nil, err
 	}

@@ -29,3 +29,9 @@ type Layout struct {
 	Name    string
 	Content string
 }
+
+type Page struct {
+	ID      int64
+	Name    string
+	Content string
+}

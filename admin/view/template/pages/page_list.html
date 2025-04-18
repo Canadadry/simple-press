@@ -1,0 +1,33 @@
+{{define "body"}}
+<section class="wrapper bg-reverse-primary">
+    <div class="container pt-12 pt-md-14 pb-14 pb-md-16">
+        <div class="row">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>{{Trans "PAGE_LIST.column_name"}}</th>
+                    <th>{{Trans "PAGE_LIST.column_action"}}</th>
+                </tr>
+                {{ range $idx, $page := .Pages }}
+                <tr>
+                    <td>{{$idx}}</td>
+                    <td>{{$page.Name}}</td>
+                    <td>
+                        <a href="/admin/pages/{{$page.Name}}/edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="/admin/pages/{{$page.Name}}/delete">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+                {{end}}
+            </table>
+            <a href="/admin/page/add" class="btn btn-primary rounded-pill"
+                >{{Trans "PAGE.add"}}</a
+            >
+            {{template "pagination" .Pages}}
+        </div>
+    </div>
+</section>
+{{end}}

@@ -60,8 +60,8 @@ func (r *Repository) GetLayoutList(ctx context.Context, limit, offset int) ([]La
 	}), nil
 }
 
-func (r *Repository) SelectBaseLayout(ctx context.Context) ([]Layout, error) {
-	list, err := adminmodel.New(r.Db).SelectBaseLayout(ctx)
+func (r *Repository) SelectAllLayout(ctx context.Context) ([]Layout, error) {
+	list, err := adminmodel.New(r.Db).SelectAllLayout(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
