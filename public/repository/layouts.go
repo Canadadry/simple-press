@@ -13,8 +13,8 @@ type Layout struct {
 	Content string
 }
 
-func (r *Repository) SelectBaseLayout(ctx context.Context) ([]Layout, error) {
-	list, err := publicmodel.New(r.Db).SelectBaseLayout(ctx)
+func (r *Repository) SelectAllLayout(ctx context.Context) ([]Layout, error) {
+	list, err := publicmodel.New(r.Db).SelectAllLayout(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
@@ -25,21 +25,4 @@ func (r *Repository) SelectBaseLayout(ctx context.Context) ([]Layout, error) {
 			Content: l.Content,
 		}
 	}), nil
-}
-
-func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, bool, error) {
-	list, err := publicmodel.New(r.Db).SelectLayout(ctx, name)
-	if err != nil {
-		return Layout{}, false, stacktrace.From(err)
-	}
-	if len(list) == 0 {
-		return Layout{}, false, nil
-	}
-	fromModel := func(l publicmodel.Layout) Layout {
-		return Layout{
-			Name:    l.Name,
-			Content: l.Content,
-		}
-	}
-	return fromModel(list[0]), true, nil
 }

@@ -8,11 +8,12 @@ import (
 )
 
 type Article struct {
-	Title   string
-	Date    time.Time
-	Author  string
-	Slug    string
-	Content string
+	Title    string
+	Date     time.Time
+	Author   string
+	Slug     string
+	Content  string
+	LayoutID int64
 }
 
 func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Article, bool, error) {
@@ -25,11 +26,12 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 	}
 	fromModel := func(a publicmodel.Article) Article {
 		return Article{
-			Title:   a.Title,
-			Date:    a.Date,
-			Author:  a.Author,
-			Content: a.Content,
-			Slug:    a.Slug,
+			Title:    a.Title,
+			Date:     a.Date,
+			Author:   a.Author,
+			Content:  a.Content,
+			Slug:     a.Slug,
+			LayoutID: a.LayoutID,
 		}
 	}
 	return fromModel(list[0]), true, nil
