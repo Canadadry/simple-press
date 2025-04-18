@@ -20,7 +20,7 @@
                 </div>
                 <!-- /column -->
                 <div class="col-12">
-                  <div class="form-floating mb-4">
+                  <div class="mb-4">
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px" required>{{.Layout.Content}}</textarea>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
@@ -51,6 +51,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
   const editor = CodeMirror.fromTextArea(document.getElementById("form_content"), {
     lineNumbers: true,
     mode: "htmlmixed",
@@ -60,5 +61,6 @@
   document.querySelector("form").addEventListener("submit", function () {
     document.getElementById("form_content").value = editor.getValue();
   });
+});
 </script>
 {{end}}
