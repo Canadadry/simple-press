@@ -4,19 +4,27 @@ import (
 	"io"
 )
 
+type PageSelector struct {
+	Name  string
+	Value int64
+}
+
 type ArticleEditData struct {
-	Title   string
-	Author  string
-	Slug    string
-	Content string
-	Draft   bool
+	Title    string
+	Author   string
+	Slug     string
+	Content  string
+	Draft    bool
+	LayoutID int64
+	Pages    []PageSelector
 }
 
 type ArticleEditError struct {
-	Title   string
-	Author  string
-	Slug    string
-	Content string
+	Title    string
+	Author   string
+	Slug     string
+	Content  string
+	LayoutID string
 }
 
 func ArticleEdit(a ArticleEditData, errors ArticleEditError) ViewFunc {

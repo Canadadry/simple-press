@@ -42,18 +42,27 @@ func (q *Queries) CountArticlesBySlug(ctx context.Context, slug string) (int64, 
 
 const createArticle = `-- name: CreateArticle :execlastid
 INSERT INTO
-    articles (title, date, author, content, slug, draft)
+    articles (
+        title,
+        date,
+        author,
+        content,
+        slug,
+        draft,
+        layout_id
+    )
 VALUES
-    (?, ?, ?, ?, ?, ?)
+    (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateArticleParams struct {
-	Title   string
-	Date    time.Time
-	Author  string
-	Content string
-	Slug    string
-	Draft   int64
+	Title    string
+	Date     time.Time
+	Author   string
+	Content  string
+	Slug     string
+	Draft    int64
+	LayoutID int64
 }
 
 func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (int64, error) {
@@ -64,6 +73,7 @@ func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (i
 		arg.Content,
 		arg.Slug,
 		arg.Draft,
+		arg.LayoutID,
 	)
 	if err != nil {
 		return 0, err
@@ -143,7 +153,7 @@ func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams
 
 const selectArticleBySlug = `-- name: SelectArticleBySlug :many
 SELECT
-    id, title, date, author, content, slug, draft
+    id, title, date, author, content, slug, draft, layout_id
 FROM
     articles
 WHERE
@@ -169,6 +179,7 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 			&i.Content,
 			&i.Slug,
 			&i.Draft,
+			&i.LayoutID,
 		); err != nil {
 			return nil, err
 		}
@@ -191,19 +202,21 @@ SET
     author = ?,
     content = ?,
     slug = ?,
-    draft = ?
+    draft = ?,
+    layout_id = ?
 WHERE
     slug = ?
 `
 
 type UpdateArticleParams struct {
-	Title   string
-	Date    time.Time
-	Author  string
-	Content string
-	Slug    string
-	Draft   int64
-	Slug_2  string
+	Title    string
+	Date     time.Time
+	Author   string
+	Content  string
+	Slug     string
+	Draft    int64
+	LayoutID int64
+	Slug_2   string
 }
 
 func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) error {
@@ -214,6 +227,7 @@ func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) er
 		arg.Content,
 		arg.Slug,
 		arg.Draft,
+		arg.LayoutID,
 		arg.Slug_2,
 	)
 	return err

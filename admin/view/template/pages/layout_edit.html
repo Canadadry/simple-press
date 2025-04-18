@@ -13,7 +13,7 @@
                     <label for="form_name">{{Trans "LAYOUT_EDIT.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "LAYOUT_EDIT.errors." .Errors.Name)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Name)}}
                     </div>
                     {{ end }}
                     </div>
@@ -24,7 +24,7 @@
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Layout.Content}}</textarea>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "LAYOUT_EDIT.errors." .Errors.Content)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Content)}}
                     </div>
                     {{ end }}
 

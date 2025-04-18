@@ -23,6 +23,22 @@ func (q *Queries) CountPage(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const countPageByID = `-- name: CountPageByID :one
+SELECT
+    count(*)
+FROM
+    pages
+WHERE
+    id = ?
+`
+
+func (q *Queries) CountPageByID(ctx context.Context, id int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countPageByID, id)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countPageByName = `-- name: CountPageByName :one
 SELECT
     count(*)
@@ -70,9 +86,41 @@ func (q *Queries) DeletePage(ctx context.Context, name string) error {
 	return err
 }
 
-const gePageList = `-- name: GePageList :many
+const getAllPages = `-- name: GetAllPages :many
 SELECT
-    name
+    id, name, content
+FROM
+    pages
+ORDER BY
+    id DESC
+`
+
+func (q *Queries) GetAllPages(ctx context.Context) ([]Page, error) {
+	rows, err := q.db.QueryContext(ctx, getAllPages)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Page
+	for rows.Next() {
+		var i Page
+		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getPageList = `-- name: GetPageList :many
+SELECT
+    id, name, content
 FROM
     pages
 ORDER BY
@@ -83,24 +131,24 @@ OFFSET
     ?
 `
 
-type GePageListParams struct {
+type GetPageListParams struct {
 	Limit  int64
 	Offset int64
 }
 
-func (q *Queries) GePageList(ctx context.Context, arg GePageListParams) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, gePageList, arg.Limit, arg.Offset)
+func (q *Queries) GetPageList(ctx context.Context, arg GetPageListParams) ([]Page, error) {
+	rows, err := q.db.QueryContext(ctx, getPageList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	var items []Page
 	for rows.Next() {
-		var name string
-		if err := rows.Scan(&name); err != nil {
+		var i Page
+		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
 			return nil, err
 		}
-		items = append(items, name)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
@@ -124,6 +172,40 @@ LIMIT
 
 func (q *Queries) SelectPage(ctx context.Context, name string) ([]Page, error) {
 	rows, err := q.db.QueryContext(ctx, selectPage, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Page
+	for rows.Next() {
+		var i Page
+		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const selectPageByID = `-- name: SelectPageByID :many
+SELECT
+    id, name, content
+FROM
+    pages
+WHERE
+    id = ?
+LIMIT
+    1
+`
+
+func (q *Queries) SelectPageByID(ctx context.Context, id int64) ([]Page, error) {
+	rows, err := q.db.QueryContext(ctx, selectPageByID, id)
 	if err != nil {
 		return nil, err
 	}

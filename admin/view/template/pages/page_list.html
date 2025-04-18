@@ -8,7 +8,7 @@
                     <th>{{Trans "PAGE_LIST.column_name"}}</th>
                     <th>{{Trans "PAGE_LIST.column_action"}}</th>
                 </tr>
-                {{ range $idx, $page := .Pages }}
+                {{ range $idx, $page := .Data }}
                 <tr>
                     <td>{{$idx}}</td>
                     <td>{{$page.Name}}</td>

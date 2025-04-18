@@ -11,7 +11,7 @@
                     <label for="form_name">{{Trans "PAGE_ADD.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
                     <div class="invalid-feedback d-block">
-                        {{Trans (print "PAGE_ADD.errors." .Errors.Name)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Name)}}
                     </div>
                     {{ end }}
                     </div>

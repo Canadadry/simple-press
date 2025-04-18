@@ -47,7 +47,7 @@ SELECT
 FROM
     layouts;
 
--- name: GeLayoutList :many
+-- name: GetLayoutList :many
 SELECT
     name
 FROM

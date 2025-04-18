@@ -9,13 +9,14 @@ import (
 )
 
 type Article struct {
-	ID      int64
-	Title   string
-	Date    time.Time
-	Author  string
-	Content string
-	Slug    string
-	Draft   int64
+	ID       int64
+	Title    string
+	Date     time.Time
+	Author   string
+	Content  string
+	Slug     string
+	Draft    int64
+	LayoutID int64
 }
 
 type File struct {

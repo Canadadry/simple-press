@@ -8,6 +8,7 @@ import (
 )
 
 type Page struct {
+	ID      int64
 	Name    string
 	Content string
 }
@@ -19,6 +20,11 @@ func (r *Repository) CountPages(ctx context.Context) (int, error) {
 
 func (r *Repository) CountPageByName(ctx context.Context, name string) (int, error) {
 	c, err := adminmodel.New(r.Db).CountPageByName(ctx, name)
+	return int(c), err
+}
+
+func (r *Repository) CountPageByID(ctx context.Context, id int64) (int, error) {
+	c, err := adminmodel.New(r.Db).CountPageByID(ctx, id)
 	return int(c), err
 }
 
@@ -45,16 +51,30 @@ func (r *Repository) DeletePage(ctx context.Context, name string) error {
 }
 
 func (r *Repository) GetPageList(ctx context.Context, limit, offset int) ([]Page, error) {
-	list, err := adminmodel.New(r.Db).GePageList(ctx, adminmodel.GePageListParams{
+	list, err := adminmodel.New(r.Db).GetPageList(ctx, adminmodel.GetPageListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(name string) Page {
+	return sqlutil.Map(list, func(p adminmodel.Page) Page {
 		return Page{
-			Name: name,
+			Name: p.Name,
+			ID:   p.ID,
+		}
+	}), nil
+}
+
+func (r *Repository) GetAllPages(ctx context.Context) ([]Page, error) {
+	list, err := adminmodel.New(r.Db).GetAllPages(ctx)
+	if err != nil {
+		return nil, stacktrace.From(err)
+	}
+	return sqlutil.Map(list, func(p adminmodel.Page) Page {
+		return Page{
+			Name: p.Name,
+			ID:   p.ID,
 		}
 	}), nil
 }
@@ -71,6 +91,25 @@ func (r *Repository) SelectPage(ctx context.Context, name string) (Page, bool, e
 		return Page{
 			Name:    l.Name,
 			Content: l.Content,
+			ID:      l.ID,
+		}
+	}
+	return fromModel(list[0]), true, nil
+}
+
+func (r *Repository) SelectPageByID(ctx context.Context, id int64) (Page, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectPageByID(ctx, id)
+	if err != nil {
+		return Page{}, false, stacktrace.From(err)
+	}
+	if len(list) == 0 {
+		return Page{}, false, nil
+	}
+	fromModel := func(l adminmodel.Page) Page {
+		return Page{
+			Name:    l.Name,
+			Content: l.Content,
+			ID:      l.ID,
 		}
 	}
 	return fromModel(list[0]), true, nil

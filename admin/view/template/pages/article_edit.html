@@ -8,15 +8,32 @@
       <div class="col-xl-10 mx-auto">
         <form method="post" action="">
             <div class="row gx-4">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="form-floating mb-4">
                     <input id="form_slug" type="text" name="slug" class="form-control" value="{{.Article.Slug}}" required>
                     <label for="form_slug">{{Trans "ARTICLE_EDIT.slug"}} *</label>
                     {{if not (eq .Errors.Slug "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_EDIT.errors." .Errors.Slug)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Slug)}}
                     </div>
                     {{ end }}
+                    </div>
+                </div>
+                <!-- /column -->
+                <div class="col-md-4">
+                    <div class="form-floating mb-4">
+                      <select class="form-select" id="form-layout" name="layout">
+                        {{$article := .Article}}
+                        {{ range $idx, $page := .Article.Pages }}
+                        <option value="{{$page.Value}}" {{if eq $article.LayoutID $page.Value}}selected{{end}}>{{$page.Name}}</option>
+                        {{end}}
+                      </select>
+                      <label for="form-layout">{{Trans "ARTICLE_EDIT.layout"}}</label>
+                      {{if not (eq .Errors.LayoutID "") }}
+                      <div class="invalid-feedback  d-block">
+                          {{Trans (print "FORM_ERROR." .Errors.LayoutID)}}
+                      </div>
+                      {{end}}
                     </div>
                 </div>
                 <!-- /column -->
@@ -26,7 +43,7 @@
                     <label for="form_title">{{Trans "ARTICLE_ADD.title"}} *</label>
                     {{if not (eq .Errors.Title "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Title)}}
                     </div>
                     {{ end }}
                     </div>
@@ -38,7 +55,7 @@
                     <label for="form_author">{{Trans "ARTICLE_ADD.author"}} *</label>
                     {{if not (eq .Errors.Author "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Title)}}
                     </div>
                     {{ end }}
                     </div>
@@ -49,7 +66,7 @@
                     <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Article.Content}}</textarea>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_EDIT.errors." .Errors.Content)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Content)}}
                     </div>
                     {{ end }}
 

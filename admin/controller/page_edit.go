@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GePageEdit(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetPageEdit(w http.ResponseWriter, r *http.Request) error {
 	name := router.GetField(r, 0)
 	l, ok, err := c.Repository.SelectPage(r.Context(), name)
 	if err != nil {

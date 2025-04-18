@@ -5,7 +5,9 @@ CREATE TABLE articles (
     author TEXT NOT NULL,
     content TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    draft INTEGER NOT NULL
+    draft INTEGER NOT NULL,
+    layout_id INTEGER NOT NULL,
+    FOREIGN KEY (layout_id) REFERENCES pages (id)
 );
 
 CREATE TABLE layouts (

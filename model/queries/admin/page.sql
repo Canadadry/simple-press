@@ -12,6 +12,14 @@ FROM
 WHERE
     name = ?;
 
+-- name: CountPageByID :one
+SELECT
+    count(*)
+FROM
+    pages
+WHERE
+    id = ?;
+
 -- name: CreatePage :execlastid
 INSERT INTO
     pages (name, content)
@@ -41,9 +49,19 @@ WHERE
 LIMIT
     1;
 
--- name: GePageList :many
+-- name: SelectPageByID :many
 SELECT
-    name
+    *
+FROM
+    pages
+WHERE
+    id = ?
+LIMIT
+    1;
+
+-- name: GetPageList :many
+SELECT
+    *
 FROM
     pages
 ORDER BY
@@ -52,3 +70,11 @@ LIMIT
     ?
 OFFSET
     ?;
+
+-- name: GetAllPages :many
+SELECT
+    *
+FROM
+    pages
+ORDER BY
+    id DESC;

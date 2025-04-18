@@ -14,9 +14,17 @@ WHERE
 
 -- name: CreateArticle :execlastid
 INSERT INTO
-    articles (title, date, author, content, slug, draft)
+    articles (
+        title,
+        date,
+        author,
+        content,
+        slug,
+        draft,
+        layout_id
+    )
 VALUES
-    (?, ?, ?, ?, ?, ?);
+    (?, ?, ?, ?, ?, ?, ?);
 
 -- name: UpdateArticle :exec
 UPDATE articles
@@ -26,7 +34,8 @@ SET
     author = ?,
     content = ?,
     slug = ?,
-    draft = ?
+    draft = ?,
+    layout_id = ?
 WHERE
     slug = ?;
 

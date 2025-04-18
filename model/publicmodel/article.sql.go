@@ -73,7 +73,7 @@ func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams
 
 const selectArticleBySlug = `-- name: SelectArticleBySlug :many
 SELECT
-    id, title, date, author, content, slug, draft
+    id, title, date, author, content, slug, draft, layout_id
 FROM
     articles
 WHERE
@@ -100,6 +100,7 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 			&i.Content,
 			&i.Slug,
 			&i.Draft,
+			&i.LayoutID,
 		); err != nil {
 			return nil, err
 		}

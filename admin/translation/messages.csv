@@ -20,6 +20,11 @@ footer.phone_value,phone_value,phone_value
 footer.address,address,address
 footer.address_value,address_value,address_value
 footer.copyright,copyright,copyright
+FORM_ERROR.empty,cannot be empty,cannot be empty
+FORM_ERROR.too_big,Too big,Too big
+FORM_ERROR.errorNotASlug,Not a slug,Not a slug
+FORM_ERROR.invalid_id,invalid_id,invalid_id
+LAYOUT_EDIT.errors.not_a_path,Not a path,Not a path
 ARTICLE.add,add,add
 ARTICLE_ADD.page_title,page title,page title
 ARTICLE_ADD.title_placeholder,title_placeholder,title_placeholder
@@ -28,13 +33,11 @@ ARTICLE_ADD.author_placeholder,author_placeholder,author_placeholder
 ARTICLE_ADD.author,author,author
 ARTICLE_ADD.draft,draft,draft
 ARTICLE_ADD.submit,submit,submit
-ARTICLE_ADD.errors.empty,cannot be empty,cannot be empty
-ARTICLE_ADD.errors.too_big,Too big,Too big
-ARTICLE_ADD.errors.errorNotASlug,Not a slug,Not a slug
 ARTICLE_EDIT.page_title,page title, page title
 ARTICLE_EDIT.slug,slug,slug
 ARTICLE_EDIT.content,content,content
 ARTICLE_EDIT.submit,submit,submit
+ARTICLE_EDIT.layout,layout,layout
 ARTICLE_LIST.page_title,page title,page title
 ARTICLE_LIST.column_name,name,name
 ARTICLE_LIST.column_author,author,author
@@ -49,15 +52,27 @@ LAYOUT_ADD.errors.empty,cannot be empty,cannot be empty
 LAYOUT_ADD.errors.too_big,Too big,Too big
 LAYOUT_ADD.errors.not_a_path,Not a path,Not a path
 LAYOUT_EDIT.page_title,page title, page title
-LAYOUT_EDIT.errors.empty,cannot be empty,cannot be empty
-LAYOUT_EDIT.errors.too_big,Too big,Too big
-LAYOUT_EDIT.errors.not_a_path,Not a path,Not a path
 LAYOUT_EDIT.name,name,name
 LAYOUT_EDIT.content,content,content
 LAYOUT_EDIT.submit,submit,submit
 LAYOUT_LIST.page_title, page title, page title
 LAYOUT_LIST.column_name,name,name
 LAYOUT_LIST.column_action,action,action
+PAGE.add,add,add
+PAGE_ADD.page_title,page title, page title
+PAGE_ADD.name_placeholder,name_placeholder,name_placeholder
+PAGE_ADD.name,name,name
+PAGE_ADD.submit,submit,submit
+PAGE_EDIT.page_title,page title, page title
+PAGE_EDIT.errors.empty,cannot be empty,cannot be empty
+PAGE_EDIT.errors.too_big,Too big,Too big
+PAGE_EDIT.errors.not_a_path,Not a path,Not a path
+PAGE_EDIT.name,name,name
+PAGE_EDIT.content,content,content
+PAGE_EDIT.submit,submit,submit
+PAGE_LIST.page_title, page title, page title
+PAGE_LIST.column_name,name,name
+PAGE_LIST.column_action,action,action
 FILE_LIST.page_title,page_title,page_title
 FILE_LIST.column_name,name,name
 FILE_LIST.column_action,action,action
@@ -66,11 +81,9 @@ FILE_ADD.page_title,page title, page title
 FILE_ADD.name_placeholder,name_placeholder,name_placeholder
 FILE_ADD.file,file,file
 FILE_ADD.submit,submit,submit
-FILE_ADD.errors.empty,cannot be empty,cannot be empty
-FILE_ADD.errors.too_big,Too big,Too big
-FILE_ADD.errors.not_a_path,Not a path,Not a path
 MENU.articles,articles,articles
 MENU.layouts,layouts,layouts
+MENU.pages,pages,pages
 MENU.files,files,files
 MENU.settings,settings,settings
 404.page_title,page_title,page_title

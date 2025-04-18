@@ -11,7 +11,7 @@
                     <label for="form_title">{{Trans "ARTICLE_ADD.title"}} *</label>
                     {{if not (eq .Errors.Title "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Title)}}
                     </div>
                     {{ end }}
                     </div>
@@ -23,7 +23,7 @@
                     <label for="form_author">{{Trans "ARTICLE_ADD.author"}} *</label>
                     {{if not (eq .Errors.Author "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "ARTICLE_ADD.errors." .Errors.Title)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Title)}}
                     </div>
                     {{ end }}
                     </div>

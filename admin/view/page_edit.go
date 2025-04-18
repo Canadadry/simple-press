@@ -21,8 +21,8 @@ func PageEdit(a PageEditData, errors PageEditError) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
-			"template/pages/layout_edit.html",
-			TemplateData("LAYOUT_EDIT.page_title", viewData{a, errors}),
+			"template/pages/page_edit.html",
+			TemplateData("PAGE_EDIT.page_title", viewData{a, errors}),
 		)
 	}
 }

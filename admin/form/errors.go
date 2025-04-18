@@ -5,6 +5,7 @@ const (
 	errorTagetToBig    = "too_big"
 	errorNotASlug      = "not_a_slug"
 	errorNotAPath      = "not_a_path"
+	errorInvalidId     = "invalid_id"
 	maxTitleLen        = 255
 	maxAuthorLen       = 255
 	maxSlugLen         = 255

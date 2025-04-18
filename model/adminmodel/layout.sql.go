@@ -70,7 +70,7 @@ func (q *Queries) DeleteLayout(ctx context.Context, name string) error {
 	return err
 }
 
-const geLayoutList = `-- name: GeLayoutList :many
+const getLayoutList = `-- name: GetLayoutList :many
 SELECT
     name
 FROM
@@ -83,13 +83,13 @@ OFFSET
     ?
 `
 
-type GeLayoutListParams struct {
+type GetLayoutListParams struct {
 	Limit  int64
 	Offset int64
 }
 
-func (q *Queries) GeLayoutList(ctx context.Context, arg GeLayoutListParams) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, geLayoutList, arg.Limit, arg.Offset)
+func (q *Queries) GetLayoutList(ctx context.Context, arg GetLayoutListParams) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getLayoutList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

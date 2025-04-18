@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GeLayoutEdit(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error {
 	name := router.GetField(r, 0)
 	l, ok, err := c.Repository.SelectLayout(r.Context(), name)
 	if err != nil {

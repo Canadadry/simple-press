@@ -46,7 +46,7 @@ func (r *Repository) DeleteLayout(ctx context.Context, name string) error {
 }
 
 func (r *Repository) GetLayoutList(ctx context.Context, limit, offset int) ([]Layout, error) {
-	list, err := adminmodel.New(r.Db).GeLayoutList(ctx, adminmodel.GeLayoutListParams{
+	list, err := adminmodel.New(r.Db).GetLayoutList(ctx, adminmodel.GetLayoutListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})

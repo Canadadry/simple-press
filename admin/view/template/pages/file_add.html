@@ -11,7 +11,7 @@
                          <input class="form-control" name="content" type="file" id="formFile"  required>
                          {{if not (eq .Errors.Content "") }}
                          <div class="invalid-feedback d-block">
-                             {{Trans (print "FILE_ADD.errors." .Errors.Content)}}
+                             {{Trans (print "FORM_ERROR." .Errors.Content)}}
                          </div>
                          {{ end }}
                      </div>
