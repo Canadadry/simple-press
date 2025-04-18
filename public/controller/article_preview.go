@@ -14,6 +14,9 @@ import (
 
 func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) error {
 	slug := router.GetField(r, 0)
+	if slug == "" {
+		slug = "index"
+	}
 	a, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
