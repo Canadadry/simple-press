@@ -21,7 +21,7 @@
                 <!-- /column -->
                 <div class="col-12">
                   <div class="mb-4">
-                    <textarea id="form_content" name="content" class="form-control" style="height: 450px" required>{{.Layout.Content}}</textarea>
+                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Layout.Content}}</textarea>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
                         {{Trans (print "LAYOUT_EDIT.errors." .Errors.Content)}}
