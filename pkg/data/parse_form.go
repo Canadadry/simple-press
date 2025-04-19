@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"sort"
@@ -85,6 +86,32 @@ func extractValue(values url.Values, f Field) (any, error) {
 	default:
 		return nil, errors.New("unsupported type: " + f.Type)
 	}
+}
+
+func updatePathForArrayIndex(f Field, index int) Field {
+	newField := f
+
+	// Remplacer UNIQUEMENT la première occurrence de ".0" ou suffix "0" dans le path
+	// ex: matrix.0.0 → matrix.4.0  (mais pas matrix.4.4)
+	updated := false
+	parts := strings.Split(f.Path, ".")
+	for i := 0; i < len(parts); i++ {
+		if parts[i] == "0" && !updated {
+			parts[i] = fmt.Sprintf("%d", index)
+			updated = true
+			break
+		}
+	}
+	newField.Path = strings.Join(parts, ".")
+
+	// Recurse on children
+	newChildren := make([]Field, len(f.Children))
+	for i, child := range f.Children {
+		newChildren[i] = updatePathForArrayIndex(child, index)
+	}
+	newField.Children = newChildren
+
+	return newField
 }
 
 func isEmptyValue(v any) bool {

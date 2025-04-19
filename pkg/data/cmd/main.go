@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/pkg/data"
+	"bytes"
 	"encoding/json"
 	"html/template"
 	"log"
@@ -44,8 +45,10 @@ func main() {
 func handleForm(w http.ResponseWriter, r *http.Request) {
 	field := data.Parse(exampleDef, true)
 
-	html := data.GenerateFormDynamicHTMLWithName(field, bootstrapTheme, "demo")
-	js := data.GenerateDynamicJS(field)
+	var buf bytes.Buffer
+	renderer := data.NewBootstrapRenderer(&buf, bootstrapTheme)
+	data.GenerateFormDynamicHTMLWithName(field, renderer, "demo")
+	formHTML := buf.String()
 
 	tmpl := `
 <!DOCTYPE html>
@@ -53,9 +56,6 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
 <head>
   <title>Bootstrap Form Demo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script>
-  {{ .JS }}
-  </script>
 </head>
 <body class="p-4">
   <div class="container">
@@ -67,8 +67,7 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
 
 	t := template.Must(template.New("page").Parse(tmpl))
 	_ = t.Execute(w, map[string]any{
-		"Form": template.HTML(html),
-		"JS":   template.JS(js),
+		"Form": template.HTML(formHTML),
 	})
 }
 
