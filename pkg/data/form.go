@@ -50,12 +50,9 @@ func renderFieldWithTheme(sb *strings.Builder, f Field, theme FormTheme) {
 
 	case "array":
 		sb.WriteString(fmt.Sprintf(`<fieldset class="%s"><legend class="%s">%s</legend>`, theme.FieldsetClass, theme.LegendClass, f.Key))
-		repeat := f.Repeat
+		repeat := theme.Repeat
 		if repeat == 0 {
-			repeat = theme.Repeat
-			if repeat == 0 {
-				repeat = 5
-			}
+			repeat = 5
 		}
 		for i := 0; i < repeat; i++ {
 			sb.WriteString(fmt.Sprintf(`<div class="%s">`, theme.RowWrapper))
@@ -103,19 +100,28 @@ func renderFieldWithTheme(sb *strings.Builder, f Field, theme FormTheme) {
 	}
 }
 
-// Fixe les chemins des champs dans les tableaux : children.0.firstname → children.3.firstname
 func updatePathForArrayIndex(f Field, index int) Field {
+	newField := f
+
+	// Remplacer UNIQUEMENT la première occurrence de ".0" ou suffix "0" dans le path
+	// ex: matrix.0.0 → matrix.4.0  (mais pas matrix.4.4)
+	updated := false
 	parts := strings.Split(f.Path, ".")
-	for i := len(parts) - 1; i >= 0; i-- {
-		if parts[i] == "0" {
+	for i := 0; i < len(parts); i++ {
+		if parts[i] == "0" && !updated {
 			parts[i] = fmt.Sprintf("%d", index)
+			updated = true
 			break
 		}
 	}
-	f.Path = strings.Join(parts, ".")
+	newField.Path = strings.Join(parts, ".")
 
-	for i := range f.Children {
-		f.Children[i] = updatePathForArrayIndex(f.Children[i], index)
+	// Recurse on children
+	newChildren := make([]Field, len(f.Children))
+	for i, child := range f.Children {
+		newChildren[i] = updatePathForArrayIndex(child, index)
 	}
-	return f
+	newField.Children = newChildren
+
+	return newField
 }

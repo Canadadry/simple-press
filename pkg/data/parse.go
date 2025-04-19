@@ -11,7 +11,6 @@ type Field struct {
 	Type     string
 	EnumVals []string
 	Children []Field
-	Repeat   int
 	IsRoot   bool
 }
 
@@ -46,7 +45,6 @@ func parseInternal(input any, isRoot bool, currentPath string) Field {
 			IsRoot: isRoot,
 			Type:   "array",
 			Path:   currentPath,
-			Repeat: 5,
 		}
 		if len(v) > 0 {
 			child := v[0]
@@ -101,10 +99,9 @@ func parseField(key string, val any, parentPath string) Field {
 
 	case []any:
 		arr := Field{
-			Key:    key,
-			Path:   path,
-			Type:   "array",
-			Repeat: 5,
+			Key:  key,
+			Path: path,
+			Type: "array",
 		}
 		if len(t) > 0 {
 			child := parseField("", t[0], path+".0")

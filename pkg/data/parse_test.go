@@ -28,10 +28,9 @@ func TestParseDefinition(t *testing.T) {
 				Path:   "",
 				Children: []Field{
 					{
-						Key:    "children",
-						Path:   "children",
-						Type:   "array",
-						Repeat: 5,
+						Key:  "children",
+						Path: "children",
+						Type: "array",
 						Children: []Field{
 							{
 								Key:  "",
@@ -61,7 +60,6 @@ func TestParseDefinition(t *testing.T) {
 				IsRoot: true,
 				Type:   "array",
 				Path:   "",
-				Repeat: 5,
 				Children: []Field{
 					{
 						Type: "object",
@@ -84,10 +82,9 @@ func TestParseDefinition(t *testing.T) {
 				Path:   "",
 				Children: []Field{
 					{
-						Key:    "scores",
-						Path:   "scores",
-						Type:   "array",
-						Repeat: 5,
+						Key:  "scores",
+						Path: "scores",
+						Type: "array",
 						Children: []Field{
 							{Path: "scores.0", Type: "number"},
 						},
