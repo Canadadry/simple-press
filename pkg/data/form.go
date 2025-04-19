@@ -17,6 +17,7 @@ type FormTheme struct {
 	LegendClass       string
 	AddButtonClass    string
 	SubmitButtonClass string
+	DeleteButtonClass string
 	Repeat            int // default repeat count for arrays
 }
 

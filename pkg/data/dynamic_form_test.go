@@ -137,18 +137,20 @@ func TestGenerateDynamicFormWithJS_ExactMatch(t *testing.T) {
   <fieldset class="">
     <legend class="">children</legend>
     <div id="container-children">
-      <div>
+      <div data-item>
         <div class="">
           <label class="">name: <input type="text" name="children.0.name" class=""/></label><br/>
         </div>
+        <button type="button" class="" onclick="this.closest('[data-item]').remove()">Delete</button>
       </div>
     </div>
     <button type="button" class="" onclick="add_children()">Add</button>
     <template id="template-children">
-      <div>
+      <div data-item>
         <div class="">
           <label class="">name: <input type="text" name="children.__INDEX__.name" class=""/></label><br/>
         </div>
+        <button type="button" class="" onclick="this.closest('[data-item]').remove()">Delete</button>
       </div>
     </template>
   </fieldset>

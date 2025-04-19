@@ -28,6 +28,7 @@ var bootstrapTheme = data.FormTheme{
 	RowWrapper:        "row",
 	FieldsetClass:     "mb-4",
 	AddButtonClass:    "btn btn-secondary",
+	DeleteButtonClass: "btn btn-outline-danger",
 	SubmitButtonClass: "btn btn-primary",
 	LegendClass:       "fw-bold",
 }

@@ -39,10 +39,12 @@ func renderDynamicField(b *strings.Builder, f Field, theme FormTheme) {
 		containerID := "container-" + f.Path
 		b.WriteString(fmt.Sprintf(`<div id="%s">`, containerID))
 
-		for i := 0; i < 1; i++ { // une seule ligne initiale
+		// boucle initiale (1 item)
+		for i := 0; i < 1; i++ {
 			child := updatePathForArrayIndex(f.Children[0], i)
-			b.WriteString(`<div>`)
+			b.WriteString(`<div data-item>`)
 			renderDynamicField(b, child, theme)
+			b.WriteString(fmt.Sprintf(`<button type="button" class="%s" onclick="this.closest('[data-item]').remove()">Delete</button>`, theme.DeleteButtonClass))
 			b.WriteString(`</div>`)
 		}
 		b.WriteString(`</div>`)
@@ -54,9 +56,10 @@ func renderDynamicField(b *strings.Builder, f Field, theme FormTheme) {
 		))
 
 		// Template HTML pour duplication
-		b.WriteString(fmt.Sprintf(`<template id="template-%s"><div>`, f.Path))
+		b.WriteString(fmt.Sprintf(`<template id="template-%s"><div data-item>`, f.Path))
 		templateField := replaceIndexInPath(f.Children[0], "__INDEX__")
 		renderDynamicField(b, templateField, theme)
+		b.WriteString(fmt.Sprintf(`<button type="button" class="%s" onclick="this.closest('[data-item]').remove()">Delete</button>`, theme.DeleteButtonClass))
 		b.WriteString(`</div></template>`)
 
 		b.WriteString(`</fieldset>`)
