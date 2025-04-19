@@ -1,6 +1,7 @@
 package data
 
 import (
+	"app/pkg/scrapper"
 	"strings"
 	"testing"
 )
@@ -163,6 +164,127 @@ func TestGenerateFormHTML_ExactMatch(t *testing.T) {
 
 			if html != tt.ExpectedHTML {
 				t.Errorf("HTML output mismatch.\nExpected:\n%s\n\nGot:\n%s", tt.ExpectedHTML, html)
+			}
+		})
+	}
+}
+
+func TestScrapGeneratedForms(t *testing.T) {
+	tests := map[string]struct {
+		Input          map[string]any
+		FormName       string
+		ExpectedMethod string
+		ExpectedAction string
+		ExpectedFields map[string]string // fieldName -> elementType (input/select/etc)
+	}{
+		"simple contact form": {
+			Input: map[string]any{
+				"email":     "email",
+				"firstname": "string",
+				"gender":    "enum:Mr;Mme",
+			},
+			FormName:       "contact",
+			ExpectedMethod: "POST",
+			ExpectedAction: "/submit",
+			ExpectedFields: map[string]string{
+				"email":     "input",
+				"firstname": "input",
+				"gender":    "select",
+			},
+		},
+		"array with nested fields": {
+			Input: map[string]any{
+				"children": []any{
+					map[string]any{
+						"name": "string",
+						"age":  "number",
+					},
+				},
+			},
+			FormName:       "family",
+			ExpectedMethod: "POST",
+			ExpectedAction: "/submit",
+			ExpectedFields: map[string]string{
+				"children.0.name": "input",
+				"children.0.age":  "input",
+				"children.1.name": "input",
+				"children.1.age":  "input",
+			},
+		},
+		"deeply nested and mixed structure": {
+			Input: map[string]any{
+				"company": map[string]any{
+					"name": "string",
+					"address": map[string]any{
+						"street": "string",
+						"city":   "string",
+						"coords": map[string]any{
+							"lat":  "number",
+							"long": "number",
+						},
+					},
+					"departments": []any{
+						map[string]any{
+							"name": "string",
+							"manager": map[string]any{
+								"firstname": "string",
+								"gender":    "enum:Mr;Mme",
+							},
+						},
+					},
+				},
+			},
+			FormName:       "company-form",
+			ExpectedMethod: "POST",
+			ExpectedAction: "/submit",
+			ExpectedFields: map[string]string{
+				"company.name":                "input",
+				"company.address.street":      "input",
+				"company.address.city":        "input",
+				"company.address.coords.lat":  "input",
+				"company.address.coords.long": "input",
+
+				"company.departments.0.name":              "input",
+				"company.departments.0.manager.firstname": "input",
+				"company.departments.0.manager.gender":    "select",
+				"company.departments.1.name":              "input",
+				"company.departments.1.manager.firstname": "input",
+				"company.departments.1.manager.gender":    "select",
+			},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			field := Parse(tt.Input, true)
+			html := GenerateFormHTMLWithName(field, ThemeNoStyle, tt.FormName)
+
+			doc, err := scrapper.NewDocumentFromReader(strings.NewReader(html))
+			if err != nil {
+				t.Fatalf("error parsing HTML: %v", err)
+			}
+
+			form, err := scrapper.GetForm(doc, tt.FormName)
+			if err != nil {
+				t.Fatalf("GetForm error: %v", err)
+			}
+
+			if form.Method != tt.ExpectedMethod {
+				t.Errorf("Expected method %s, got %s", tt.ExpectedMethod, form.Method)
+			}
+			if form.Action != tt.ExpectedAction {
+				t.Errorf("Expected action %s, got %s", tt.ExpectedAction, form.Action)
+			}
+
+			for fieldName, expectedType := range tt.ExpectedFields {
+				typ, ok := form.Attribute[fieldName]
+				if !ok {
+					t.Errorf("Missing field '%s' in form", fieldName)
+					continue
+				}
+				if typ != expectedType {
+					t.Errorf("Expected type '%s' for field '%s', got '%s'", expectedType, fieldName, typ)
+				}
 			}
 		})
 	}

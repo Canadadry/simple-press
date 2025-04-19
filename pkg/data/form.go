@@ -18,6 +18,14 @@ type FormTheme struct {
 	Repeat        int // default repeat count for arrays
 }
 
+func GenerateFormHTMLWithName(field Field, theme FormTheme, formName string) string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf(`<form method="POST" action="/submit" class="%s" name="%s">`, theme.FormClass, formName))
+	renderFieldWithTheme(&sb, field, theme)
+	sb.WriteString(`<button type="submit">Submit</button></form>`)
+	return sb.String()
+}
+
 func GenerateFormHTML(field Field, theme FormTheme) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf(`<form method="POST" action="/submit" class="%s">`, theme.FormClass))
