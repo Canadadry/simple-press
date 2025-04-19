@@ -18,23 +18,8 @@ type FormValue struct {
 }
 
 func (c *Client) Submit(name string, fields map[string]FormValue) error {
-	if c.page == nil {
-		return fmt.Errorf("cannot submit : the current scrapper page is nil")
-	}
 
-	form, err := GetForm(c.page, name)
-	if err != nil {
-		return fmt.Errorf("while trying to submit to %s : %w", name, err)
-	}
-
-	for fname := range fields {
-		_, ok := form.Attribute[cleanFieldname(fname)]
-		if !ok {
-			return fmt.Errorf("field  %s dont exist on form %s", fname, name)
-		}
-	}
-
-	body, bodyCtIn, err := createBodyRequest(fields)
+	form, body, bodyCtIn, err := c.CreateFormRequest(name, fields)
 	if err != nil {
 		return fmt.Errorf("can't create body request of %s : %w", name, err)
 	}
@@ -53,6 +38,30 @@ func (c *Client) Submit(name string, fields map[string]FormValue) error {
 	req.Header.Add("Content-Type", bodyCtIn)
 	req.Header.Add("Referer", previousURL)
 	return c.makeRequest(req)
+}
+
+func (c *Client) CreateFormRequest(name string, fields map[string]FormValue) (Form, io.Reader, string, error) {
+	if c.page == nil {
+		return Form{}, nil, "", fmt.Errorf("cannot submit : the current scrapper page is nil")
+	}
+
+	form, err := GetForm(c.page, name)
+	if err != nil {
+		return Form{}, nil, "", fmt.Errorf("while trying to submit to %s : %w", name, err)
+	}
+
+	for fname := range fields {
+		_, ok := form.Attribute[cleanFieldname(fname)]
+		if !ok {
+			return Form{}, nil, "", fmt.Errorf("field  %s dont exist on form %s", fname, name)
+		}
+	}
+
+	body, bodyCtIn, err := createBodyRequest(fields)
+	if err != nil {
+		return Form{}, nil, "", fmt.Errorf("can't create body request of %s : %w", name, err)
+	}
+	return form, body, bodyCtIn, nil
 }
 
 func createBodyRequest(f map[string]FormValue) (io.Reader, string, error) {
