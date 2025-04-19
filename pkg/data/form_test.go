@@ -6,19 +6,6 @@ import (
 	"testing"
 )
 
-var ThemeNoStyle = FormTheme{
-	FormClass:     "",
-	LabelClass:    "",
-	InputClass:    "",
-	SelectClass:   "",
-	CheckboxClass: "",
-	FieldWrapper:  "",
-	RowWrapper:    "",
-	FieldsetClass: "",
-	LegendClass:   "",
-	Repeat:        5,
-}
-
 func collectPaths(f Field, out *[]string) {
 	*out = append(*out, f.Path)
 	for _, child := range f.Children {
