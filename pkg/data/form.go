@@ -6,23 +6,25 @@ import (
 )
 
 type FormTheme struct {
-	FormClass     string // global form wrapper class
-	LabelClass    string
-	InputClass    string
-	SelectClass   string
-	CheckboxClass string
-	FieldWrapper  string // div class for each label+input
-	RowWrapper    string // for arrays or grouped children
-	FieldsetClass string
-	LegendClass   string
-	Repeat        int // default repeat count for arrays
+	FormClass         string // global form wrapper class
+	LabelClass        string
+	InputClass        string
+	SelectClass       string
+	CheckboxClass     string
+	FieldWrapper      string // div class for each label+input
+	RowWrapper        string // for arrays or grouped children
+	FieldsetClass     string
+	LegendClass       string
+	AddButtonClass    string
+	SubmitButtonClass string
+	Repeat            int // default repeat count for arrays
 }
 
 func GenerateFormHTMLWithName(field Field, theme FormTheme, formName string) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf(`<form method="POST" action="/submit" class="%s" name="%s">`, theme.FormClass, formName))
 	renderFieldWithTheme(&sb, field, theme)
-	sb.WriteString(`<button type="submit">Submit</button></form>`)
+	sb.WriteString(fmt.Sprintf(`<button class="%s" type="submit">Submit</button></form>`, theme.SubmitButtonClass))
 	return sb.String()
 }
 

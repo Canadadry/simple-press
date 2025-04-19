@@ -19,15 +19,17 @@ var exampleDef = map[string]any{
 }
 
 var bootstrapTheme = data.FormTheme{
-	FormClass:     "needs-validation",
-	LabelClass:    "form-label",
-	InputClass:    "form-control",
-	SelectClass:   "form-select",
-	CheckboxClass: "form-check-input",
-	FieldWrapper:  "mb-3",
-	RowWrapper:    "row",
-	FieldsetClass: "mb-4",
-	LegendClass:   "fw-bold",
+	FormClass:         "needs-validation",
+	LabelClass:        "form-label",
+	InputClass:        "form-control",
+	SelectClass:       "form-select",
+	CheckboxClass:     "form-check-input",
+	FieldWrapper:      "mb-3",
+	RowWrapper:        "row",
+	FieldsetClass:     "mb-4",
+	AddButtonClass:    "btn btn-secondary",
+	SubmitButtonClass: "btn btn-primary",
+	LegendClass:       "fw-bold",
 }
 
 func main() {
@@ -58,7 +60,6 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
   <div class="container">
     <h1 class="mb-4">Dynamic Form (Bootstrap)</h1>
     {{ .Form }}
-    <button type="button" class="btn btn-secondary mt-3" onclick="add_children()">Add Child</button>
   </div>
 </body>
 </html>`

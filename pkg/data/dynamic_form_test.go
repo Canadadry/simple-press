@@ -143,6 +143,7 @@ func TestGenerateDynamicFormWithJS_ExactMatch(t *testing.T) {
         </div>
       </div>
     </div>
+    <button type="button" class="" onclick="add_children()">Add</button>
     <template id="template-children">
       <div>
         <div class="">
@@ -151,9 +152,10 @@ func TestGenerateDynamicFormWithJS_ExactMatch(t *testing.T) {
       </div>
     </template>
   </fieldset>
-  <button type="submit">Submit</button>
+  <button class="" type="submit">Submit</button>
 </form>
 `,
+
 			ExpectedJS: `
 let currentIndex_children = 1;
 

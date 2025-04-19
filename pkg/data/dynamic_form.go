@@ -11,7 +11,7 @@ func GenerateFormDynamicHTMLWithName(root Field, theme FormTheme, formName strin
 
 	b.WriteString(fmt.Sprintf(`<form method="POST" action="/submit" name="%s" class="%s">`, html.EscapeString(formName), theme.FormClass))
 	renderDynamicField(&b, root, theme)
-	b.WriteString(`<button type="submit">Submit</button></form>`)
+	b.WriteString(fmt.Sprintf(`<button class="%s" type="submit">Submit</button></form>`, theme.SubmitButtonClass))
 
 	return b.String()
 }
@@ -19,89 +19,72 @@ func GenerateFormDynamicHTMLWithName(root Field, theme FormTheme, formName strin
 func renderDynamicField(b *strings.Builder, f Field, theme FormTheme) {
 	switch f.Type {
 	case "object":
-		if f.IsRoot {
+		if f.IsRoot || f.Key == "" {
 			for _, child := range f.Children {
 				renderDynamicField(b, child, theme)
 			}
 			return
 		}
-
-		if f.Key == "" {
-			for _, child := range f.Children {
-				renderDynamicField(b, child, theme)
-			}
-			return
-		}
-
-		b.WriteString(fmt.Sprintf(`<fieldset class="%s"><legend class="%s">%s</legend>`, theme.FieldsetClass, theme.LegendClass, html.EscapeString(f.Key)))
+		b.WriteString(fmt.Sprintf(`<fieldset class="%s"><legend class="%s">%s</legend>`,
+			theme.FieldsetClass, theme.LegendClass, html.EscapeString(f.Key)))
 		for _, child := range f.Children {
 			renderDynamicField(b, child, theme)
 		}
 		b.WriteString(`</fieldset>`)
 
 	case "array":
-		containerID := "container-" + f.Path
-		templateID := "template-" + f.Path
+		b.WriteString(fmt.Sprintf(`<fieldset class="%s"><legend class="%s">%s</legend>`,
+			theme.FieldsetClass, theme.LegendClass, html.EscapeString(f.Key)))
 
-		// Bloc initial visible : .0
-		b.WriteString(fmt.Sprintf(`<fieldset class="%s"><legend class="%s">%s</legend>`, theme.FieldsetClass, theme.LegendClass, html.EscapeString(f.Key)))
+		containerID := "container-" + f.Path
 		b.WriteString(fmt.Sprintf(`<div id="%s">`, containerID))
 
-		child := updatePathForArrayIndex(f.Children[0], 0)
-		b.WriteString(`<div>`)
-		renderDynamicField(b, child, theme)
+		for i := 0; i < 1; i++ { // une seule ligne initiale
+			child := updatePathForArrayIndex(f.Children[0], i)
+			b.WriteString(`<div>`)
+			renderDynamicField(b, child, theme)
+			b.WriteString(`</div>`)
+		}
 		b.WriteString(`</div>`)
 
-		b.WriteString(`</div>`) // close container
+		// Ajouter automatiquement le bouton "Add"
+		b.WriteString(fmt.Sprintf(
+			`<button type="button" class="%s" onclick="add_%s()">Add</button>`,
+			theme.AddButtonClass, safeJSVar(f.Path),
+		))
 
-		// Template avec __INDEX__
-		templateChild := replaceIndexInPath(f.Children[0], "__INDEX__")
-		b.WriteString(fmt.Sprintf(`<template id="%s">`, templateID))
-		b.WriteString(`<div>`)
-		renderDynamicField(b, templateChild, theme)
-		b.WriteString(`</div>`)
-		b.WriteString(`</template>`)
+		// Template HTML pour duplication
+		b.WriteString(fmt.Sprintf(`<template id="template-%s"><div>`, f.Path))
+		templateField := replaceIndexInPath(f.Children[0], "__INDEX__")
+		renderDynamicField(b, templateField, theme)
+		b.WriteString(`</div></template>`)
 
 		b.WriteString(`</fieldset>`)
 
-	case "string", "email", "date", "number":
-		inputType := map[string]string{
-			"string": "text",
-			"email":  "email",
-			"date":   "date",
-			"number": "number",
-		}[f.Type]
-
+	case "string", "number", "email", "date":
 		b.WriteString(fmt.Sprintf(`<div class="%s">`, theme.FieldWrapper))
-		b.WriteString(fmt.Sprintf(`<label class="%s">%s: <input type="%s" name="%s" class="%s"/></label><br/>`,
-			theme.LabelClass,
-			html.EscapeString(f.Key),
-			inputType,
-			html.EscapeString(f.Path),
-			theme.InputClass,
-		))
-		b.WriteString(`</div>`)
+		b.WriteString(fmt.Sprintf(`<label class="%s">%s: `, theme.LabelClass, html.EscapeString(f.Key)))
+		inputType := map[string]string{
+			"string": "text", "number": "number", "email": "email", "date": "date",
+		}[f.Type]
+		b.WriteString(fmt.Sprintf(`<input type="%s" name="%s" class="%s"/>`,
+			inputType, f.Path, theme.InputClass))
+		b.WriteString(`</label><br/></div>`)
 
 	case "bool":
 		b.WriteString(fmt.Sprintf(`<div class="%s">`, theme.FieldWrapper))
-		b.WriteString(fmt.Sprintf(`<label class="%s">%s: <input type="checkbox" name="%s" value="true" class="%s"/></label><br/>`,
-			theme.LabelClass,
-			html.EscapeString(f.Key),
-			html.EscapeString(f.Path),
-			theme.CheckboxClass,
-		))
-		b.WriteString(`</div>`)
+		b.WriteString(fmt.Sprintf(`<label class="%s">%s: `, theme.LabelClass, html.EscapeString(f.Key)))
+		b.WriteString(fmt.Sprintf(`<input type="checkbox" name="%s" value="true" class="%s"/>`,
+			f.Path, theme.CheckboxClass))
+		b.WriteString(`</label><br/></div>`)
 
 	case "enum":
 		b.WriteString(fmt.Sprintf(`<div class="%s">`, theme.FieldWrapper))
-		b.WriteString(fmt.Sprintf(`<label class="%s">%s: <select name="%s" class="%s">`,
-			theme.LabelClass,
-			html.EscapeString(f.Key),
-			html.EscapeString(f.Path),
-			theme.SelectClass,
-		))
-		for _, val := range f.EnumVals {
-			b.WriteString(fmt.Sprintf(`<option value="%s">%s</option>`, html.EscapeString(val), html.EscapeString(val)))
+		b.WriteString(fmt.Sprintf(`<label class="%s">%s: `, theme.LabelClass, html.EscapeString(f.Key)))
+		b.WriteString(fmt.Sprintf(`<select name="%s" class="%s">`, f.Path, theme.SelectClass))
+		for _, opt := range f.EnumVals {
+			b.WriteString(fmt.Sprintf(`<option value="%s">%s</option>`,
+				html.EscapeString(opt), html.EscapeString(opt)))
 		}
 		b.WriteString(`</select></label><br/></div>`)
 	}
