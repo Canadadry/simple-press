@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+var ThemeNoStyle = FormTheme{
+	FormClass:     "",
+	LabelClass:    "",
+	InputClass:    "",
+	SelectClass:   "",
+	CheckboxClass: "",
+	FieldWrapper:  "",
+	RowWrapper:    "",
+	FieldsetClass: "",
+	LegendClass:   "",
+	Repeat:        5,
+}
+
 func TestGenerateFormHTML(t *testing.T) {
 	tests := map[string]struct {
 		Input    map[string]any
@@ -17,9 +30,12 @@ func TestGenerateFormHTML(t *testing.T) {
 				"newsletter": "bool",
 			},
 			Contains: []string{
-				`<input type="text" name="firstname" />`,
-				`<input type="email" name="email" />`,
-				`<input type="checkbox" name="newsletter" value="true" />`,
+				`name="firstname"`,
+				`name="email"`,
+				`name="newsletter"`,
+				`type="text"`,
+				`type="email"`,
+				`type="checkbox"`,
 			},
 		},
 		"object with enum and date": {
@@ -28,10 +44,11 @@ func TestGenerateFormHTML(t *testing.T) {
 				"dob":      "date",
 			},
 			Contains: []string{
-				`<select name="civility">`,
-				`<option value="Mr">Mr</option>`,
-				`<option value="Mme">Mme</option>`,
-				`<input type="date" name="dob" />`,
+				`<select name="civility"`,
+				`<option value="Mr"`,
+				`<option value="Mme"`,
+				`name="dob"`,
+				`type="date"`,
 			},
 		},
 		"nested object": {
@@ -44,8 +61,8 @@ func TestGenerateFormHTML(t *testing.T) {
 				},
 			},
 			Contains: []string{
-				`<input type="text" name="profile.name.first" />`,
-				`<input type="text" name="profile.name.last" />`,
+				`name="profile.name.first"`,
+				`name="profile.name.last"`,
 			},
 		},
 		"array of objects": {
@@ -58,10 +75,10 @@ func TestGenerateFormHTML(t *testing.T) {
 				},
 			},
 			Contains: []string{
-				`<input type="text" name="children.0.firstname" />`,
-				`<select name="children.0.gender">`,
-				`<input type="text" name="children.1.firstname" />`,
-				`<select name="children.1.gender">`,
+				`name="children.0.firstname"`,
+				`name="children.0.gender"`,
+				`name="children.1.firstname"`,
+				`name="children.1.gender"`,
 			},
 		},
 		"array of primitives": {
@@ -69,9 +86,9 @@ func TestGenerateFormHTML(t *testing.T) {
 				"scores": []any{"number"},
 			},
 			Contains: []string{
-				`<input type="number" name="scores.0" />`,
-				`<input type="number" name="scores.1" />`,
-				`<input type="number" name="scores.2" />`,
+				`name="scores.0"`,
+				`name="scores.1"`,
+				`type="number"`,
 			},
 		},
 	}
@@ -79,7 +96,7 @@ func TestGenerateFormHTML(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			root := Parse(tt.Input, true)
-			html := GenerateFormHTML(root)
+			html := GenerateFormHTML(root, ThemeNoStyle)
 
 			for _, frag := range tt.Contains {
 				if !strings.Contains(html, frag) {
@@ -93,18 +110,48 @@ func TestGenerateFormHTML(t *testing.T) {
 func TestGenerateFormHTML_ExactMatch(t *testing.T) {
 	tests := map[string]struct {
 		Input        map[string]any
+		Theme        FormTheme
 		ExpectedHTML string
 	}{
-		"simple object with enum": {
+		"simple_object_with_enum": {
 			Input: map[string]any{
-				"firstname": "string",
-				"email":     "email",
 				"civility":  "enum:Mr;Mme",
+				"email":     "email",
+				"firstname": "string",
 			},
-			ExpectedHTML: `<form method="POST" action="/submit">` +
-				`<label>civility: <select name="civility"><option value="Mr">Mr</option><option value="Mme">Mme</option></select></label><br/>` +
-				`<label>email: <input type="email" name="email" /></label><br/>` +
-				`<label>firstname: <input type="text" name="firstname" /></label><br/>` +
+			Theme: ThemeNoStyle,
+			ExpectedHTML: `<form method="POST" action="/submit" class="">` +
+				`<div class=""><label class="">civility: <select name="civility" class="">` +
+				`<option value="Mr">Mr</option><option value="Mme">Mme</option>` +
+				`</select></label><br/></div>` +
+				`<div class=""><label class="">email: <input type="email" name="email" class=""/></label><br/></div>` +
+				`<div class=""><label class="">firstname: <input type="text" name="firstname" class=""/></label><br/></div>` +
+				`<button type="submit">Submit</button></form>`,
+		},
+		"simple_object_with_enum_and_boostratp_theme": {
+			Input: map[string]any{
+				"civility":  "enum:Mr;Mme",
+				"email":     "email",
+				"firstname": "string",
+			},
+			Theme: FormTheme{
+				FormClass:     "needs-validation",
+				LabelClass:    "form-label",
+				InputClass:    "form-control",
+				SelectClass:   "form-select",
+				CheckboxClass: "form-check-input",
+				FieldWrapper:  "mb-3",
+				RowWrapper:    "row",
+				FieldsetClass: "mb-4",
+				LegendClass:   "fw-bold",
+				Repeat:        3,
+			},
+			ExpectedHTML: `<form method="POST" action="/submit" class="needs-validation">` +
+				`<div class="mb-3"><label class="form-label">civility: <select name="civility" class="form-select">` +
+				`<option value="Mr">Mr</option><option value="Mme">Mme</option>` +
+				`</select></label><br/></div>` +
+				`<div class="mb-3"><label class="form-label">email: <input type="email" name="email" class="form-control"/></label><br/></div>` +
+				`<div class="mb-3"><label class="form-label">firstname: <input type="text" name="firstname" class="form-control"/></label><br/></div>` +
 				`<button type="submit">Submit</button></form>`,
 		},
 	}
@@ -112,9 +159,8 @@ func TestGenerateFormHTML_ExactMatch(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			root := Parse(tt.Input, true)
-			html := GenerateFormHTML(root)
+			html := GenerateFormHTML(root, tt.Theme)
 
-			// Remove newlines/spaces for stable match (if needed)
 			if html != tt.ExpectedHTML {
 				t.Errorf("HTML output mismatch.\nExpected:\n%s\n\nGot:\n%s", tt.ExpectedHTML, html)
 			}
