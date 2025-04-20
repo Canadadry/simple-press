@@ -10,11 +10,10 @@ var ThemeNoStyle = FormTheme{
 	RowWrapper:    "",
 	FieldsetClass: "",
 	LegendClass:   "",
-	Repeat:        5,
 }
 
 var ThemeBootstrap = FormTheme{
-	FormClass:         "needs-validation",
+	FormClass:         "form-bootstrap",
 	LabelClass:        "form-label",
 	InputClass:        "form-control",
 	SelectClass:       "form-select",
