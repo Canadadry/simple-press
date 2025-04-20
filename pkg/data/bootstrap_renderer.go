@@ -32,14 +32,14 @@ func (r *BootstrapRenderer) EndForm() {
 	fmt.Fprintln(r.w, `</form>`)
 }
 
-func (r *BootstrapRenderer) BeginFieldset(label string) {
+func (r *BootstrapRenderer) BeginObject(label string) {
 	fmt.Fprintf(r.w, `  <fieldset class="%s">`, r.theme.FieldsetClass)
 	fmt.Fprintln(r.w)
 	fmt.Fprintf(r.w, `    <legend class="%s">%s</legend>`, r.theme.LegendClass, template.HTMLEscapeString(label))
 	fmt.Fprintln(r.w)
 }
 
-func (r *BootstrapRenderer) EndFieldset() {
+func (r *BootstrapRenderer) EndObject() {
 	fmt.Fprintln(r.w, `  </fieldset>`)
 }
 

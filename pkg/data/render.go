@@ -9,8 +9,8 @@ import (
 type DynamicFormRenderer interface {
 	BeginForm()
 	EndForm()
-	BeginFieldset(label string)
-	EndFieldset()
+	BeginObject(label string)
+	EndObject()
 	Input(label, name, inputType, value string)
 	Checkbox(label, name string, checked bool)
 }
@@ -25,7 +25,7 @@ func renderValue(val any, key, path string, r DynamicFormRenderer) error {
 	switch v := val.(type) {
 	case map[string]any:
 		if key != "" {
-			r.BeginFieldset(key)
+			r.BeginObject(key)
 		}
 
 		keys := make([]string, 0, len(v))
@@ -43,7 +43,7 @@ func renderValue(val any, key, path string, r DynamicFormRenderer) error {
 		}
 
 		if key != "" {
-			r.EndFieldset()
+			r.EndObject()
 		}
 
 	case string:

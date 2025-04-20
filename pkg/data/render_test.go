@@ -21,10 +21,10 @@ func (r *MockWriterRenderer) BeginForm() {
 func (r *MockWriterRenderer) EndForm() {
 	r.logf("EndForm")
 }
-func (r *MockWriterRenderer) BeginFieldset(label string) {
+func (r *MockWriterRenderer) BeginObject(label string) {
 	r.logf("BeginFieldset label=%s", label)
 }
-func (r *MockWriterRenderer) EndFieldset() {
+func (r *MockWriterRenderer) EndObject() {
 	r.logf("EndFieldset")
 }
 func (r *MockWriterRenderer) Input(label, name, inputType, value string) {
