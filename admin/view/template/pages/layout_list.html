@@ -5,8 +5,8 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>#</th>
-                    <th>{{Trans "LAYOUT_LIST.column_name"}}</th>
-                    <th>{{Trans "LAYOUT_LIST.column_action"}}</th>
+                    <th>{{Trans "TEMPLATE_LIST.column_name"}}</th>
+                    <th>{{Trans "TEMPLATE_LIST.column_action"}}</th>
                 </tr>
                 {{ range $idx, $layout := .Templates }}
                 <tr>
@@ -24,7 +24,7 @@
                 {{end}}
             </table>
             <a href="/admin/layout/add" class="btn btn-primary rounded-pill"
-                >{{Trans "LAYOUT.add"}}</a
+                >{{Trans "TEMPLATE.add"}}</a
             >
             {{template "pagination" .Pages}}
         </div>

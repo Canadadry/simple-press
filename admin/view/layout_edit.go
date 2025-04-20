@@ -22,7 +22,7 @@ func TemplateEdit(a TemplateEditData, errors TemplateEditError) ViewFunc {
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/layout_edit.html",
-			TemplateData("LAYOUT_EDIT.page_title", viewData{a, errors}),
+			TemplateData("TEMPLATE_EDIT.page_title", viewData{a, errors}),
 		)
 	}
 }

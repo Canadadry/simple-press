@@ -10,7 +10,7 @@
                 <div class="col-md-12">
                     <div class="form-floating mb-4">
                     <input id="form_name" type="text" name="name" class="form-control" value="{{.Template.Name}}" required>
-                    <label for="form_name">{{Trans "LAYOUT_EDIT.name"}} *</label>
+                    <label for="form_name">{{Trans "TEMPLATE_EDIT.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
                     <div class="invalid-feedback  d-block">
                         {{Trans (print "FORM_ERROR." .Errors.Name)}}
@@ -32,7 +32,7 @@
                 </div>
                 <!-- /column -->
                 <div class="col-12">
-                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "LAYOUT_EDIT.submit"}}">
+                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "TEMPLATE_EDIT.submit"}}">
                     <p class="text-muted"><strong>*</strong>{{Trans "FORM.field_requiered"}}</p>
                 </div>
                 <!-- /column -->
