@@ -25,13 +25,13 @@ type File struct {
 	Content []byte
 }
 
-type Layout struct {
+type Page struct {
 	ID      int64
 	Name    string
 	Content string
 }
 
-type Page struct {
+type Template struct {
 	ID      int64
 	Name    string
 	Content string

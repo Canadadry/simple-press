@@ -2,13 +2,13 @@
 SELECT
     count(*)
 FROM
-    pages;
+    page;
 
 -- name: CountPageByName :one
 SELECT
     count(*)
 FROM
-    pages
+    page
 WHERE
     name = ?;
 
@@ -16,18 +16,18 @@ WHERE
 SELECT
     count(*)
 FROM
-    pages
+    page
 WHERE
     id = ?;
 
 -- name: CreatePage :execlastid
 INSERT INTO
-    pages (name, content)
+    page (name, content)
 VALUES
     (?, ?);
 
 -- name: UpdatePage :exec
-UPDATE pages
+UPDATE page
 SET
     name = ?,
     content = ?
@@ -35,7 +35,7 @@ WHERE
     name = ?;
 
 -- name: DeletePage :exec
-DELETE FROM pages
+DELETE FROM page
 WHERE
     name = ?;
 
@@ -43,7 +43,7 @@ WHERE
 SELECT
     *
 FROM
-    pages
+    page
 WHERE
     name = ?
 LIMIT
@@ -53,7 +53,7 @@ LIMIT
 SELECT
     *
 FROM
-    pages
+    page
 WHERE
     id = ?
 LIMIT
@@ -63,7 +63,7 @@ LIMIT
 SELECT
     *
 FROM
-    pages
+    page
 ORDER BY
     name DESC
 LIMIT
@@ -71,10 +71,10 @@ LIMIT
 OFFSET
     ?;
 
--- name: GetAllPages :many
+-- name: GetAllPage :many
 SELECT
     *
 FROM
-    pages
+    page
 ORDER BY
     id DESC;

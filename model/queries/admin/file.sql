@@ -2,19 +2,19 @@
 SELECT
     count(*)
 FROM
-    files;
+    file;
 
 -- name: CountFileByName :one
 SELECT
     count(*)
 FROM
-    files
+    file
 WHERE
     name = ?;
 
 -- name: UploadFile :execlastid
 INSERT INTO
-    files (name, content)
+    file (name, content)
 VALUES
     (?, ?);
 
@@ -22,14 +22,14 @@ VALUES
 SELECT
     content
 FROM
-    files
+    file
 WHERE
     name = ?
 LIMIT
     1;
 
 -- name: DeleteFile :exec
-DELETE FROM files
+DELETE FROM file
 WHERE
     name = ?;
 
@@ -37,7 +37,7 @@ WHERE
 SELECT
     name
 FROM
-    files
+    file
 ORDER BY
     id DESC
 LIMIT

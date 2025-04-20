@@ -2,14 +2,14 @@
 SELECT
     *
 FROM
-    articles
+    article
 WHERE
     slug = ?
     and draft = false
 LIMIT
     1;
 
--- name: GetArticlesList :many
+-- name: GetArticleList :many
 SELECT
     title,
     date,
@@ -17,7 +17,7 @@ SELECT
     slug,
     draft
 FROM
-    articles
+    article
 WHERE
     draft = false
 ORDER BY

@@ -13,7 +13,7 @@ const countPage = `-- name: CountPage :one
 SELECT
     count(*)
 FROM
-    pages
+    page
 `
 
 func (q *Queries) CountPage(ctx context.Context) (int64, error) {
@@ -27,7 +27,7 @@ const countPageByID = `-- name: CountPageByID :one
 SELECT
     count(*)
 FROM
-    pages
+    page
 WHERE
     id = ?
 `
@@ -43,7 +43,7 @@ const countPageByName = `-- name: CountPageByName :one
 SELECT
     count(*)
 FROM
-    pages
+    page
 WHERE
     name = ?
 `
@@ -57,7 +57,7 @@ func (q *Queries) CountPageByName(ctx context.Context, name string) (int64, erro
 
 const createPage = `-- name: CreatePage :execlastid
 INSERT INTO
-    pages (name, content)
+    page (name, content)
 VALUES
     (?, ?)
 `
@@ -76,7 +76,7 @@ func (q *Queries) CreatePage(ctx context.Context, arg CreatePageParams) (int64, 
 }
 
 const deletePage = `-- name: DeletePage :exec
-DELETE FROM pages
+DELETE FROM page
 WHERE
     name = ?
 `
@@ -86,17 +86,17 @@ func (q *Queries) DeletePage(ctx context.Context, name string) error {
 	return err
 }
 
-const getAllPages = `-- name: GetAllPages :many
+const getAllPage = `-- name: GetAllPage :many
 SELECT
     id, name, content
 FROM
-    pages
+    page
 ORDER BY
     id DESC
 `
 
-func (q *Queries) GetAllPages(ctx context.Context) ([]Page, error) {
-	rows, err := q.db.QueryContext(ctx, getAllPages)
+func (q *Queries) GetAllPage(ctx context.Context) ([]Page, error) {
+	rows, err := q.db.QueryContext(ctx, getAllPage)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ const getPageList = `-- name: GetPageList :many
 SELECT
     id, name, content
 FROM
-    pages
+    page
 ORDER BY
     name DESC
 LIMIT
@@ -163,7 +163,7 @@ const selectPage = `-- name: SelectPage :many
 SELECT
     id, name, content
 FROM
-    pages
+    page
 WHERE
     name = ?
 LIMIT
@@ -197,7 +197,7 @@ const selectPageByID = `-- name: SelectPageByID :many
 SELECT
     id, name, content
 FROM
-    pages
+    page
 WHERE
     id = ?
 LIMIT
@@ -228,7 +228,7 @@ func (q *Queries) SelectPageByID(ctx context.Context, id int64) ([]Page, error) 
 }
 
 const updatePage = `-- name: UpdatePage :exec
-UPDATE pages
+UPDATE page
 SET
     name = ?,
     content = ?

@@ -1,4 +1,4 @@
-CREATE TABLE articles (
+CREATE TABLE article (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
     date DATE NOT NULL,
@@ -10,19 +10,19 @@ CREATE TABLE articles (
     FOREIGN KEY (layout_id) REFERENCES pages (id)
 );
 
-CREATE TABLE layouts (
+CREATE TABLE template (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     content TEXT NOT NULL
 );
 
-CREATE TABLE pages (
+CREATE TABLE page (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     content TEXT NOT NULL
 );
 
-CREATE TABLE files (
+CREATE TABLE file (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     content BLOB NOT NULL

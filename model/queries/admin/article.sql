@@ -2,19 +2,19 @@
 SELECT
     count(*)
 FROM
-    articles;
+    article;
 
 -- name: CountArticlesBySlug :one
 SELECT
     count(*)
 FROM
-    articles
+    article
 WHERE
     slug = ?;
 
 -- name: CreateArticle :execlastid
 INSERT INTO
-    articles (
+    article (
         title,
         date,
         author,
@@ -27,7 +27,7 @@ VALUES
     (?, ?, ?, ?, ?, ?, ?);
 
 -- name: UpdateArticle :exec
-UPDATE articles
+UPDATE article
 SET
     title = ?,
     date = ?,
@@ -40,7 +40,7 @@ WHERE
     slug = ?;
 
 -- name: DeleteArticle :exec
-DELETE FROM articles
+DELETE FROM article
 WHERE
     slug = ?;
 
@@ -48,13 +48,13 @@ WHERE
 SELECT
     *
 FROM
-    articles
+    article
 WHERE
     slug = ?
 LIMIT
     1;
 
--- name: GetArticlesList :many
+-- name: GetArticleList :many
 SELECT
     title,
     date,
@@ -62,7 +62,7 @@ SELECT
     slug,
     draft
 FROM
-    articles
+    article
 ORDER BY
     date DESC
 LIMIT

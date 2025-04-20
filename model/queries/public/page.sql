@@ -2,7 +2,7 @@
 SELECT
     *
 FROM
-    pages
+    page
 WHERE
     id = ?
 LIMIT

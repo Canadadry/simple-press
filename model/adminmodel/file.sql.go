@@ -13,7 +13,7 @@ const countFile = `-- name: CountFile :one
 SELECT
     count(*)
 FROM
-    files
+    file
 `
 
 func (q *Queries) CountFile(ctx context.Context) (int64, error) {
@@ -27,7 +27,7 @@ const countFileByName = `-- name: CountFileByName :one
 SELECT
     count(*)
 FROM
-    files
+    file
 WHERE
     name = ?
 `
@@ -40,7 +40,7 @@ func (q *Queries) CountFileByName(ctx context.Context, name string) (int64, erro
 }
 
 const deleteFile = `-- name: DeleteFile :exec
-DELETE FROM files
+DELETE FROM file
 WHERE
     name = ?
 `
@@ -54,7 +54,7 @@ const downloadFile = `-- name: DownloadFile :many
 SELECT
     content
 FROM
-    files
+    file
 WHERE
     name = ?
 LIMIT
@@ -88,7 +88,7 @@ const getFileList = `-- name: GetFileList :many
 SELECT
     name
 FROM
-    files
+    file
 ORDER BY
     id DESC
 LIMIT
@@ -127,7 +127,7 @@ func (q *Queries) GetFileList(ctx context.Context, arg GetFileListParams) ([]str
 
 const uploadFile = `-- name: UploadFile :execlastid
 INSERT INTO
-    files (name, content)
+    file (name, content)
 VALUES
     (?, ?)
 `

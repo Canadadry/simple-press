@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const getArticlesList = `-- name: GetArticlesList :many
+const getArticleList = `-- name: GetArticleList :many
 SELECT
     title,
     date,
@@ -18,7 +18,7 @@ SELECT
     slug,
     draft
 FROM
-    articles
+    article
 WHERE
     draft = false
 ORDER BY
@@ -29,12 +29,12 @@ OFFSET
     ?
 `
 
-type GetArticlesListParams struct {
+type GetArticleListParams struct {
 	Limit  int64
 	Offset int64
 }
 
-type GetArticlesListRow struct {
+type GetArticleListRow struct {
 	Title  string
 	Date   time.Time
 	Author string
@@ -42,15 +42,15 @@ type GetArticlesListRow struct {
 	Draft  int64
 }
 
-func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams) ([]GetArticlesListRow, error) {
-	rows, err := q.db.QueryContext(ctx, getArticlesList, arg.Limit, arg.Offset)
+func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) ([]GetArticleListRow, error) {
+	rows, err := q.db.QueryContext(ctx, getArticleList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetArticlesListRow
+	var items []GetArticleListRow
 	for rows.Next() {
-		var i GetArticlesListRow
+		var i GetArticleListRow
 		if err := rows.Scan(
 			&i.Title,
 			&i.Date,
@@ -75,7 +75,7 @@ const selectArticleBySlug = `-- name: SelectArticleBySlug :many
 SELECT
     id, title, date, author, content, slug, draft, layout_id
 FROM
-    articles
+    article
 WHERE
     slug = ?
     and draft = false

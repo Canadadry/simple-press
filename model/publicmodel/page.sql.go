@@ -13,7 +13,7 @@ const selectPageByID = `-- name: SelectPageByID :many
 SELECT
     id, name, content
 FROM
-    pages
+    page
 WHERE
     id = ?
 LIMIT

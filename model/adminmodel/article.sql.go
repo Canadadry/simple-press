@@ -14,7 +14,7 @@ const countArticles = `-- name: CountArticles :one
 SELECT
     count(*)
 FROM
-    articles
+    article
 `
 
 func (q *Queries) CountArticles(ctx context.Context) (int64, error) {
@@ -28,7 +28,7 @@ const countArticlesBySlug = `-- name: CountArticlesBySlug :one
 SELECT
     count(*)
 FROM
-    articles
+    article
 WHERE
     slug = ?
 `
@@ -42,7 +42,7 @@ func (q *Queries) CountArticlesBySlug(ctx context.Context, slug string) (int64, 
 
 const createArticle = `-- name: CreateArticle :execlastid
 INSERT INTO
-    articles (
+    article (
         title,
         date,
         author,
@@ -82,7 +82,7 @@ func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (i
 }
 
 const deleteArticle = `-- name: DeleteArticle :exec
-DELETE FROM articles
+DELETE FROM article
 WHERE
     slug = ?
 `
@@ -92,7 +92,7 @@ func (q *Queries) DeleteArticle(ctx context.Context, slug string) error {
 	return err
 }
 
-const getArticlesList = `-- name: GetArticlesList :many
+const getArticleList = `-- name: GetArticleList :many
 SELECT
     title,
     date,
@@ -100,7 +100,7 @@ SELECT
     slug,
     draft
 FROM
-    articles
+    article
 ORDER BY
     date DESC
 LIMIT
@@ -109,12 +109,12 @@ OFFSET
     ?
 `
 
-type GetArticlesListParams struct {
+type GetArticleListParams struct {
 	Limit  int64
 	Offset int64
 }
 
-type GetArticlesListRow struct {
+type GetArticleListRow struct {
 	Title  string
 	Date   time.Time
 	Author string
@@ -122,15 +122,15 @@ type GetArticlesListRow struct {
 	Draft  int64
 }
 
-func (q *Queries) GetArticlesList(ctx context.Context, arg GetArticlesListParams) ([]GetArticlesListRow, error) {
-	rows, err := q.db.QueryContext(ctx, getArticlesList, arg.Limit, arg.Offset)
+func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) ([]GetArticleListRow, error) {
+	rows, err := q.db.QueryContext(ctx, getArticleList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetArticlesListRow
+	var items []GetArticleListRow
 	for rows.Next() {
-		var i GetArticlesListRow
+		var i GetArticleListRow
 		if err := rows.Scan(
 			&i.Title,
 			&i.Date,
@@ -155,7 +155,7 @@ const selectArticleBySlug = `-- name: SelectArticleBySlug :many
 SELECT
     id, title, date, author, content, slug, draft, layout_id
 FROM
-    articles
+    article
 WHERE
     slug = ?
 LIMIT
@@ -195,7 +195,7 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 }
 
 const updateArticle = `-- name: UpdateArticle :exec
-UPDATE articles
+UPDATE article
 SET
     title = ?,
     date = ?,

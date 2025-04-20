@@ -13,7 +13,7 @@ const downloadFile = `-- name: DownloadFile :many
 SELECT
     content
 FROM
-    files
+    file
 WHERE
     name = ?
 LIMIT
