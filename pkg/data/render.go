@@ -15,15 +15,14 @@ type DynamicFormRenderer interface {
 	Checkbox(label, name string, checked bool)
 }
 
-func Render(data any, r DynamicFormRenderer) {
+func Render(data any, r DynamicFormRenderer) error {
 	r.BeginForm()
-	renderValue(data, "", "", r)
-	r.EndForm()
+	defer r.EndForm()
+	return renderValue(data, "", "", r)
 }
 
-func renderValue(val any, key, path string, r DynamicFormRenderer) {
+func renderValue(val any, key, path string, r DynamicFormRenderer) error {
 	switch v := val.(type) {
-
 	case map[string]any:
 		if key != "" {
 			r.BeginFieldset(key)
@@ -37,7 +36,10 @@ func renderValue(val any, key, path string, r DynamicFormRenderer) {
 
 		for _, k := range keys {
 			fullPath := joinPath(path, k)
-			renderValue(v[k], k, fullPath, r)
+			err := renderValue(v[k], k, fullPath, r)
+			if err != nil {
+				return err
+			}
 		}
 
 		if key != "" {
@@ -51,8 +53,9 @@ func renderValue(val any, key, path string, r DynamicFormRenderer) {
 	case bool:
 		r.Checkbox(key, path, v)
 	default:
-		r.Input(key, path, "text", "")
+		return fmt.Errorf("at %v not handle value type %T", path, val)
 	}
+	return nil
 }
 
 func joinPath(parts ...string) string {

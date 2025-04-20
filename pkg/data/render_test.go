@@ -37,7 +37,7 @@ func (r *MockWriterRenderer) Select(label, name string, options []string, value 
 	r.logf("Select label=%s name=%s options=%v value=%s", label, name, options, value)
 }
 
-func TestRenderDefinition(t *testing.T) {
+func TestRender(t *testing.T) {
 	tests := map[string]struct {
 		Input    any
 		Expected []string
@@ -71,9 +71,36 @@ func TestRenderDefinition(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			var buf strings.Builder
 			mock := &MockWriterRenderer{w: &buf}
-			Render(tt.Input, mock)
+			err := Render(tt.Input, mock)
+			if err != nil {
+				t.Fatalf("failed %v", err)
+			}
 			lines := strings.Split(strings.TrimSpace(buf.String()), "\n")
 			compareCallStacks(t, lines, tt.Expected)
+		})
+	}
+}
+
+func TestRenderCanRaiseError(t *testing.T) {
+	tests := map[string]struct {
+		Input any
+	}{
+
+		"nested object": {
+			Input: map[string]any{
+				"profile": []int{1, 2, 3},
+			},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			var buf strings.Builder
+			mock := &MockWriterRenderer{w: &buf}
+			err := Render(tt.Input, mock)
+			if err == nil {
+				t.Fatal("should have raised an error")
+			}
 		})
 	}
 }

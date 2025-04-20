@@ -4,25 +4,45 @@ import (
 	"app/pkg/data"
 	"bytes"
 	"encoding/json"
+	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
-var exampleDef = map[string]any{
-	"children": []any{
-		map[string]any{
+var (
+	form_data = map[string]any{}
+)
+
+func main() {
+
+	defaultValue := map[string]any{
+		"children": map[string]any{
 			"name":   "Jean",
 			"gender": "Mr",
 		},
-	},
-	"emails": map[string]any{
-		"1": "jean@paul.com",
-		"2": "paul@jean.com",
-	},
-}
+		"emails": map[string]any{
+			"1": "jean@paul.com",
+			"2": "paul@jean.com",
+		},
+	}
+	defaultStr, _ := json.Marshal(defaultValue)
 
-func main() {
+	rawJSON := ""
+	flag.StringVar(&rawJSON, "data", string(defaultStr), "JSON input defining the form structure")
+	flag.Parse()
+
+	if rawJSON != "" {
+		if err := json.Unmarshal([]byte(rawJSON), &form_data); err != nil {
+			fmt.Fprintf(os.Stderr, "Invalid JSON passed to -data: %v\n", err)
+			os.Exit(1)
+		}
+	} else {
+		form_data["value"] = "none"
+	}
+
 	http.HandleFunc("/", handleForm)
 	http.HandleFunc("/submit", handleSubmit)
 
@@ -33,7 +53,11 @@ func main() {
 func handleForm(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
 	renderer := data.NewBootstrapRenderer(&buf, data.ThemeBootstrap)
-	data.Render(exampleDef, renderer)
+	err := data.Render(form_data, renderer)
+	if err != nil {
+		fmt.Fprintln(w, "invalid data", err)
+		return
+	}
 	formHTML := buf.String()
 
 	tmpl := `
@@ -59,12 +83,12 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
 
 func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	var err error
-	exampleDef, err = data.ParseFormData(r, exampleDef)
+	form_data, err = data.ParseFormData(r, form_data)
 	if err != nil {
 		http.Error(w, "ParseFormData: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(exampleDef)
+	_ = json.NewEncoder(w).Encode(form_data)
 }
