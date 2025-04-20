@@ -1,18 +1,34 @@
 package data
 
+type FormTheme struct {
+	FormName          string
+	FormMethod        string
+	FormAction        string
+	FormClass         string
+	LabelClass        string
+	InputClass        string
+	SelectClass       string
+	CheckboxClass     string
+	FieldWrapper      string
+	RowWrapper        string
+	FieldsetClass     string
+	LegendClass       string
+	SubmitButtonClass string
+	SubmitButtonName  string
+}
+
 var ThemeNoStyle = FormTheme{
-	FormClass:     "",
-	LabelClass:    "",
-	InputClass:    "",
-	SelectClass:   "",
-	CheckboxClass: "",
-	FieldWrapper:  "",
-	RowWrapper:    "",
-	FieldsetClass: "",
-	LegendClass:   "",
+	FormName:         "form",
+	FormAction:       "/submit",
+	FormMethod:       "POST",
+	SubmitButtonName: "Submit",
 }
 
 var ThemeBootstrap = FormTheme{
+	FormName:          "form",
+	FormAction:        "/submit",
+	FormMethod:        "POST",
+	SubmitButtonName:  "Submit",
 	FormClass:         "form-bootstrap",
 	LabelClass:        "form-label",
 	InputClass:        "form-control",
@@ -21,8 +37,6 @@ var ThemeBootstrap = FormTheme{
 	FieldWrapper:      "mb-3",
 	RowWrapper:        "row",
 	FieldsetClass:     "mb-4",
-	AddButtonClass:    "btn btn-secondary",
-	DeleteButtonClass: "btn btn-outline-danger",
 	SubmitButtonClass: "btn btn-primary",
 	LegendClass:       "fw-bold",
 }

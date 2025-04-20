@@ -12,26 +12,14 @@ import (
 var exampleDef = map[string]any{
 	"children": []any{
 		map[string]any{
-			"name":   "string",
-			"gender": "enum:Mr;Mme",
+			"name":   "Jean",
+			"gender": "Mr",
 		},
 	},
-	"emails": []any{"email"},
-}
-
-var bootstrapTheme = data.FormTheme{
-	FormClass:         "needs-validation",
-	LabelClass:        "form-label",
-	InputClass:        "form-control",
-	SelectClass:       "form-select",
-	CheckboxClass:     "form-check-input",
-	FieldWrapper:      "mb-3",
-	RowWrapper:        "row",
-	FieldsetClass:     "mb-4",
-	AddButtonClass:    "btn btn-secondary",
-	DeleteButtonClass: "btn btn-outline-danger",
-	SubmitButtonClass: "btn btn-primary",
-	LegendClass:       "fw-bold",
+	"emails": map[string]any{
+		"1": "jean@paul.com",
+		"2": "paul@jean.com",
+	},
 }
 
 func main() {
@@ -43,11 +31,9 @@ func main() {
 }
 
 func handleForm(w http.ResponseWriter, r *http.Request) {
-	field := data.Parse(exampleDef, true)
-
 	var buf bytes.Buffer
-	renderer := data.NewBootstrapRenderer(&buf, bootstrapTheme)
-	data.GenerateFormDynamicHTMLWithName(field, renderer, "demo")
+	renderer := data.NewBootstrapRenderer(&buf, data.ThemeBootstrap)
+	data.Render(exampleDef, renderer)
 	formHTML := buf.String()
 
 	tmpl := `
@@ -72,18 +58,13 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSubmit(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "ParseForm: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	field := data.Parse(exampleDef, true)
-	result, err := data.ParseFormData(r, field)
+	var err error
+	exampleDef, err = data.ParseFormData(r, exampleDef)
 	if err != nil {
 		http.Error(w, "ParseFormData: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(result)
+	_ = json.NewEncoder(w).Encode(exampleDef)
 }

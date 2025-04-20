@@ -8,118 +8,39 @@ import (
 
 func TestDynamicRenderer_WithWriter(t *testing.T) {
 	tests := map[string]struct {
-		Render   func(DynamicFormRenderer)
+		Input    any
 		Renderer func(w io.Writer) DynamicFormRenderer
 		Expected []string
 	}{
-		"basic bootstrap form": {
-			Render: func(r DynamicFormRenderer) {
-				r.BeginForm("demo", "/submit", "POST")
-				r.Input("firstname", "firstname", "text")
-				r.Select("gender", "gender", []string{"Mr", "Mme"})
-				r.Checkbox("newsletter", "newsletter")
-				r.EndForm()
+		"nested object": {
+			Input: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Jane",
+						"last":  "Doe",
+					},
+					"age": 42,
+				},
 			},
 			Renderer: func(w io.Writer) DynamicFormRenderer {
 				return NewBootstrapRenderer(w, ThemeBootstrap)
 			},
 			Expected: []string{
-				`<form method="POST" action="/submit" name="demo" class="form-bootstrap">`,
-				`  <div class="mb-3">`,
-				`    <label class="form-label">firstname: <input type="text" name="firstname" class="form-control"/></label>`,
-				`  </div>`,
-				`  <div class="mb-3">`,
-				`    <label class="form-label">gender: <select name="gender" class="form-select">`,
-				`      <option value="Mr">Mr</option>`,
-				`      <option value="Mme">Mme</option>`,
-				`    </select></label>`,
-				`  </div>`,
-				`  <div class="mb-3">`,
-				`    <label class="form-label">newsletter: <input type="checkbox" name="newsletter" value="true" class="form-check-input"/></label>`,
-				`  </div>`,
-				`  <button class="btn btn-primary" type="submit">Submit</button>`,
-				`</form>`,
-			},
-		},
-		"array of emails": {
-			Render: func(r DynamicFormRenderer) {
-				r.BeginForm("emailForm", "/submit", "POST")
-				r.BeginFieldset("emails")
-				r.BeginArray("emails", "emails")
-				r.BeginArrayItem(0)
-				r.Input("", "emails.0", "email")
-				r.EndArrayItem()
-				r.EndArray()
-				r.EndFieldset()
-				r.EndForm()
-			},
-			Renderer: func(w io.Writer) DynamicFormRenderer {
-				return NewBootstrapRenderer(w, ThemeBootstrap)
-			},
-			Expected: []string{
-				`<form method="POST" action="/submit" name="emailForm" class="form-bootstrap">`,
+				`<form method="POST" action="/submit" name="form" class="form-bootstrap">`,
 				`  <fieldset class="mb-4">`,
-				`    <legend class="fw-bold">emails</legend>`,
-				`    <div id="container-emails">`,
-				`      <div data-item class="row mb-3">`,
-				`        <div class="col">`,
-				`          <div class="mb-3">`,
-				`            <label class="form-label">: <input type="email" name="emails.0" class="form-control"/></label>`,
-				`          </div>`,
-				`        </div>`,
-				`      </div>`,
+				`    <legend class="fw-bold">profile</legend>`,
+				`    <div class="mb-3">`,
+				`      <label class="form-label">age: <input type="number" name="profile.age" value="42" class="form-control"/></label>`,
 				`    </div>`,
-				`  </fieldset>`,
-				`  <button class="btn btn-primary" type="submit">Submit</button>`,
-				`</form>`,
-			},
-		}, "nested array (children -> pets)": {
-			Render: func(r DynamicFormRenderer) {
-				r.BeginForm("nestedSlice", "/submit", "POST")
-				r.BeginFieldset("children")
-				r.BeginArray("children", "children")
-				r.BeginArrayItem(0)
-				r.Input("name", "children.0.name", "text")
-				r.BeginFieldset("pets")
-				r.BeginArray("pets", "children.0.pets")
-				r.BeginArrayItem(0)
-				r.Input("pet", "children.0.pets.0", "text")
-				r.EndArrayItem()
-				r.EndArray()
-				r.EndFieldset()
-				r.EndArrayItem()
-				r.EndArray()
-				r.EndFieldset()
-				r.EndForm()
-			},
-			Renderer: func(w io.Writer) DynamicFormRenderer {
-				return NewBootstrapRenderer(w, ThemeBootstrap)
-			},
-			Expected: []string{
-				`<form method="POST" action="/submit" name="nestedSlice" class="form-bootstrap">`,
-				`  <fieldset class="mb-4">`,
-				`    <legend class="fw-bold">children</legend>`,
-				`    <div id="container-children">`,
-				`      <div data-item class="row mb-3">`,
-				`        <div class="col">`,
-				`          <div class="mb-3">`,
-				`            <label class="form-label">name: <input type="text" name="children.0.name" class="form-control"/></label>`,
-				`          </div>`,
-				`          <fieldset class="mb-4">`,
-				`            <legend class="fw-bold">pets</legend>`,
-				`            <div id="container-children.0.pets">`,
-				`              <div data-item class="row mb-3">`,
-				`                <div class="col">`,
-				`                  <div class="mb-3">`,
-				`                    <label class="form-label">pet: <input type="text" name="children.0.pets.0" class="form-control"/></label>`,
-				`                  </div>`,
-				`                </div>`,
-				`              </div>`,
-				`            </div>`,
-				`          </fieldset>`,
-				`        </div>`,
+				`    <fieldset class="mb-4">`,
+				`      <legend class="fw-bold">name</legend>`,
+				`      <div class="mb-3">`,
+				`        <label class="form-label">first: <input type="text" name="profile.name.first" value="Jane" class="form-control"/></label>`,
 				`      </div>`,
-				`    </div>`,
+				`      <div class="mb-3">`,
+				`        <label class="form-label">last: <input type="text" name="profile.name.last" value="Doe" class="form-control"/></label>`,
+				`      </div>`,
+				`    </fieldset>`,
 				`  </fieldset>`,
 				`  <button class="btn btn-primary" type="submit">Submit</button>`,
 				`</form>`,
@@ -130,9 +51,7 @@ func TestDynamicRenderer_WithWriter(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			var buf strings.Builder
-			renderer := tt.Renderer(&buf)
-			tt.Render(renderer)
-
+			Render(tt.Input, tt.Renderer(&buf))
 			lines := strings.Split(strings.TrimSpace(buf.String()), "\n")
 			compareCallStacks(t, lines, tt.Expected)
 		})
