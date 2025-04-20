@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	layoutEditName    = "name"
-	layoutEditContent = "content"
+	templateEditName    = "name"
+	templateEditContent = "content"
 )
 
 type TemplateEdit struct {
@@ -38,8 +38,8 @@ func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error)
 		return TemplateEdit{}, TemplateEditError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 	a := TemplateEdit{
-		Name:    r.PostForm.Get(layoutEditName),
-		Content: r.PostForm.Get(layoutEditContent),
+		Name:    r.PostForm.Get(templateEditName),
+		Content: r.PostForm.Get(templateEditContent),
 	}
 	errors := TemplateEditError{}
 	if a.Name == "" {

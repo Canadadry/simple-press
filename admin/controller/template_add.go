@@ -28,6 +28,6 @@ func (c *Controller) PostTemplateAdd(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("cannot create Template : %w", err)
 	}
 
-	http.Redirect(w, r, "/admin/layouts/"+l.Name+"/edit", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/template/"+l.Name+"/edit", http.StatusSeeOther)
 	return nil
 }

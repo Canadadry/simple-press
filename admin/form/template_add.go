@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	layoutAddName = "name"
+	templateAddName = "name"
 )
 
 type Template struct {
@@ -35,7 +35,7 @@ func ParseTemplateAdd(r *http.Request) (Template, TemplateError, error) {
 		return Template{}, TemplateError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 	l := Template{
-		Name: r.PostForm.Get(layoutAddName),
+		Name: r.PostForm.Get(templateAddName),
 	}
 	errors := TemplateError{}
 	if l.Name == "" {

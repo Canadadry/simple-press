@@ -10,7 +10,7 @@ PAGE.title,title,title
 HEADER.title,title,title
 HEADER.home,home,home
 HEADER.articles,articles,articles
-HEADER.layout,layout,layout
+HEADER.template,template,template
 HEADER.current_language,current_language,current_language
 HEADER.change_language,change_language,change_language
 footer.tagline,tagline,tagline
@@ -82,7 +82,7 @@ FILE_ADD.name_placeholder,name_placeholder,name_placeholder
 FILE_ADD.file,file,file
 FILE_ADD.submit,submit,submit
 MENU.articles,articles,articles
-MENU.layouts,layouts,layouts
+MENU.template,template,template
 MENU.pages,pages,pages
 MENU.files,files,files
 MENU.settings,settings,settings

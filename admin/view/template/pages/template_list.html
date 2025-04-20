@@ -8,22 +8,22 @@
                     <th>{{Trans "TEMPLATE_LIST.column_name"}}</th>
                     <th>{{Trans "TEMPLATE_LIST.column_action"}}</th>
                 </tr>
-                {{ range $idx, $layout := .Templates }}
+                {{ range $idx, $template := .Templates }}
                 <tr>
                     <td>{{$idx}}</td>
-                    <td>{{$layout.Name}}</td>
+                    <td>{{$template.Name}}</td>
                     <td>
-                        <a href="/admin/layouts/{{$layout.Name}}/edit">
+                        <a href="/admin/template/{{$template.Name}}/edit">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <a href="/admin/layouts/{{$layout.Name}}/delete">
+                        <a href="/admin/template/{{$template.Name}}/delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>
                 </tr>
                 {{end}}
             </table>
-            <a href="/admin/layout/add" class="btn btn-primary rounded-pill"
+            <a href="/admin/template/add" class="btn btn-primary rounded-pill"
                 >{{Trans "TEMPLATE.add"}}</a
             >
             {{template "pagination" .Pages}}

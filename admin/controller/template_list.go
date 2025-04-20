@@ -15,22 +15,22 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 
 	count, err := c.Repository.CountTemplates(r.Context())
 	if err != nil {
-		return fmt.Errorf("cannot count layouts : %w", err)
+		return fmt.Errorf("cannot count template : %w", err)
 	}
 
 	list, err := c.Repository.GetTemplateList(r.Context(), limit, page*limit)
 	if err != nil {
-		return fmt.Errorf("cannot list layouts : %w", err)
+		return fmt.Errorf("cannot list template : %w", err)
 	}
 
 	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/layouts", http.StatusFound)
+		http.Redirect(w, r, "/admin/template", http.StatusFound)
 		return nil
 	}
 
-	layouts := []view.TemplateListData{}
+	templates := []view.TemplateListData{}
 	for _, a := range list {
-		layouts = append(layouts, view.TemplateListData{
+		templates = append(templates, view.TemplateListData{
 			Name: a.Name,
 		})
 	}
@@ -39,7 +39,7 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 		Total:     count,
 		Limit:     limit,
 		Page:      page,
-		Templates: layouts,
+		Templates: templates,
 	}
 
 	return c.render(w, r, view.TemplatesList(l))

@@ -15,22 +15,22 @@ func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 
 	count, err := c.Repository.CountFiles(r.Context())
 	if err != nil {
-		return fmt.Errorf("cannot count layouts : %w", err)
+		return fmt.Errorf("cannot count file : %w", err)
 	}
 
 	list, err := c.Repository.GetFileList(r.Context(), limit, page*limit)
 	if err != nil {
-		return fmt.Errorf("cannot list layouts : %w", err)
+		return fmt.Errorf("cannot list files : %w", err)
 	}
 
 	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/layouts", http.StatusFound)
+		http.Redirect(w, r, "/admin/template", http.StatusFound)
 		return nil
 	}
 
-	layouts := []view.FileListData{}
+	files := []view.FileListData{}
 	for _, a := range list {
-		layouts = append(layouts, view.FileListData{
+		files = append(files, view.FileListData{
 			Name: a.Name,
 		})
 	}
@@ -39,7 +39,7 @@ func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 		Total: count,
 		Limit: limit,
 		Page:  page,
-		Files: layouts,
+		Files: files,
 	}
 
 	return c.render(w, r, view.FilesList(l))

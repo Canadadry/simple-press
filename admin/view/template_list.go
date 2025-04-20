@@ -29,7 +29,7 @@ func TemplatesList(data TemplatesListData) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		lastPage := int(math.Ceil(float64(data.Total) / float64(data.Limit)))
-		p := paginator.New(data.Page, lastPage, MaxTemplatePaginationItem, "/layouts?page=%page%")
+		p := paginator.New(data.Page, lastPage, MaxTemplatePaginationItem, "/template?page=%page%")
 		return render(w, tr,
 			"template/pages/template_list.html",
 			TemplateData("TEMPLATE_LIST.page_title", viewData{

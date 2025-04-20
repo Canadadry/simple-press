@@ -26,7 +26,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 	}
 	baseTemplates, err := c.Repository.SelectAllTemplate(r.Context())
 	if err != nil {
-		return fmt.Errorf("cannot select base layouts : %w", err)
+		return fmt.Errorf("cannot select base template : %w", err)
 	}
 	files := map[string]string{}
 	for _, l := range baseTemplates {
@@ -46,7 +46,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 func renderPreview(w io.Writer, files map[string]string, pageData repository.Article) error {
 	const baseTemplate = "baseof.html"
 	if _, ok := files[baseTemplate]; !ok {
-		return fmt.Errorf("base template %s not defined in _layout/", baseTemplate)
+		return fmt.Errorf("base template %s not defined in", baseTemplate)
 	}
 	funcMap := template.FuncMap{
 		"markdownify": func(source string) template.HTML {

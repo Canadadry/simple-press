@@ -15,7 +15,7 @@ func (c *Controller) GetTemplateEdit(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("cannot select Template : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/template", http.StatusSeeOther)
 	}
 
 	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
@@ -26,12 +26,12 @@ func (c *Controller) GetTemplateEdit(w http.ResponseWriter, r *http.Request) err
 
 func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) error {
 	name := router.GetField(r, 0)
-	layout, ok, err := c.Repository.SelectTemplate(r.Context(), name)
+	template, ok, err := c.Repository.SelectTemplate(r.Context(), name)
 	if err != nil {
-		return fmt.Errorf("cannot select layout : %w", err)
+		return fmt.Errorf("cannot select template : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/template", http.StatusSeeOther)
 	}
 
 	l, errors, err := form.ParseTemplateEdit(r)
@@ -39,13 +39,13 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	layout.Name = l.Name
-	layout.Content = l.Content
+	template.Name = l.Name
+	template.Content = l.Content
 
 	if !errors.HasError() {
-		err := c.Repository.UpdateTemplate(r.Context(), name, layout)
+		err := c.Repository.UpdateTemplate(r.Context(), name, template)
 		if err != nil {
-			return fmt.Errorf("cannot update %s layout : %w", name, err)
+			return fmt.Errorf("cannot update %s template : %w", name, err)
 		}
 	}
 

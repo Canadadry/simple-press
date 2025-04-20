@@ -19,7 +19,7 @@ func (r *Repository) SelectAllTemplate(ctx context.Context) ([]Template, error) 
 		return nil, stacktrace.From(err)
 	}
 	return sqlutil.Map(list, func(l publicmodel.Template) Template {
-		name, _ := strings.CutPrefix(l.Name, "_layout/")
+		name, _ := strings.CutPrefix(l.Name, "_layout/") // TODO remove me
 		return Template{
 			Name:    name,
 			Content: l.Content,
