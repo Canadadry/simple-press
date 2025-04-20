@@ -19,7 +19,7 @@ func TemplateAdd(a TemplateAddData, errors TemplateAddError) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
-			"template/pages/layout_add.html",
+			"template/pages/template_add.html",
 			TemplateData("TEMPLATE_ADD.page_title", viewData{a, errors}),
 		)
 	}
