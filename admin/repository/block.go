@@ -9,6 +9,7 @@ import (
 )
 
 type Block struct {
+	ID         int64
 	Name       string
 	Content    string
 	Definition map[string]any
@@ -16,6 +17,7 @@ type Block struct {
 
 func blockFromModel(model adminmodel.Block) (Block, error) {
 	out := Block{
+		ID:      model.ID,
 		Name:    model.Name,
 		Content: model.Content,
 	}

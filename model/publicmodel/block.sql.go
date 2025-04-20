@@ -9,15 +9,15 @@ import (
 	"context"
 )
 
-const selectAlBlock = `-- name: SelectAlBlock :many
+const selectAllBlock = `-- name: SelectAllBlock :many
 SELECT
     id, name, content, definition
 FROM
     block
 `
 
-func (q *Queries) SelectAlBlock(ctx context.Context) ([]Block, error) {
-	rows, err := q.db.QueryContext(ctx, selectAlBlock)
+func (q *Queries) SelectAllBlock(ctx context.Context) ([]Block, error) {
+	rows, err := q.db.QueryContext(ctx, selectAllBlock)
 	if err != nil {
 		return nil, err
 	}

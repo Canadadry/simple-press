@@ -1,4 +1,4 @@
--- name: SelectAlBlock :many
+-- name: SelectAllBlock :many
 SELECT
     *
 FROM

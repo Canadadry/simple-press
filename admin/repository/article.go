@@ -9,6 +9,7 @@ import (
 )
 
 type Article struct {
+	ID       int64
 	Title    string
 	Date     time.Time
 	Author   string
@@ -92,6 +93,7 @@ func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Arti
 	}
 	fromModel := func(a adminmodel.Article) Article {
 		return Article{
+			ID:       a.ID,
 			Title:    a.Title,
 			Date:     a.Date,
 			Author:   a.Author,
