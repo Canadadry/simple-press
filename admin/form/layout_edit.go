@@ -12,17 +12,17 @@ const (
 	layoutEditContent = "content"
 )
 
-type LayoutEdit struct {
+type TemplateEdit struct {
 	Name    string
 	Content string
 }
 
-type LayoutEditError struct {
+type TemplateEditError struct {
 	Name    string
 	Content string
 }
 
-func (le LayoutEditError) HasError() bool {
+func (le TemplateEditError) HasError() bool {
 	if le.Name != "" {
 		return true
 	}
@@ -32,16 +32,16 @@ func (le LayoutEditError) HasError() bool {
 	return false
 }
 
-func ParseLayoutEdit(r *http.Request) (LayoutEdit, LayoutEditError, error) {
+func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error) {
 	err := r.ParseForm()
 	if err != nil {
-		return LayoutEdit{}, LayoutEditError{}, fmt.Errorf("cannot parse form : %w", err)
+		return TemplateEdit{}, TemplateEditError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	a := LayoutEdit{
+	a := TemplateEdit{
 		Name:    r.PostForm.Get(layoutEditName),
 		Content: r.PostForm.Get(layoutEditContent),
 	}
-	errors := LayoutEditError{}
+	errors := TemplateEditError{}
 	if a.Name == "" {
 		errors.Name = errorCannotBeEmpty
 	}

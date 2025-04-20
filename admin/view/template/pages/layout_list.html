@@ -8,7 +8,7 @@
                     <th>{{Trans "LAYOUT_LIST.column_name"}}</th>
                     <th>{{Trans "LAYOUT_LIST.column_action"}}</th>
                 </tr>
-                {{ range $idx, $layout := .Layouts }}
+                {{ range $idx, $layout := .Templates }}
                 <tr>
                     <td>{{$idx}}</td>
                     <td>{{$layout.Name}}</td>

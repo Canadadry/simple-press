@@ -67,7 +67,7 @@ func (r *Repository) GetPageList(ctx context.Context, limit, offset int) ([]Page
 }
 
 func (r *Repository) GetAllPages(ctx context.Context) ([]Page, error) {
-	list, err := adminmodel.New(r.Db).GetAllPages(ctx)
+	list, err := adminmodel.New(r.Db).GetAllPage(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}

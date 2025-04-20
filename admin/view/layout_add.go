@@ -4,18 +4,18 @@ import (
 	"io"
 )
 
-type LayoutAddData struct {
+type TemplateAddData struct {
 	Name string
 }
 
-type LayoutAddError struct {
+type TemplateAddError struct {
 	Name string
 }
 
-func LayoutAdd(a LayoutAddData, errors LayoutAddError) ViewFunc {
+func TemplateAdd(a TemplateAddData, errors TemplateAddError) ViewFunc {
 	type viewData struct {
-		Layout LayoutAddData
-		Errors LayoutAddError
+		Template TemplateAddData
+		Errors   TemplateAddError
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,

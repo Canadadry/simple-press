@@ -11,15 +11,15 @@ const (
 	layoutAddName = "name"
 )
 
-type Layout struct {
+type Template struct {
 	Name string
 }
 
-type LayoutError struct {
+type TemplateError struct {
 	Name string
 }
 
-func (le LayoutError) HasError() bool {
+func (le TemplateError) HasError() bool {
 	if le.Name != "" {
 		return true
 	}
@@ -29,15 +29,15 @@ func (le LayoutError) HasError() bool {
 	return false
 }
 
-func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
+func ParseTemplateAdd(r *http.Request) (Template, TemplateError, error) {
 	err := r.ParseForm()
 	if err != nil {
-		return Layout{}, LayoutError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Template{}, TemplateError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	l := Layout{
+	l := Template{
 		Name: r.PostForm.Get(layoutAddName),
 	}
-	errors := LayoutError{}
+	errors := TemplateError{}
 	if l.Name == "" {
 		errors.Name = errorCannotBeEmpty
 	}

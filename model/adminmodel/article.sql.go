@@ -10,21 +10,21 @@ import (
 	"time"
 )
 
-const countArticles = `-- name: CountArticles :one
+const countArticle = `-- name: CountArticle :one
 SELECT
     count(*)
 FROM
     article
 `
 
-func (q *Queries) CountArticles(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countArticles)
+func (q *Queries) CountArticle(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countArticle)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
 }
 
-const countArticlesBySlug = `-- name: CountArticlesBySlug :one
+const countArticleBySlug = `-- name: CountArticleBySlug :one
 SELECT
     count(*)
 FROM
@@ -33,8 +33,8 @@ WHERE
     slug = ?
 `
 
-func (q *Queries) CountArticlesBySlug(ctx context.Context, slug string) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countArticlesBySlug, slug)
+func (q *Queries) CountArticleBySlug(ctx context.Context, slug string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countArticleBySlug, slug)
 	var count int64
 	err := row.Scan(&count)
 	return count, err

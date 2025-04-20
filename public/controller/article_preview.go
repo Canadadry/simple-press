@@ -24,12 +24,12 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 	if !ok {
 		return c.GetFile(w, r)
 	}
-	baseLayouts, err := c.Repository.SelectAllLayout(r.Context())
+	baseTemplates, err := c.Repository.SelectAllTemplate(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select base layouts : %w", err)
 	}
 	files := map[string]string{}
-	for _, l := range baseLayouts {
+	for _, l := range baseTemplates {
 		files[l.Name] = l.Content
 	}
 	pageLayout, ok, err := c.Repository.SelectPageByID(r.Context(), a.LayoutID)

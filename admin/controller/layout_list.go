@@ -7,18 +7,18 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) error {
 	const MinPage = 0
 	const MinLimit = 10
 	page := paginator.PageFromRequest(r, "page", MinPage)
 	limit := paginator.PageFromRequest(r, "limit", MinLimit)
 
-	count, err := c.Repository.CountLayouts(r.Context())
+	count, err := c.Repository.CountTemplates(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot count layouts : %w", err)
 	}
 
-	list, err := c.Repository.GetLayoutList(r.Context(), limit, page*limit)
+	list, err := c.Repository.GetTemplateList(r.Context(), limit, page*limit)
 	if err != nil {
 		return fmt.Errorf("cannot list layouts : %w", err)
 	}
@@ -28,19 +28,19 @@ func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error
 		return nil
 	}
 
-	layouts := []view.LayoutListData{}
+	layouts := []view.TemplateListData{}
 	for _, a := range list {
-		layouts = append(layouts, view.LayoutListData{
+		layouts = append(layouts, view.TemplateListData{
 			Name: a.Name,
 		})
 	}
 
-	l := view.LayoutsListData{
-		Total:   count,
-		Limit:   limit,
-		Page:    page,
-		Layouts: layouts,
+	l := view.TemplatesListData{
+		Total:     count,
+		Limit:     limit,
+		Page:      page,
+		Templates: layouts,
 	}
 
-	return c.render(w, r, view.LayoutsList(l))
+	return c.render(w, r, view.TemplatesList(l))
 }

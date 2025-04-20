@@ -8,27 +8,27 @@ import (
 	"strings"
 )
 
-type Layout struct {
+type Template struct {
 	Name    string
 	Content string
 }
 
-func (r *Repository) CountLayouts(ctx context.Context) (int, error) {
-	c, err := adminmodel.New(r.Db).CountLayout(ctx)
+func (r *Repository) CountTemplates(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.Db).CountTemplate(ctx)
 	return int(c), err
 }
 
-func (r *Repository) CountLayoutByName(ctx context.Context, name string) (int, error) {
-	c, err := adminmodel.New(r.Db).CountLayoutByName(ctx, name)
+func (r *Repository) CountTemplateByName(ctx context.Context, name string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountTemplateByName(ctx, name)
 	return int(c), err
 }
 
-type CreateLayoutParams struct {
+type CreateTemplateParams struct {
 	Name string
 }
 
-func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) error {
-	_, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
+func (r *Repository) CreateTemplate(ctx context.Context, l CreateTemplateParams) error {
+	_, err := adminmodel.New(r.Db).CreateTemplate(ctx, adminmodel.CreateTemplateParams{
 		Name: l.Name,
 	})
 	if err != nil {
@@ -37,53 +37,53 @@ func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) err
 	return nil
 }
 
-func (r *Repository) DeleteLayout(ctx context.Context, name string) error {
-	err := adminmodel.New(r.Db).DeleteLayout(ctx, name)
+func (r *Repository) DeleteTemplate(ctx context.Context, name string) error {
+	err := adminmodel.New(r.Db).DeleteTemplate(ctx, name)
 	if err != nil {
 		return stacktrace.From(err)
 	}
 	return nil
 }
 
-func (r *Repository) GetLayoutList(ctx context.Context, limit, offset int) ([]Layout, error) {
-	list, err := adminmodel.New(r.Db).GetLayoutList(ctx, adminmodel.GetLayoutListParams{
+func (r *Repository) GetTemplateList(ctx context.Context, limit, offset int) ([]Template, error) {
+	list, err := adminmodel.New(r.Db).GetTemplateList(ctx, adminmodel.GetTemplateListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(name string) Layout {
-		return Layout{
+	return sqlutil.Map(list, func(name string) Template {
+		return Template{
 			Name: name,
 		}
 	}), nil
 }
 
-func (r *Repository) SelectAllLayout(ctx context.Context) ([]Layout, error) {
-	list, err := adminmodel.New(r.Db).SelectAllLayout(ctx)
+func (r *Repository) SelectAllTemplate(ctx context.Context) ([]Template, error) {
+	list, err := adminmodel.New(r.Db).SelectAllTemplate(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(l adminmodel.Layout) Layout {
+	return sqlutil.Map(list, func(l adminmodel.Template) Template {
 		name, _ := strings.CutPrefix(l.Name, "_layout/")
-		return Layout{
+		return Template{
 			Name:    name,
 			Content: l.Content,
 		}
 	}), nil
 }
 
-func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, bool, error) {
-	list, err := adminmodel.New(r.Db).SelectLayout(ctx, name)
+func (r *Repository) SelectTemplate(ctx context.Context, name string) (Template, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectTemplate(ctx, name)
 	if err != nil {
-		return Layout{}, false, stacktrace.From(err)
+		return Template{}, false, stacktrace.From(err)
 	}
 	if len(list) == 0 {
-		return Layout{}, false, nil
+		return Template{}, false, nil
 	}
-	fromModel := func(l adminmodel.Layout) Layout {
-		return Layout{
+	fromModel := func(l adminmodel.Template) Template {
+		return Template{
 			Name:    l.Name,
 			Content: l.Content,
 		}
@@ -91,8 +91,8 @@ func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, boo
 	return fromModel(list[0]), true, nil
 }
 
-func (r *Repository) UpdateLayout(ctx context.Context, name string, l Layout) error {
-	err := adminmodel.New(r.Db).UpdateLayout(ctx, adminmodel.UpdateLayoutParams{
+func (r *Repository) UpdateTemplate(ctx context.Context, name string, l Template) error {
+	err := adminmodel.New(r.Db).UpdateTemplate(ctx, adminmodel.UpdateTemplateParams{
 		Name:    l.Name,
 		Content: l.Content,
 		Name_2:  name,

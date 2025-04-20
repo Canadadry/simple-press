@@ -18,13 +18,13 @@ type Article struct {
 	LayoutID int64
 }
 
-func (r *Repository) CountArticles(ctx context.Context) (int, error) {
-	c, err := adminmodel.New(r.Db).CountArticles(ctx)
+func (r *Repository) CountArticle(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.Db).CountArticle(ctx)
 	return int(c), err
 }
 
-func (r *Repository) CountArticlesBySlug(ctx context.Context, slug string) (int, error) {
-	c, err := adminmodel.New(r.Db).CountArticlesBySlug(ctx, slug)
+func (r *Repository) CountArticleBySlug(ctx context.Context, slug string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountArticleBySlug(ctx, slug)
 	return int(c), err
 }
 
@@ -63,15 +63,15 @@ func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
 	return nil
 }
 
-func (r *Repository) GetArticlesList(ctx context.Context, limit, offset int) ([]Article, error) {
-	list, err := adminmodel.New(r.Db).GetArticlesList(ctx, adminmodel.GetArticlesListParams{
+func (r *Repository) GetArticleList(ctx context.Context, limit, offset int) ([]Article, error) {
+	list, err := adminmodel.New(r.Db).GetArticleList(ctx, adminmodel.GetArticleListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(a adminmodel.GetArticlesListRow) Article {
+	return sqlutil.Map(list, func(a adminmodel.GetArticleListRow) Article {
 		return Article{
 			Title:  a.Title,
 			Date:   a.Date,

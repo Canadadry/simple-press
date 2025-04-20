@@ -1,10 +1,10 @@
--- name: CountArticles :one
+-- name: CountArticle :one
 SELECT
     count(*)
 FROM
     article;
 
--- name: CountArticlesBySlug :one
+-- name: CountArticleBySlug :one
 SELECT
     count(*)
 FROM

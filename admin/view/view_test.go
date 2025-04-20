@@ -18,13 +18,13 @@ func TestView(t *testing.T) {
 		"article_add with error":  ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
 		"article_edit":            ArticleEdit(ArticleEditData{Pages: []PageSelector{{Name: "test", Value: 1}}}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5"}),
-		"layout_list": LayoutsList(LayoutsListData{
-			Layouts: []LayoutListData{LayoutListData{}},
+		"layout_list": TemplatesList(TemplatesListData{
+			Templates: []TemplateListData{TemplateListData{}},
 		}),
-		"layout_add":             LayoutAdd(LayoutAddData{}, LayoutAddError{}),
-		"layout_add with error":  LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),
-		"layout_edit":            LayoutEdit(LayoutEditData{}, LayoutEditError{}),
-		"layout_edit with error": LayoutEdit(LayoutEditData{}, LayoutEditError{"test1", "test2"}),
+		"layout_add":             TemplateAdd(TemplateAddData{}, TemplateAddError{}),
+		"layout_add with error":  TemplateAdd(TemplateAddData{}, TemplateAddError{"test1"}),
+		"layout_edit":            TemplateEdit(TemplateEditData{}, TemplateEditError{}),
+		"layout_edit with error": TemplateEdit(TemplateEditData{}, TemplateEditError{"test1", "test2"}),
 		"page_list": PagesList(PagesListData{
 			Pages: []PageListData{PageListData{}},
 		}),

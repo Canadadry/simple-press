@@ -9,7 +9,7 @@
             <div class="row gx-4">
                 <div class="col-md-12">
                     <div class="form-floating mb-4">
-                    <input id="form_name" type="text" name="name" class="form-control" value="{{.Layout.Name}}" required>
+                    <input id="form_name" type="text" name="name" class="form-control" value="{{.Template.Name}}" required>
                     <label for="form_name">{{Trans "LAYOUT_EDIT.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
                     <div class="invalid-feedback  d-block">
@@ -21,7 +21,7 @@
                 <!-- /column -->
                 <div class="col-12">
                   <div class="mb-4">
-                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Layout.Content}}</textarea>
+                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Template.Content}}</textarea>
                     {{if not (eq .Errors.Content "") }}
                     <div class="invalid-feedback  d-block">
                         {{Trans (print "FORM_ERROR." .Errors.Content)}}

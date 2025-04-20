@@ -8,19 +8,19 @@ import (
 	"strings"
 )
 
-type Layout struct {
+type Template struct {
 	Name    string
 	Content string
 }
 
-func (r *Repository) SelectAllLayout(ctx context.Context) ([]Layout, error) {
-	list, err := publicmodel.New(r.Db).SelectAllLayout(ctx)
+func (r *Repository) SelectAllTemplate(ctx context.Context) ([]Template, error) {
+	list, err := publicmodel.New(r.Db).SelectAllTemplate(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(l publicmodel.Layout) Layout {
+	return sqlutil.Map(list, func(l publicmodel.Template) Template {
 		name, _ := strings.CutPrefix(l.Name, "_layout/")
-		return Layout{
+		return Template{
 			Name:    name,
 			Content: l.Content,
 		}
