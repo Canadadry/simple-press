@@ -5,27 +5,27 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>#</th>
-                    <th>{{Trans "LAYOUT_LIST.column_name"}}</th>
-                    <th>{{Trans "LAYOUT_LIST.column_action"}}</th>
+                    <th>{{Trans "BLOCK_LIST.column_name"}}</th>
+                    <th>{{Trans "BLOCK_LIST.column_action"}}</th>
                 </tr>
-                {{ range $idx, $layout := .Layouts }}
+                {{ range $idx, $block := .Blocks }}
                 <tr>
                     <td>{{$idx}}</td>
-                    <td>{{$layout.Name}}</td>
+                    <td>{{$block.Name}}</td>
                     <td>
-                        <a href="/admin/layout/{{$layout.Name}}/edit">
+                        <a href="/admin/block/{{$block.Name}}/edit">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <a href="/admin/layout/{{$layout.Name}}/delete">
+                        <a href="/admin/block/{{$block.Name}}/delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>
                 </tr>
                 {{end}}
             </table>
-            <a href="/admin/layout/add" class="btn btn-primary rounded-pill"
-                >{{Trans "LAYOUT.add"}}</a
-            >
+            <a href="/admin/block/add" class="btn btn-primary rounded-pill">
+                {{Trans "BLOCK.add"}}
+            </a>
             {{template "pagination" .Pages}}
         </div>
     </div>

@@ -48,6 +48,7 @@ func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string,
 		"EscapeJS":     escapeJs,
 		"NumberFormat": formatNumber,
 		"DateFormat":   formatDateTemplate(tr),
+		"JsonMarshal":  json_marshal,
 	}
 	templates, err := template.New(baseTemplate).Funcs(funcMap).ParseFS(templates, allFiles...)
 	if err != nil {
@@ -63,8 +64,9 @@ func TemplateData[T any](pageTitle string, pageData T) BasePage[T] {
 		PageData:  pageData,
 		Menu: []MenuItem{
 			{Name: "MENU.articles", Path: "/admin/articles", Icon: "bi bi-body-text"},
-			{Name: "MENU.template", Path: "/admin/template", Icon: "bi bi-puzzle"},
-			{Name: "MENU.layout", Path: "/admin/layout", Icon: "bi bi-grid-1x2"},
+			{Name: "MENU.template", Path: "/admin/template", Icon: "bi bi-palette-fill"},
+			{Name: "MENU.layout", Path: "/admin/layout", Icon: "bi bi-columns-gap"},
+			{Name: "MENU.block", Path: "/admin/block", Icon: "bi bi-hammer"},
 			{Name: "MENU.file", Path: "/admin/files", Icon: "bi bi-file-image"},
 			{Name: "MENU.settings", Path: "/admin/settings", Icon: "bi bi-gear-wide"},
 		},

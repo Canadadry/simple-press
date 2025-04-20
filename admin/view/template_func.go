@@ -1,6 +1,7 @@
 package view
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"strings"
@@ -106,4 +107,9 @@ func formatDate(t time.Time, tr func(string) string) string {
 	}
 	month := t.Format("Jan")
 	return strings.Replace(t.Format("02 Jan 2006, 15:04"), month, tr("month.short."+month), 1)
+}
+
+func json_marshal(v any) (string, error) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	return string(b), err
 }

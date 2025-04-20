@@ -19,6 +19,21 @@ type Article struct {
 	LayoutID int64
 }
 
+type Block struct {
+	ID         int64
+	Name       string
+	Content    string
+	Definition string
+}
+
+type BlockDatum struct {
+	ID        int64
+	Position  int64
+	Data      string
+	ArticleID int64
+	BlockID   int64
+}
+
 type File struct {
 	ID      int64
 	Name    string

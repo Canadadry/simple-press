@@ -6,6 +6,7 @@ const (
 	errorNotASlug      = "not_a_slug"
 	errorNotAPath      = "not_a_path"
 	errorInvalidId     = "invalid_id"
+	errorInvalidJson   = "invalid_json"
 	maxTitleLen        = 255
 	maxAuthorLen       = 255
 	maxSlugLen         = 255

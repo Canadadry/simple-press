@@ -58,6 +58,5 @@ func ParseLayoutEdit(r *http.Request) (LayoutEdit, LayoutEditError, error) {
 	if !re.Match([]byte(a.Name)) {
 		errors.Name = errorNotAPath
 	}
-	fmt.Println("content submited -", a.Content, "-")
 	return a, errors, nil
 }

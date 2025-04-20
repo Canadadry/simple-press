@@ -24,6 +24,7 @@ FORM_ERROR.empty,cannot be empty,cannot be empty
 FORM_ERROR.too_big,Too big,Too big
 FORM_ERROR.errorNotASlug,Not a slug,Not a slug
 FORM_ERROR.invalid_id,invalid_id,invalid_id
+FORM_ERROR.invalid_json,invalid_json,invalid_json
 TEMPLATE_EDIT.errors.not_a_path,Not a path,Not a path
 ARTICLE.add,add,add
 ARTICLE_ADD.page_title,page title,page title
@@ -48,9 +49,6 @@ TEMPLATE_ADD.page_title,page title, page title
 TEMPLATE_ADD.name_placeholder,name_placeholder,name_placeholder
 TEMPLATE_ADD.name,name,name
 TEMPLATE_ADD.submit,submit,submit
-TEMPLATE_ADD.errors.empty,cannot be empty,cannot be empty
-TEMPLATE_ADD.errors.too_big,Too big,Too big
-TEMPLATE_ADD.errors.not_a_path,Not a path,Not a path
 TEMPLATE_EDIT.page_title,page title, page title
 TEMPLATE_EDIT.name,name,name
 TEMPLATE_EDIT.content,content,content
@@ -64,9 +62,6 @@ LAYOUT_ADD.name_placeholder,name_placeholder,name_placeholder
 LAYOUT_ADD.name,name,name
 LAYOUT_ADD.submit,submit,submit
 LAYOUT_EDIT.page_title,page title, page title
-LAYOUT_EDIT.errors.empty,cannot be empty,cannot be empty
-LAYOUT_EDIT.errors.too_big,Too big,Too big
-LAYOUT_EDIT.errors.not_a_path,Not a path,Not a path
 LAYOUT_EDIT.name,name,name
 LAYOUT_EDIT.content,content,content
 LAYOUT_EDIT.submit,submit,submit
@@ -81,10 +76,23 @@ FILE_ADD.page_title,page title, page title
 FILE_ADD.name_placeholder,name_placeholder,name_placeholder
 FILE_ADD.file,file,file
 FILE_ADD.submit,submit,submit
+TEMPLATE.add,add,add
+BLOCK_ADD.page_title,page title, page title
+BLOCK_ADD.name_placeholder,name_placeholder,name_placeholder
+BLOCK_ADD.name,name,name
+BLOCK_ADD.submit,submit,submit
+BLOCK_EDIT.page_title,page title, page title
+BLOCK_EDIT.name,name,name
+BLOCK_EDIT.content,content,content
+BLOCK_EDIT.submit,submit,submit
+BLOCK_LIST.page_title, page title, page title
+BLOCK_LIST.column_name,name,name
+BLOCK_LIST.column_action,action,action
 MENU.articles,articles,articles
 MENU.template,template,template
 MENU.layout,layout,layout
 MENU.file,files,files
+MENU.block,blocks,blocks
 MENU.settings,settings,settings
 404.page_title,page_title,page_title
 404.message,message,message

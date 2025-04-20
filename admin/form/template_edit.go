@@ -58,6 +58,5 @@ func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error)
 	if !re.Match([]byte(a.Name)) {
 		errors.Name = errorNotAPath
 	}
-	fmt.Println("content submited -", a.Content, "-")
 	return a, errors, nil
 }

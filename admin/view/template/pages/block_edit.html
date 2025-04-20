@@ -1,0 +1,85 @@
+{{define "body"}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+
+<section class="wrapper">
+  <div class="container py-14 py-md-16">
+    <div class="row">
+      <div class="col-xl-10 mx-auto">
+        <form method="post" action="">
+            <div class="row gx-4">
+                <div class="col-md-12">
+                    <div class="form-floating mb-4">
+                    <input id="form_name" type="text" name="name" class="form-control" value="{{.Block.Name}}" required>
+                    <label for="form_name">{{Trans "BLOCK_EDIT.name"}} *</label>
+                    {{if not (eq .Errors.Name "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "FORM_ERROR." .Errors.Name)}}
+                    </div>
+                    {{ end }}
+                    </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                  <div class="mb-4">
+                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Block.Content| }}</textarea>
+                    {{if not (eq .Errors.Content "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "FORM_ERROR." .Errors.Content)}}
+                    </div>
+                    {{ end }}
+
+                  </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                  <div class="mb-4">
+                    <textarea id="form_definition" name="definition" class="form-control" style="height: 450px">{{JsonMarshal .Block.Definition}}</textarea>
+                    {{if not (eq .Errors.Definition "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "FORM_ERROR." .Errors.Definition)}}
+                    </div>
+                    {{ end }}
+
+                  </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "BLOCK_EDIT.submit"}}">
+                    <p class="text-muted"><strong>*</strong>{{Trans "FORM.field_requiered"| }}</p>
+                </div>
+                <!-- /column -->
+            </div>
+            <!-- /.row -->
+        </form>
+        <!-- /form -->
+      </div>
+      <!-- /column -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+<!-- /section -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const editor_content = CodeMirror.fromTextArea(document.getElementById("form_content"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "default",
+    tabSize: 2,
+  });
+  const editor_definition = CodeMirror.fromTextArea(document.getElementById("form_definition"), {
+    lineNumbers: true,
+    mode: "javascript",
+    theme: "default",
+    tabSize: 2,
+  });
+  document.querySelector("form").addEventListener("submit", function () {
+    document.getElementById("form_content").value = editor_content.getValue();
+    document.getElementById("form_definition").value = editor_definition.getValue();
+  });
+});
+</script>
+{{end}}

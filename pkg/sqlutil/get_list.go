@@ -2,6 +2,7 @@ package sqlutil
 
 import (
 	"context"
+	"errors"
 	// "fmt"
 )
 
@@ -57,6 +58,17 @@ func Map[K any, V any](in []K, dto func(K) V) []V {
 		out[i] = dto(v)
 	}
 	return out
+}
+
+func MapWithError[K any, V any](in []K, dto func(K) (V, error)) ([]V, error) {
+	out := make([]V, len(in))
+	var errs error
+	for i, v := range in {
+		var err error
+		out[i], err = dto(v)
+		errs = errors.Join(errs, err)
+	}
+	return out, errs
 }
 
 func Map2[K any, V any, W any](in []K, k2v func(K) V, v2w func(V) W) []W {
