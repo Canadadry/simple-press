@@ -56,6 +56,57 @@ func TestParseFormData(t *testing.T) {
 				},
 			},
 		},
+		"missing field default to old value": {
+			FormValues: url.Values{
+				"profile.name.first": {"Alice"},
+				"profile.name.last":  {"Smith"},
+				"profile.age":        {"28"},
+				"profile.gender":     {"Mme"},
+			},
+			Definition: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Bob",
+						"last":  "Morane",
+					},
+					"age": 10,
+				},
+			},
+			Expected: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Alice",
+						"last":  "Smith",
+					},
+					"age": 28.0,
+				},
+			},
+		},
+
+		"extra field ignored": {
+			FormValues: url.Values{
+				"profile.name.first": {"Alice"},
+				"profile.name.last":  {"Smith"},
+			},
+			Definition: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Bob",
+						"last":  "Morane",
+					},
+					"age": 10,
+				},
+			},
+			Expected: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Alice",
+						"last":  "Smith",
+					},
+					"age": 10,
+				},
+			},
+		},
 	}
 
 	for name, tt := range tests {
