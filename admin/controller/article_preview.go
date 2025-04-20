@@ -30,14 +30,14 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 	for _, l := range baseTemplates {
 		files[l.Name] = l.Content
 	}
-	pageLayout, ok, err := c.Repository.SelectPageByID(r.Context(), a.LayoutID)
+	layout, ok, err := c.Repository.SelectLayoutByID(r.Context(), a.LayoutID)
 	if err != nil {
-		return fmt.Errorf("cannot select page layout %d : %w", a.LayoutID, err)
+		return fmt.Errorf("cannot select layout %d : %w", a.LayoutID, err)
 	}
 	if !ok {
-		return fmt.Errorf("cannot found page layout %d : %w", a.LayoutID, err)
+		return fmt.Errorf("cannot found layout %d : %w", a.LayoutID, err)
 	}
-	files[pageLayout.Name] = pageLayout.Content
+	files[layout.Name] = layout.Content
 	return renderPreview(w, files, a)
 }
 

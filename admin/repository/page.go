@@ -7,33 +7,33 @@ import (
 	"context"
 )
 
-type Page struct {
+type Layout struct {
 	ID      int64
 	Name    string
 	Content string
 }
 
-func (r *Repository) CountPages(ctx context.Context) (int, error) {
-	c, err := adminmodel.New(r.Db).CountPage(ctx)
+func (r *Repository) CountLayout(ctx context.Context) (int, error) {
+	c, err := adminmodel.New(r.Db).CountLayout(ctx)
 	return int(c), err
 }
 
-func (r *Repository) CountPageByName(ctx context.Context, name string) (int, error) {
-	c, err := adminmodel.New(r.Db).CountPageByName(ctx, name)
+func (r *Repository) CountLayoutByName(ctx context.Context, name string) (int, error) {
+	c, err := adminmodel.New(r.Db).CountLayoutByName(ctx, name)
 	return int(c), err
 }
 
-func (r *Repository) CountPageByID(ctx context.Context, id int64) (int, error) {
-	c, err := adminmodel.New(r.Db).CountPageByID(ctx, id)
+func (r *Repository) CountLayoutByID(ctx context.Context, id int64) (int, error) {
+	c, err := adminmodel.New(r.Db).CountLayoutByID(ctx, id)
 	return int(c), err
 }
 
-type CreatePageParams struct {
+type CreateLayoutParams struct {
 	Name string
 }
 
-func (r *Repository) CreatePage(ctx context.Context, l CreatePageParams) error {
-	_, err := adminmodel.New(r.Db).CreatePage(ctx, adminmodel.CreatePageParams{
+func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) error {
+	_, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
 		Name: l.Name,
 	})
 	if err != nil {
@@ -42,53 +42,53 @@ func (r *Repository) CreatePage(ctx context.Context, l CreatePageParams) error {
 	return nil
 }
 
-func (r *Repository) DeletePage(ctx context.Context, name string) error {
-	err := adminmodel.New(r.Db).DeletePage(ctx, name)
+func (r *Repository) DeleteLayout(ctx context.Context, name string) error {
+	err := adminmodel.New(r.Db).DeleteLayout(ctx, name)
 	if err != nil {
 		return stacktrace.From(err)
 	}
 	return nil
 }
 
-func (r *Repository) GetPageList(ctx context.Context, limit, offset int) ([]Page, error) {
-	list, err := adminmodel.New(r.Db).GetPageList(ctx, adminmodel.GetPageListParams{
+func (r *Repository) GetLayoutList(ctx context.Context, limit, offset int) ([]Layout, error) {
+	list, err := adminmodel.New(r.Db).GetLayoutList(ctx, adminmodel.GetLayoutListParams{
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(p adminmodel.Page) Page {
-		return Page{
+	return sqlutil.Map(list, func(p adminmodel.Layout) Layout {
+		return Layout{
 			Name: p.Name,
 			ID:   p.ID,
 		}
 	}), nil
 }
 
-func (r *Repository) GetAllPages(ctx context.Context) ([]Page, error) {
-	list, err := adminmodel.New(r.Db).GetAllPage(ctx)
+func (r *Repository) GetAllLayout(ctx context.Context) ([]Layout, error) {
+	list, err := adminmodel.New(r.Db).GetAllLayout(ctx)
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(p adminmodel.Page) Page {
-		return Page{
+	return sqlutil.Map(list, func(p adminmodel.Layout) Layout {
+		return Layout{
 			Name: p.Name,
 			ID:   p.ID,
 		}
 	}), nil
 }
 
-func (r *Repository) SelectPage(ctx context.Context, name string) (Page, bool, error) {
-	list, err := adminmodel.New(r.Db).SelectPage(ctx, name)
+func (r *Repository) SelectLayout(ctx context.Context, name string) (Layout, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectLayout(ctx, name)
 	if err != nil {
-		return Page{}, false, stacktrace.From(err)
+		return Layout{}, false, stacktrace.From(err)
 	}
 	if len(list) == 0 {
-		return Page{}, false, nil
+		return Layout{}, false, nil
 	}
-	fromModel := func(l adminmodel.Page) Page {
-		return Page{
+	fromModel := func(l adminmodel.Layout) Layout {
+		return Layout{
 			Name:    l.Name,
 			Content: l.Content,
 			ID:      l.ID,
@@ -97,16 +97,16 @@ func (r *Repository) SelectPage(ctx context.Context, name string) (Page, bool, e
 	return fromModel(list[0]), true, nil
 }
 
-func (r *Repository) SelectPageByID(ctx context.Context, id int64) (Page, bool, error) {
-	list, err := adminmodel.New(r.Db).SelectPageByID(ctx, id)
+func (r *Repository) SelectLayoutByID(ctx context.Context, id int64) (Layout, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectLayoutByID(ctx, id)
 	if err != nil {
-		return Page{}, false, stacktrace.From(err)
+		return Layout{}, false, stacktrace.From(err)
 	}
 	if len(list) == 0 {
-		return Page{}, false, nil
+		return Layout{}, false, nil
 	}
-	fromModel := func(l adminmodel.Page) Page {
-		return Page{
+	fromModel := func(l adminmodel.Layout) Layout {
+		return Layout{
 			Name:    l.Name,
 			Content: l.Content,
 			ID:      l.ID,
@@ -115,8 +115,8 @@ func (r *Repository) SelectPageByID(ctx context.Context, id int64) (Page, bool, 
 	return fromModel(list[0]), true, nil
 }
 
-func (r *Repository) UpdatePage(ctx context.Context, name string, l Page) error {
-	err := adminmodel.New(r.Db).UpdatePage(ctx, adminmodel.UpdatePageParams{
+func (r *Repository) UpdateLayout(ctx context.Context, name string, l Layout) error {
+	err := adminmodel.New(r.Db).UpdateLayout(ctx, adminmodel.UpdateLayoutParams{
 		Name:    l.Name,
 		Content: l.Content,
 		Name_2:  name,

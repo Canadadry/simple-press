@@ -24,7 +24,7 @@
                     <div class="form-floating mb-4">
                       <select class="form-select" id="form-layout" name="layout">
                         {{$article := .Article}}
-                        {{ range $idx, $page := .Article.Pages }}
+                        {{ range $idx, $page := .Article.Layouts }}
                         <option value="{{$page.Value}}" {{if eq $article.LayoutID $page.Value}}selected{{end}}>{{$page.Name}}</option>
                         {{end}}
                       </select>

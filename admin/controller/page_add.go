@@ -8,26 +8,26 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetPageAdd(w http.ResponseWriter, r *http.Request) error {
-	return c.render(w, r, view.PageAdd(view.PageAddData{}, view.PageAddError{}))
+func (c *Controller) GetLayoutAdd(w http.ResponseWriter, r *http.Request) error {
+	return c.render(w, r, view.LayoutAdd(view.LayoutAddData{}, view.LayoutAddError{}))
 }
 
-func (c *Controller) PostPageAdd(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error {
 
-	l, errors, err := form.ParsePageAdd(r)
+	l, errors, err := form.ParseLayoutAdd(r)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
 	if errors.HasError() {
-		return c.render(w, r, view.PageAdd(view.PageAddData(l), view.PageAddError(errors)))
+		return c.render(w, r, view.LayoutAdd(view.LayoutAddData(l), view.LayoutAddError(errors)))
 	}
 
-	err = c.Repository.CreatePage(r.Context(), repository.CreatePageParams(l))
+	err = c.Repository.CreateLayout(r.Context(), repository.CreateLayoutParams(l))
 	if err != nil {
-		return fmt.Errorf("cannot create Page : %w", err)
+		return fmt.Errorf("cannot create Layout : %w", err)
 	}
 
-	http.Redirect(w, r, "/admin/pages/"+l.Name+"/edit", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/layout/"+l.Name+"/edit", http.StatusSeeOther)
 	return nil
 }

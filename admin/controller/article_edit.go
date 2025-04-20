@@ -18,13 +18,13 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
-	pages, err := c.Repository.GetAllPages(r.Context())
+	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
-		return fmt.Errorf("cannot select all pages : %w", err)
+		return fmt.Errorf("cannot select all layouts : %w", err)
 	}
-	pageSelector := []view.PageSelector{}
-	for _, p := range pages {
-		pageSelector = append(pageSelector, view.PageSelector{Name: p.Name, Value: p.ID})
+	layoutSelector := []view.LayoutSelector{}
+	for _, p := range layouts {
+		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
@@ -34,7 +34,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		Content:  a.Content,
 		Draft:    a.Draft,
 		LayoutID: a.LayoutID,
-		Pages:    pageSelector,
+		Layouts:  layoutSelector,
 	}, view.ArticleEditError{}))
 }
 
@@ -48,7 +48,7 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
-	a, errors, err := form.ParseArticleEdit(r, c.Repository.CountPageByID)
+	a, errors, err := form.ParseArticleEdit(r, c.Repository.CountLayoutByID)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
@@ -66,14 +66,14 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 			return fmt.Errorf("cannot update %s article : %w", slug, err)
 		}
 	}
-	pages, err := c.Repository.GetAllPages(r.Context())
+	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
-		return fmt.Errorf("cannot select all pages : %w", err)
+		return fmt.Errorf("cannot select all layouts : %w", err)
 	}
 
-	pageSelector := []view.PageSelector{}
-	for _, p := range pages {
-		pageSelector = append(pageSelector, view.PageSelector{Name: p.Name, Value: p.ID})
+	layoutSelector := []view.LayoutSelector{}
+	for _, p := range layouts {
+		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
@@ -83,6 +83,6 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		Content:  a.Content,
 		Draft:    a.Draft,
 		LayoutID: a.LayoutID,
-		Pages:    pageSelector,
+		Layouts:  layoutSelector,
 	}, view.ArticleEditError(errors)))
 }

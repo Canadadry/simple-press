@@ -25,7 +25,7 @@ type File struct {
 	Content []byte
 }
 
-type Page struct {
+type Layout struct {
 	ID      int64
 	Name    string
 	Content string

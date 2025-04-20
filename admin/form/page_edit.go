@@ -8,21 +8,21 @@ import (
 )
 
 const (
-	pageEditName    = "name"
-	pageEditContent = "content"
+	layoutEditName    = "name"
+	layoutEditContent = "content"
 )
 
-type PageEdit struct {
+type LayoutEdit struct {
 	Name    string
 	Content string
 }
 
-type PageEditError struct {
+type LayoutEditError struct {
 	Name    string
 	Content string
 }
 
-func (le PageEditError) HasError() bool {
+func (le LayoutEditError) HasError() bool {
 	if le.Name != "" {
 		return true
 	}
@@ -32,16 +32,16 @@ func (le PageEditError) HasError() bool {
 	return false
 }
 
-func ParsePageEdit(r *http.Request) (PageEdit, PageEditError, error) {
+func ParseLayoutEdit(r *http.Request) (LayoutEdit, LayoutEditError, error) {
 	err := r.ParseForm()
 	if err != nil {
-		return PageEdit{}, PageEditError{}, fmt.Errorf("cannot parse form : %w", err)
+		return LayoutEdit{}, LayoutEditError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	a := PageEdit{
-		Name:    r.PostForm.Get(pageEditName),
-		Content: r.PostForm.Get(pageEditContent),
+	a := LayoutEdit{
+		Name:    r.PostForm.Get(layoutEditName),
+		Content: r.PostForm.Get(layoutEditContent),
 	}
-	errors := PageEditError{}
+	errors := LayoutEditError{}
 	if a.Name == "" {
 		errors.Name = errorCannotBeEmpty
 	}

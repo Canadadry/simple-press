@@ -16,7 +16,7 @@ func TestView(t *testing.T) {
 		}),
 		"article_add":             ArticleAdd(ArticleAddData{}, ArticleAddError{}),
 		"article_add with error":  ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
-		"article_edit":            ArticleEdit(ArticleEditData{Pages: []PageSelector{{Name: "test", Value: 1}}}, ArticleEditError{}),
+		"article_edit":            ArticleEdit(ArticleEditData{Layouts: []LayoutSelector{{Name: "test", Value: 1}}}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5"}),
 		"template_list": TemplatesList(TemplatesListData{
 			Templates: []TemplateListData{TemplateListData{}},
@@ -25,13 +25,13 @@ func TestView(t *testing.T) {
 		"template_add with error":  TemplateAdd(TemplateAddData{}, TemplateAddError{"test1"}),
 		"template_edit":            TemplateEdit(TemplateEditData{}, TemplateEditError{}),
 		"template_edit with error": TemplateEdit(TemplateEditData{}, TemplateEditError{"test1", "test2"}),
-		"page_list": PagesList(PagesListData{
-			Pages: []PageListData{PageListData{}},
+		"page_list": LayoutsList(LayoutsListData{
+			Layouts: []LayoutListData{LayoutListData{}},
 		}),
-		"page_add":             PageAdd(PageAddData{}, PageAddError{}),
-		"page_add with error":  PageAdd(PageAddData{}, PageAddError{"test1"}),
-		"page_edit":            PageEdit(PageEditData{}, PageEditError{}),
-		"page_edit with error": PageEdit(PageEditData{}, PageEditError{"test1", "test2"}),
+		"page_add":             LayoutAdd(LayoutAddData{}, LayoutAddError{}),
+		"page_add with error":  LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),
+		"page_edit":            LayoutEdit(LayoutEditData{}, LayoutEditError{}),
+		"page_edit with error": LayoutEdit(LayoutEditData{}, LayoutEditError{"test1", "test2"}),
 		"file_list": FilesList(FilesListData{
 			Files: []FileListData{FileListData{}},
 		}),

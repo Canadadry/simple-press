@@ -4,25 +4,25 @@ import (
 	"io"
 )
 
-type PageEditData struct {
+type LayoutEditData struct {
 	Name    string
 	Content string
 }
 
-type PageEditError struct {
+type LayoutEditError struct {
 	Name    string
 	Content string
 }
 
-func PageEdit(a PageEditData, errors PageEditError) ViewFunc {
+func LayoutEdit(a LayoutEditData, errors LayoutEditError) ViewFunc {
 	type viewData struct {
-		Page   PageEditData
-		Errors PageEditError
+		Layout LayoutEditData
+		Errors LayoutEditError
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/page_edit.html",
-			TemplateData("PAGE_EDIT.page_title", viewData{a, errors}),
+			TemplateData("LAYOUT_EDIT.page_title", viewData{a, errors}),
 		)
 	}
 }

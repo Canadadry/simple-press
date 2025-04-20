@@ -5,18 +5,18 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>#</th>
-                    <th>{{Trans "PAGE_LIST.column_name"}}</th>
-                    <th>{{Trans "PAGE_LIST.column_action"}}</th>
+                    <th>{{Trans "LAYOUT_LIST.column_name"}}</th>
+                    <th>{{Trans "LAYOUT_LIST.column_action"}}</th>
                 </tr>
-                {{ range $idx, $page := .Data }}
+                {{ range $idx, $layout := .Layouts }}
                 <tr>
                     <td>{{$idx}}</td>
-                    <td>{{$page.Name}}</td>
+                    <td>{{$layout.Name}}</td>
                     <td>
-                        <a href="/admin/pages/{{$page.Name}}/edit">
+                        <a href="/admin/pages/{{$layout.Name}}/edit">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <a href="/admin/pages/{{$page.Name}}/delete">
+                        <a href="/admin/pages/{{$layout.Name}}/delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>
@@ -24,7 +24,7 @@
                 {{end}}
             </table>
             <a href="/admin/page/add" class="btn btn-primary rounded-pill"
-                >{{Trans "PAGE.add"}}</a
+                >{{Trans "LAYOUT.add"}}</a
             >
             {{template "pagination" .Pages}}
         </div>

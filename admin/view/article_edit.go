@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-type PageSelector struct {
+type LayoutSelector struct {
 	Name  string
 	Value int64
 }
@@ -16,7 +16,7 @@ type ArticleEditData struct {
 	Content  string
 	Draft    bool
 	LayoutID int64
-	Pages    []PageSelector
+	Layouts  []LayoutSelector
 }
 
 type ArticleEditError struct {

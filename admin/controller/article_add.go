@@ -22,19 +22,19 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		return c.render(w, r, view.ArticleAdd(view.ArticleAddData(a), view.ArticleAddError(errors)))
 	}
 
-	pages, err := c.Repository.GetPageList(r.Context(), 1, 0)
+	layouts, err := c.Repository.GetLayoutList(r.Context(), 1, 0)
 	if err != nil {
-		return fmt.Errorf("cannot select all pages : %w", err)
+		return fmt.Errorf("cannot select all layouts : %w", err)
 	}
-	if len(pages) == 0 {
-		return fmt.Errorf("need at leats one page to create an article : %w", err)
+	if len(layouts) == 0 {
+		return fmt.Errorf("need at leats one layout to create an article : %w", err)
 	}
 
 	slug, err := c.Repository.CreateArticle(r.Context(), repository.CreateArticleParams{
 		Title:    a.Title,
 		Author:   a.Author,
 		Draft:    a.Draft,
-		LayoutID: pages[0].ID,
+		LayoutID: layouts[0].ID,
 	})
 	if err != nil {
 		return fmt.Errorf("cannot create article : %w", err)

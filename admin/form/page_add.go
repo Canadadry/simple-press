@@ -8,18 +8,18 @@ import (
 )
 
 const (
-	pageAddName = "name"
+	layoutAddName = "name"
 )
 
-type Page struct {
+type Layout struct {
 	Name string
 }
 
-type PageError struct {
+type LayoutError struct {
 	Name string
 }
 
-func (le PageError) HasError() bool {
+func (le LayoutError) HasError() bool {
 	if le.Name != "" {
 		return true
 	}
@@ -29,15 +29,15 @@ func (le PageError) HasError() bool {
 	return false
 }
 
-func ParsePageAdd(r *http.Request) (Page, PageError, error) {
+func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
 	err := r.ParseForm()
 	if err != nil {
-		return Page{}, PageError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Layout{}, LayoutError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	l := Page{
-		Name: r.PostForm.Get(pageAddName),
+	l := Layout{
+		Name: r.PostForm.Get(layoutAddName),
 	}
-	errors := PageError{}
+	errors := LayoutError{}
 	if l.Name == "" {
 		errors.Name = errorCannotBeEmpty
 	}

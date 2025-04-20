@@ -1,8 +1,8 @@
--- name: SelectPageByID :many
+-- name: SelectLayoutByID :many
 SELECT
     *
 FROM
-    page
+    layout
 WHERE
     id = ?
 LIMIT

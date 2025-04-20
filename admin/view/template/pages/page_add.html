@@ -7,8 +7,8 @@
             <div class="row gx-4">
                 <div class="col-md-8">
                     <div class="form-floating mb-4">
-                    <input id="form_name" type="text" name="name" class="form-control" placeholder="{{Trans "PAGE_ADD.name_placeholder"}}" value="{{.Page.Name}}" required>
-                    <label for="form_name">{{Trans "PAGE_ADD.name"}} *</label>
+                    <input id="form_name" type="text" name="name" class="form-control" placeholder="{{Trans "LAYOUT_ADD.name_placeholder"}}" value="{{.Layout.Name}}" required>
+                    <label for="form_name">{{Trans "LAYOUT_ADD.name"}} *</label>
                     {{if not (eq .Errors.Name "") }}
                     <div class="invalid-feedback d-block">
                         {{Trans (print "FORM_ERROR." .Errors.Name)}}
@@ -18,7 +18,7 @@
                 </div>
                 <!-- /column -->
                 <div class="col-12">
-                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "PAGE_ADD.submit"}}">
+                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "LAYOUT_ADD.submit"}}">
                     <p class="text-muted"><strong>*</strong>{{Trans "FORM.field_requiered"}}</p>
                 </div>
                 <!-- /column -->

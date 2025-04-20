@@ -4,23 +4,23 @@ import (
 	"io"
 )
 
-type PageAddData struct {
+type LayoutAddData struct {
 	Name string
 }
 
-type PageAddError struct {
+type LayoutAddError struct {
 	Name string
 }
 
-func PageAdd(a PageAddData, errors PageAddError) ViewFunc {
+func LayoutAdd(a LayoutAddData, errors LayoutAddError) ViewFunc {
 	type viewData struct {
-		Page   PageAddData
-		Errors PageAddError
+		Layout LayoutAddData
+		Errors LayoutAddError
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
 			"template/pages/page_add.html",
-			TemplateData("PAGE_ADD.page_title", viewData{a, errors}),
+			TemplateData("LAYOUT_ADD.page_title", viewData{a, errors}),
 		)
 	}
 }

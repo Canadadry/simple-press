@@ -8,49 +8,49 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetPageEdit(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error {
 	name := router.GetField(r, 0)
-	l, ok, err := c.Repository.SelectPage(r.Context(), name)
+	l, ok, err := c.Repository.SelectLayout(r.Context(), name)
 	if err != nil {
-		return fmt.Errorf("cannot select Page : %w", err)
+		return fmt.Errorf("cannot select Layout : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/pages", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/layout", http.StatusSeeOther)
 	}
 
-	return c.render(w, r, view.PageEdit(view.PageEditData{
+	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.PageEditError{}))
+	}, view.LayoutEditError{}))
 }
 
-func (c *Controller) PostPageEdit(w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) error {
 	name := router.GetField(r, 0)
-	page, ok, err := c.Repository.SelectPage(r.Context(), name)
+	layout, ok, err := c.Repository.SelectLayout(r.Context(), name)
 	if err != nil {
-		return fmt.Errorf("cannot select page : %w", err)
+		return fmt.Errorf("cannot select layout : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/pages", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/layout", http.StatusSeeOther)
 	}
 
-	l, errors, err := form.ParsePageEdit(r)
+	l, errors, err := form.ParseLayoutEdit(r)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	page.Name = l.Name
-	page.Content = l.Content
+	layout.Name = l.Name
+	layout.Content = l.Content
 
 	if !errors.HasError() {
-		err := c.Repository.UpdatePage(r.Context(), name, page)
+		err := c.Repository.UpdateLayout(r.Context(), name, layout)
 		if err != nil {
-			return fmt.Errorf("cannot update %s page : %w", name, err)
+			return fmt.Errorf("cannot update %s layout : %w", name, err)
 		}
 	}
 
-	return c.render(w, r, view.PageEdit(view.PageEditData{
+	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.PageEditError(errors)))
+	}, view.LayoutEditError(errors)))
 }
