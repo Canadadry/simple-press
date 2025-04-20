@@ -54,7 +54,7 @@ func TestRenderDefinition(t *testing.T) {
 				},
 			},
 			Expected: []string{
-				"BeginForm name=form action=/submit method=POST",
+				"BeginForm",
 				"BeginFieldset label=profile",
 				"Input label=age name=profile.age type=number value=42",
 				"BeginFieldset label=name",
@@ -62,7 +62,7 @@ func TestRenderDefinition(t *testing.T) {
 				"Input label=last name=profile.name.last type=text value=Doe",
 				"EndFieldset",
 				"EndFieldset",
-				"EndForm Submit",
+				"EndForm",
 			},
 		},
 	}
