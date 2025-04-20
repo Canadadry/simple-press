@@ -49,15 +49,13 @@ func ParseBlockEdit(r *http.Request) (BlockEdit, BlockEditError, error) {
 		Content: r.PostForm.Get(blockEditContent),
 	}
 	errors := BlockEditError{}
-	if err := json.Unmarshal([]byte(r.PostForm.Get(blockEditContent)), &a.Definition); err != nil {
+	if err := json.Unmarshal([]byte(r.PostForm.Get(blockEditDefinition)), &a.Definition); err != nil {
 		errors.Definition = errorInvalidJson
 	}
 	if a.Name == "" {
 		errors.Name = errorCannotBeEmpty
 	}
-	if a.Content == "" {
-		errors.Content = errorCannotBeEmpty
-	}
+
 	if len(a.Name) > maxTitleLen {
 		errors.Name = errorTagetToBig
 	}

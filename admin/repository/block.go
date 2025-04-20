@@ -14,16 +14,20 @@ type Block struct {
 	Definition map[string]any
 }
 
-func blockFromModel(l adminmodel.Block) (Block, error) {
-	b := Block{
-		Name:    l.Name,
-		Content: l.Content,
+func blockFromModel(model adminmodel.Block) (Block, error) {
+	out := Block{
+		Name:    model.Name,
+		Content: model.Content,
 	}
-	err := json.Unmarshal([]byte(l.Definition), &b.Definition)
+	if model.Definition == "" {
+		out.Definition = map[string]any{}
+		return out, nil
+	}
+	err := json.Unmarshal([]byte(model.Definition), &out.Definition)
 	if err != nil {
-		return b, stacktrace.From(err)
+		return out, stacktrace.From(err)
 	}
-	return b, nil
+	return out, nil
 }
 
 func (r *Repository) CountBlocks(ctx context.Context) (int, error) {
