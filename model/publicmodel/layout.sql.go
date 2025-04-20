@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const selectPageByID = `-- name: SelectPageByID :many
+const selectLayoutByID = `-- name: SelectLayoutByID :many
 SELECT
     id, name, content
 FROM
@@ -20,8 +20,8 @@ LIMIT
     1
 `
 
-func (q *Queries) SelectPageByID(ctx context.Context, id int64) ([]Layout, error) {
-	rows, err := q.db.QueryContext(ctx, selectPageByID, id)
+func (q *Queries) SelectLayoutByID(ctx context.Context, id int64) ([]Layout, error) {
+	rows, err := q.db.QueryContext(ctx, selectLayoutByID, id)
 	if err != nil {
 		return nil, err
 	}
