@@ -17,83 +17,70 @@ const (
 	articleEditSlug            = "slug"
 	articleEditLayout          = "layout"
 	articleEditAction          = "action"
-	articleEditActionMetadata  = "metadata"
-	articleEditActionContent   = "content"
-	articleEditActionBlockEdit = "block_edit"
-	articleEditActionBlockAdd  = "block_add"
+	ArticleEditActionMetadata  = "metadata"
+	ArticleEditActionContent   = "content"
+	ArticleEditActionBlockEdit = "block_edit"
+	ArticleEditActionBlockAdd  = "block_add"
 )
 
 type ParsedArticleEdit struct {
-	Metadata  ArticleMetadataEdit
-	Content   string
-	BlockData BlockData
-	BlockID   int64
-	Action    string
-}
-
-type BlockData struct {
-	ID        int64
-	BlockData map[string]any
-}
-
-type ArticleMetadataEdit struct {
-	Title    string
-	Author   string
-	Draft    bool
-	Slug     string
-	LayoutID int64
+	Title           string
+	Author          string
+	Draft           bool
+	Slug            string
+	LayoutID        int64
+	Content         string
+	EditedBlockID   int64
+	EditedBlockData map[string]any
+	BlockID         int64
+	Action          string
 }
 
 type ParsedArticleEditError struct {
-	Metadata    ArticleMetadataEditError
-	Content     string
-	BlockData   BlockDataError
-	BlockID     string
-	Action      string
-	ActionError string
+	Title           string
+	Author          string
+	Slug            string
+	Content         string
+	LayoutID        string
+	EditedBlockID   string
+	EditedBlockData string
+	AddedBlockID    string
+	Action          string
+	ActionError     string
 }
 
 func (pe ParsedArticleEditError) HasError() bool {
+	if pe.ActionError != "" {
+		return true
+	}
 	switch pe.Action {
-	case articleEditActionMetadata:
-		return pe.Metadata.HasError()
-	case articleEditActionContent:
+	case ArticleEditActionMetadata:
+		return pe.HasMetadataError()
+	case ArticleEditActionContent:
 		if pe.Content != "" {
 			return true
 		}
-	case articleEditActionBlockEdit:
-		return pe.BlockData.HasError()
-	case articleEditActionBlockAdd:
-		if pe.BlockID != "" {
+	case ArticleEditActionBlockEdit:
+		return pe.HasBlockDataError()
+	case ArticleEditActionBlockAdd:
+		if pe.AddedBlockID != "" {
 			return true
 		}
 	}
 	return false
 }
 
-type BlockDataError struct {
-	ID        string
-	BlockData string
-}
-
-func (be BlockDataError) HasError() bool {
-	if be.ID != "" {
+func (be ParsedArticleEditError) HasBlockDataError() bool {
+	if be.EditedBlockID != "" {
 		return true
 	}
-	if be.BlockData != "" {
+	if be.EditedBlockData != "" {
 		return true
 	}
 	return false
 }
 
-type ArticleMetadataEditError struct {
-	Title    string
-	Author   string
-	Slug     string
-	LayoutID string
-}
-
-func (ae ArticleMetadataEditError) HasError() bool {
+func (ae ParsedArticleEditError) HasMetadataError() bool {
 	if ae.Title != "" {
 		return true
 	}
@@ -115,13 +102,13 @@ func ParseArticleEdit(r *http.Request, check_layout_id, check_block_id func(cont
 		return ParsedArticleEdit{}, ParsedArticleEditError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 	switch r.PostForm.Get(articleEditAction) {
-	case articleEditActionMetadata:
+	case ArticleEditActionMetadata:
 		return parseArticleEditMetadata(r, check_layout_id)
-	case articleEditActionContent:
+	case ArticleEditActionContent:
 		return parseArticleEditContent(r)
-	case articleEditActionBlockEdit:
+	case ArticleEditActionBlockEdit:
 		return parseArticleEditBlockEdit(r, check_block_id)
-	case articleEditActionBlockAdd:
+	case ArticleEditActionBlockAdd:
 		return parseArticleEditBlockAdd(r, check_block_id)
 	}
 	return ParsedArticleEdit{}, ParsedArticleEditError{
@@ -132,50 +119,56 @@ func ParseArticleEdit(r *http.Request, check_layout_id, check_block_id func(cont
 func parseArticleEditMetadata(r *http.Request, check_id func(context.Context, int64) (int, error)) (ParsedArticleEdit, ParsedArticleEditError, error) {
 	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditLayout), 10, 64)
 	a := ParsedArticleEdit{
-		Metadata: ArticleMetadataEdit{
-			Title:    r.PostForm.Get(articleEditTitle),
-			Author:   r.PostForm.Get(articleEditAuthor),
-			Slug:     r.PostForm.Get(articleEditSlug),
-			LayoutID: id,
-			Draft:    r.PostForm.Get(articleEditDraft) != "",
-		},
-		Action: articleEditActionMetadata,
+		Title:    r.PostForm.Get(articleEditTitle),
+		Author:   r.PostForm.Get(articleEditAuthor),
+		Slug:     r.PostForm.Get(articleEditSlug),
+		LayoutID: id,
+		Draft:    r.PostForm.Get(articleEditDraft) != "",
+		Action:   ArticleEditActionMetadata,
 	}
 	errors := ParsedArticleEditError{}
-	if a.Metadata.Title == "" {
-		errors.Metadata.Title = errorCannotBeEmpty
+	if a.Title == "" {
+		errors.Title = errorCannotBeEmpty
 	}
-	if a.Content == "" {
-		errors.Content = errorCannotBeEmpty
+	if a.Slug == "" {
+		errors.Slug = errorCannotBeEmpty
 	}
-	if a.Metadata.Slug == "" {
-		errors.Metadata.Slug = errorCannotBeEmpty
+	if a.Author == "" {
+		errors.Author = errorCannotBeEmpty
 	}
-	if a.Metadata.Author == "" {
-		errors.Metadata.Author = errorCannotBeEmpty
+	if len(a.Title) > maxTitleLen {
+		errors.Title = errorTagetToBig
 	}
-	if len(a.Metadata.Title) > maxTitleLen {
-		errors.Metadata.Title = errorTagetToBig
+	if len(a.Author) > maxAuthorLen {
+		errors.Author = errorTagetToBig
 	}
-	if len(a.Metadata.Author) > maxAuthorLen {
-		errors.Metadata.Author = errorTagetToBig
-	}
-	if len(a.Metadata.Slug) > maxSlugLen {
-		errors.Metadata.Slug = errorTagetToBig
+	if len(a.Slug) > maxSlugLen {
+		errors.Slug = errorTagetToBig
 	}
 	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
-	if !re.Match([]byte(a.Metadata.Slug)) {
-		errors.Metadata.Slug = errorNotASlug
+	if !re.Match([]byte(a.Slug)) {
+		errors.Slug = errorNotASlug
 	}
 	if c, err := check_id(r.Context(), id); c == 0 {
 		fmt.Println(r.PostForm.Get(articleEditLayout), id, c, err)
-		errors.Metadata.LayoutID = errorInvalidId
+		errors.LayoutID = errorInvalidId
 	}
 	return a, errors, nil
 }
 
 func parseArticleEditContent(r *http.Request) (ParsedArticleEdit, ParsedArticleEditError, error) {
-	return ParsedArticleEdit{}, ParsedArticleEditError{}, nil
+	pae := ParsedArticleEdit{
+		Content: r.PostForm.Get(articleEditContent),
+		Action:  ArticleEditActionContent,
+	}
+	errors := ParsedArticleEditError{}
+	if pae.Content == "" {
+		errors.Content = errorCannotBeEmpty
+	}
+	if len(pae.Content) > maxContentLen {
+		errors.Content = errorTagetToBig
+	}
+	return pae, errors, nil
 }
 
 func parseArticleEditBlockEdit(r *http.Request, check_id func(context.Context, int64) (int, error)) (ParsedArticleEdit, ParsedArticleEditError, error) {

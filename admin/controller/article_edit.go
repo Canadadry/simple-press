@@ -58,17 +58,22 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
-	a, errors, err := form.ParseArticleEdit(r, c.Repository.CountLayoutByID)
+	a, errors, err := form.ParseArticleEdit(r, c.Repository.CountLayoutByID, c.Repository.CountLayoutByID)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	article.Title = a.Title
-	article.Author = a.Author
-	article.Content = a.Content
-	article.Slug = a.Slug
-	article.Draft = a.Draft
-	article.LayoutID = a.LayoutID
+	switch a.Action {
+	case form.ArticleEditActionMetadata:
+		article.Title = a.Title
+		article.Author = a.Author
+		article.Slug = a.Slug
+		article.Draft = a.Draft
+		article.LayoutID = a.LayoutID
+	case form.ArticleEditActionContent:
+		article.Content = a.Content
+	}
+	fmt.Println("will patch", a.Action, article)
 
 	if !errors.HasError() {
 		err := c.Repository.UpdateArticle(r.Context(), slug, article)
@@ -97,12 +102,12 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
-		Title:    a.Title,
-		Author:   a.Author,
-		Slug:     a.Slug,
-		Content:  a.Content,
-		Draft:    a.Draft,
-		LayoutID: a.LayoutID,
+		Title:    article.Title,
+		Author:   article.Author,
+		Slug:     article.Slug,
+		Content:  article.Content,
+		Draft:    article.Draft,
+		LayoutID: article.LayoutID,
 		Layouts:  layoutSelector,
 		Blocks:   blockSelector,
 	}, view.ArticleEditError(errors)))
