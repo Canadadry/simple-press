@@ -19,6 +19,20 @@ func TestView(t *testing.T) {
 		"article_edit": ArticleEdit(ArticleEditData{
 			Layouts: []LayoutSelector{{Name: "test", Value: 1}},
 			Blocks:  []LayoutSelector{{Name: "test", Value: 1}},
+			BlockDatas: []BlockData{
+				{
+					ID: 1,
+					Data: map[string]any{
+						"profile": map[string]any{
+							"name": map[string]any{
+								"first": "Jane",
+								"last":  "Doe",
+							},
+							"age": 42,
+						},
+					},
+				},
+			},
 		}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"}),
 		"template_list": TemplatesList(TemplatesListData{
