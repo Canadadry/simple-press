@@ -49,6 +49,7 @@ func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string,
 		"NumberFormat": formatNumber,
 		"DateFormat":   formatDateTemplate(tr),
 		"JsonMarshal":  json_marshal,
+		"RenderData":   RenderData,
 	}
 	templates, err := template.New(baseTemplate).Funcs(funcMap).ParseFS(templates, allFiles...)
 	if err != nil {

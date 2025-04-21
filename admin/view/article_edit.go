@@ -10,14 +10,20 @@ type LayoutSelector struct {
 }
 
 type ArticleEditData struct {
-	Title    string
-	Author   string
-	Slug     string
-	Content  string
-	Draft    bool
-	LayoutID int64
-	Layouts  []LayoutSelector
-	Blocks   []LayoutSelector
+	Title      string
+	Author     string
+	Slug       string
+	Content    string
+	Draft      bool
+	LayoutID   int64
+	Layouts    []LayoutSelector
+	Blocks     []LayoutSelector
+	BlockDatas []BlockData
+}
+
+type BlockData struct {
+	ID   int64
+	Data map[string]any
 }
 
 type ArticleEditError struct {

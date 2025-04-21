@@ -116,7 +116,27 @@
                 <h2 >{{Trans "ARTICLE_EDIT.blocks"}}</h2>
             </div>
         </div>
-            <!-- /column -->
+        {{ range $idx, $data := .Article.BlockDatas }}
+        <form method="post" action="">
+            <div class="row gx-4">
+                <div class="col-12">
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <input type="hidden" name="edited_block_id" value="{{$data.ID}}"></input>
+                        </div>
+                        {{ RenderData $data.DATA}}
+                        <div class="col-auto">
+                            <input type="submit" class="btn btn-primary mb-3" name="action" value="block_edit">
+                                {{Trans "ARTICLE_EDIT.block_submit"}}
+                            </input>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- /form -->
+        {{end}}
         <form method="post" action="">
             <div class="row gx-4">
                 <div class="col-12">

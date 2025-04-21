@@ -19,6 +19,16 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
+	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), a.ID)
+	if err != nil {
+		return fmt.Errorf("cannot select block dataarticle : %w", err)
+	}
+
+	blockDataView := []view.BlockData{}
+	for _, p := range blockDatas {
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+	}
+
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select all layouts : %w", err)
@@ -38,14 +48,15 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
-		Title:    a.Title,
-		Author:   a.Author,
-		Slug:     a.Slug,
-		Content:  a.Content,
-		Draft:    a.Draft,
-		LayoutID: a.LayoutID,
-		Layouts:  layoutSelector,
-		Blocks:   blockSelector,
+		Title:      a.Title,
+		Author:     a.Author,
+		Slug:       a.Slug,
+		Content:    a.Content,
+		Draft:      a.Draft,
+		LayoutID:   a.LayoutID,
+		Layouts:    layoutSelector,
+		Blocks:     blockSelector,
+		BlockDatas: blockDataView,
 	}, view.ArticleEditError{}))
 }
 
@@ -59,12 +70,29 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
-	a, errors, err := form.ParseArticleEdit(
-		r,
-		c.Repository.CountLayoutByID,
-		c.Repository.CountBlockByID,
-		c.Repository.CountBlockDataByID,
-	)
+	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), article.ID)
+	if err != nil {
+		return fmt.Errorf("cannot select block dataarticle : %w", err)
+	}
+
+	blockDataView := []view.BlockData{}
+	for _, p := range blockDatas {
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+	}
+
+	a, errors, err := form.ParseArticleEdit(form.ParseArticleEditParam{
+		Request:          r,
+		CheckLayoutID:    c.Repository.CountLayoutByID,
+		CheckBlockdataID: c.Repository.CountBlockDataByID,
+		GetPreviousData: func(id int64) (map[string]any, bool) {
+			for _, bd := range blockDatas {
+				if bd.ID == id {
+					return bd.Data, true
+				}
+			}
+			return nil, false
+		},
+	})
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
@@ -130,13 +158,14 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
-		Title:    article.Title,
-		Author:   article.Author,
-		Slug:     article.Slug,
-		Content:  article.Content,
-		Draft:    article.Draft,
-		LayoutID: article.LayoutID,
-		Layouts:  layoutSelector,
-		Blocks:   blockSelector,
+		Title:      article.Title,
+		Author:     article.Author,
+		Slug:       article.Slug,
+		Content:    article.Content,
+		Draft:      article.Draft,
+		LayoutID:   article.LayoutID,
+		Layouts:    layoutSelector,
+		Blocks:     blockSelector,
+		BlockDatas: blockDataView,
 	}, view.ArticleEditError(errors)))
 }
