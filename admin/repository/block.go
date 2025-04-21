@@ -42,6 +42,11 @@ func (r *Repository) CountBlockByName(ctx context.Context, name string) (int, er
 	return int(c), err
 }
 
+func (r *Repository) CountBlockByID(ctx context.Context, id int64) (int, error) {
+	c, err := adminmodel.New(r.Db).CountBlockByID(ctx, id)
+	return int(c), err
+}
+
 type CreateBlockParams struct {
 	Name string
 }

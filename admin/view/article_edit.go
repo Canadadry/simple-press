@@ -21,16 +21,17 @@ type ArticleEditData struct {
 }
 
 type ArticleEditError struct {
-	Title           string
-	Author          string
-	Slug            string
-	Content         string
-	LayoutID        string
-	EditedBlockID   string
-	EditedBlockData string
-	AddedBlockID    string
-	Action          string
-	ActionError     string
+	Title               string
+	Author              string
+	Slug                string
+	Content             string
+	LayoutID            string
+	EditedBlockID       string
+	EditedBlockData     string
+	EditedBlockPosition string
+	AddedBlockID        string
+	Action              string
+	ActionError         string
 }
 
 func ArticleEdit(a ArticleEditData, errors ArticleEditError) ViewFunc {

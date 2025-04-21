@@ -9,6 +9,22 @@ import (
 	"context"
 )
 
+const countBlockDataByID = `-- name: CountBlockDataByID :one
+SELECT
+    count(*)
+FROM
+    block_data
+WHERE
+    id = ?
+`
+
+func (q *Queries) CountBlockDataByID(ctx context.Context, id int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countBlockDataByID, id)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createBlockData = `-- name: CreateBlockData :execlastid
 INSERT INTO
     block_data (position, data, block_id, article_id)

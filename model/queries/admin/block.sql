@@ -12,6 +12,14 @@ FROM
 WHERE
     name = ?;
 
+-- name: CountBlockByID :one
+SELECT
+    count(*)
+FROM
+    block
+WHERE
+    id = ?;
+
 -- name: CreateBlock :execlastid
 INSERT INTO
     block (name, content, definition)

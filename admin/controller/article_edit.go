@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/admin/form"
+	"app/admin/repository"
 	"app/admin/view"
 	"app/pkg/router"
 	"fmt"
@@ -58,7 +59,12 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
 	}
 
-	a, errors, err := form.ParseArticleEdit(r, c.Repository.CountLayoutByID, c.Repository.CountLayoutByID)
+	a, errors, err := form.ParseArticleEdit(
+		r,
+		c.Repository.CountLayoutByID,
+		c.Repository.CountBlockByID,
+		c.Repository.CountBlockDataByID,
+	)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
@@ -76,9 +82,31 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	fmt.Println("will patch", a.Action, article)
 
 	if !errors.HasError() {
-		err := c.Repository.UpdateArticle(r.Context(), slug, article)
-		if err != nil {
-			return fmt.Errorf("cannot update %s article : %w", slug, err)
+		switch a.Action {
+		case form.ArticleEditActionMetadata, form.ArticleEditActionContent:
+			err := c.Repository.UpdateArticle(r.Context(), slug, article)
+			if err != nil {
+				return fmt.Errorf("cannot update %s article : %w", slug, err)
+			}
+		case form.ArticleEditActionBlockAdd:
+			err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
+				ArticleID: article.ID,
+				Block:     repository.Block{ID: a.BlockID},
+				Position:  0,
+			})
+			if err != nil {
+				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
+			}
+
+		case form.ArticleEditActionBlockEdit:
+			err := c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
+				ID:       a.EditedBlockID,
+				Data:     a.EditedBlockData,
+				Position: int64(a.EditedBlockPosition),
+			})
+			if err != nil {
+				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
+			}
 		}
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())

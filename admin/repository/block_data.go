@@ -9,15 +9,26 @@ import (
 )
 
 type BlockData struct {
-	ID          int64
-	Position    int64
-	Data        string
-	ArticleID   int64
-	BlockDataID int64
+	ID        int64
+	Position  int64
+	Data      map[string]any
+	ArticleID int64
+	BlockID   int64
 }
 
 func blockDataFromModel(model adminmodel.BlockDatum) (BlockData, error) {
-	return BlockData{}, nil
+	out := BlockData{
+		ID:       model.ID,
+		Position: model.Position,
+		BlockID:  model.BlockID,
+	}
+	err := json.Unmarshal([]byte(model.Data), &out.Data)
+	return out, err
+}
+
+func (r *Repository) CountBlockDataByID(ctx context.Context, id int64) (int, error) {
+	c, err := adminmodel.New(r.Db).CountBlockDataByID(ctx, id)
+	return int(c), err
 }
 
 type CreateBlockDataParams struct {
@@ -59,7 +70,7 @@ func (r *Repository) SelectBlockDataByArticle(ctx context.Context, articleID int
 	return sqlutil.MapWithError(list, blockDataFromModel)
 }
 
-func (r *Repository) UpdateBlockData(ctx context.Context, name string, l BlockData) error {
+func (r *Repository) UpdateBlockData(ctx context.Context, l BlockData) error {
 	data, err := json.Marshal(l.Data)
 	if err != nil {
 		return stacktrace.From(err)

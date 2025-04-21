@@ -1,3 +1,11 @@
+-- name: CountBlockDataByID :one
+SELECT
+    count(*)
+FROM
+    block_data
+WHERE
+    id = ?;
+
 -- name: CreateBlockData :execlastid
 INSERT INTO
     block_data (position, data, block_id, article_id)

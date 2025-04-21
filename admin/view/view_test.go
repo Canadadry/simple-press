@@ -20,7 +20,7 @@ func TestView(t *testing.T) {
 			Layouts: []LayoutSelector{{Name: "test", Value: 1}},
 			Blocks:  []LayoutSelector{{Name: "test", Value: 1}},
 		}, ArticleEditError{}),
-		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10"}),
+		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"}),
 		"template_list": TemplatesList(TemplatesListData{
 			Templates: []TemplateListData{TemplateListData{}},
 		}),

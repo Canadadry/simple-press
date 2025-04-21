@@ -23,6 +23,22 @@ func (q *Queries) CountBlock(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const countBlockByID = `-- name: CountBlockByID :one
+SELECT
+    count(*)
+FROM
+    block
+WHERE
+    id = ?
+`
+
+func (q *Queries) CountBlockByID(ctx context.Context, id int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countBlockByID, id)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countBlockByName = `-- name: CountBlockByName :one
 SELECT
     count(*)

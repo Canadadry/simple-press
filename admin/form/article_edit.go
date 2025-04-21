@@ -24,29 +24,31 @@ const (
 )
 
 type ParsedArticleEdit struct {
-	Title           string
-	Author          string
-	Draft           bool
-	Slug            string
-	LayoutID        int64
-	Content         string
-	EditedBlockID   int64
-	EditedBlockData map[string]any
-	BlockID         int64
-	Action          string
+	Title               string
+	Author              string
+	Draft               bool
+	Slug                string
+	LayoutID            int64
+	Content             string
+	EditedBlockID       int64
+	EditedBlockData     map[string]any
+	EditedBlockPosition int
+	BlockID             int64
+	Action              string
 }
 
 type ParsedArticleEditError struct {
-	Title           string
-	Author          string
-	Slug            string
-	Content         string
-	LayoutID        string
-	EditedBlockID   string
-	EditedBlockData string
-	AddedBlockID    string
-	Action          string
-	ActionError     string
+	Title               string
+	Author              string
+	Slug                string
+	Content             string
+	LayoutID            string
+	EditedBlockID       string
+	EditedBlockData     string
+	EditedBlockPosition string
+	AddedBlockID        string
+	Action              string
+	ActionError         string
 }
 
 func (pe ParsedArticleEditError) HasError() bool {
@@ -77,6 +79,9 @@ func (be ParsedArticleEditError) HasBlockDataError() bool {
 	if be.EditedBlockData != "" {
 		return true
 	}
+	if be.EditedBlockPosition != "" {
+		return true
+	}
 	return false
 }
 
@@ -96,7 +101,7 @@ func (ae ParsedArticleEditError) HasMetadataError() bool {
 	return false
 }
 
-func ParseArticleEdit(r *http.Request, check_layout_id, check_block_id func(context.Context, int64) (int, error)) (ParsedArticleEdit, ParsedArticleEditError, error) {
+func ParseArticleEdit(r *http.Request, check_layout_id, check_block_id, check_blockdata_id func(context.Context, int64) (int, error)) (ParsedArticleEdit, ParsedArticleEditError, error) {
 	err := r.ParseForm()
 	if err != nil {
 		return ParsedArticleEdit{}, ParsedArticleEditError{}, fmt.Errorf("cannot parse form : %w", err)
@@ -109,7 +114,7 @@ func ParseArticleEdit(r *http.Request, check_layout_id, check_block_id func(cont
 	case ArticleEditActionBlockEdit:
 		return parseArticleEditBlockEdit(r, check_block_id)
 	case ArticleEditActionBlockAdd:
-		return parseArticleEditBlockAdd(r, check_block_id)
+		return parseArticleEditBlockAdd(r, check_blockdata_id)
 	}
 	return ParsedArticleEdit{}, ParsedArticleEditError{
 		ActionError: errorInvalidAction,
@@ -149,8 +154,11 @@ func parseArticleEditMetadata(r *http.Request, check_id func(context.Context, in
 	if !re.Match([]byte(a.Slug)) {
 		errors.Slug = errorNotASlug
 	}
-	if c, err := check_id(r.Context(), id); c == 0 {
-		fmt.Println(r.PostForm.Get(articleEditLayout), id, c, err)
+	c, err := check_id(r.Context(), id)
+	if err != nil {
+		return a, errors, err
+	}
+	if c == 0 {
 		errors.LayoutID = errorInvalidId
 	}
 	return a, errors, nil
@@ -176,5 +184,18 @@ func parseArticleEditBlockEdit(r *http.Request, check_id func(context.Context, i
 }
 
 func parseArticleEditBlockAdd(r *http.Request, check_id func(context.Context, int64) (int, error)) (ParsedArticleEdit, ParsedArticleEditError, error) {
-	return ParsedArticleEdit{}, ParsedArticleEditError{}, nil
+	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditLayout), 10, 64)
+	a := ParsedArticleEdit{
+		Action:  ArticleEditActionBlockAdd,
+		BlockID: id,
+	}
+	errors := ParsedArticleEditError{}
+	c, err := check_id(r.Context(), id)
+	if err != nil {
+		return a, errors, err
+	}
+	if c == 0 {
+		errors.AddedBlockID = errorInvalidId
+	}
+	return a, errors, nil
 }
