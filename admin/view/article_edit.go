@@ -17,6 +17,7 @@ type ArticleEditData struct {
 	Draft    bool
 	LayoutID int64
 	Layouts  []LayoutSelector
+	Blocks   []LayoutSelector
 }
 
 type ArticleEditError struct {

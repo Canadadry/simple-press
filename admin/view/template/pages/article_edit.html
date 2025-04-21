@@ -6,6 +6,12 @@
   <div class="container py-14 py-md-16">
     <div class="row">
       <div class="col-xl-10 mx-auto">
+        <div class="row gx-4">
+            <div class="col-12 mb-4">
+                <h2 >{{Trans "ARTICLE_EDIT.metadata"}}</h2>
+            </div>
+            <!-- /column -->
+        </div>
         <form method="post" action="">
             <div class="row gx-4">
                 <div class="col-md-8">
@@ -28,7 +34,7 @@
                         <option value="{{$layout.Value}}" {{if eq $article.LayoutID $layout.Value}}selected{{end}}>{{$layout.Name}}</option>
                         {{end}}
                       </select>
-                      <label for="form-layout">{{Trans "ARTICLE_EDIT.layout"}}</label>
+                      <label for="form-layout">{{Trans "ARTICLE_EDIT.layout"}} *</label>
                       {{if not (eq .Errors.LayoutID "") }}
                       <div class="invalid-feedback  d-block">
                           {{Trans (print "FORM_ERROR." .Errors.LayoutID)}}
@@ -62,18 +68,6 @@
                 </div>
                 <!-- /column -->
                 <div class="col-12">
-                  <div class="form-floating mb-4">
-                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Article.Content}}</textarea>
-                    {{if not (eq .Errors.Content "") }}
-                    <div class="invalid-feedback  d-block">
-                        {{Trans (print "FORM_ERROR." .Errors.Content)}}
-                    </div>
-                    {{ end }}
-
-                  </div>
-                </div>
-                <!-- /column -->
-                <div class="col-12">
                     <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" name="draft" value="{{.Article.Draft}}" id="checkboxDraft" >
                     <label class="form-check-label" for="checkboxDraft">
@@ -83,12 +77,67 @@
                 </div>
                 <!-- /column -->
                 <div class="col-12">
-                    <input type="submit" class="btn btn-primary rounded-pill btn-send mb-3" value="{{Trans "ARTICLE_EDIT.submit"}}">
+                    <input type="submit" class="btn btn-primary  rounded-pill btn-send mb-3" name="action" value="metadata">
+                        {{Trans "ARTICLE_EDIT.submit"}}
+                    </input>
                     <p class="text-muted"><strong>*</strong>{{Trans "FORM.field_requiered"}}</p>
                 </div>
                 <!-- /column -->
             </div>
-            <!-- /.row -->
+        </form>
+        <div class="row gx-4">
+            <div class="col-12 mb-4">
+                <h2 >{{Trans "ARTICLE_EDIT.content"}}</h2>
+            </div>
+        </div>
+        <form method="post" action="">
+            <div class="row gx-4">
+                <div class="col-12">
+                  <div class="mb-4">
+                    <textarea id="form_content" name="content" class="form-control" style="height: 450px">{{.Article.Content}}</textarea>
+                    {{if not (eq .Errors.Content "") }}
+                    <div class="invalid-feedback  d-block">
+                        {{Trans (print "FORM_ERROR." .Errors.Content)}}
+                    </div>
+                    {{ end }}
+                  </div>
+                </div>
+                <!-- /column -->
+                <div class="col-12">
+                    <input type="submit" class="btn btn-primary  rounded-pill btn-send mb-3" name="action" value="content">
+                        {{Trans "ARTICLE_EDIT.submit"}}
+                    </input>
+                </div>
+                <!-- /column -->
+            </div>
+        </form>
+        <div class="row gx-4">
+            <div class="col-12 mb-4">
+                <h2 >{{Trans "ARTICLE_EDIT.blocks"}}</h2>
+            </div>
+        </div>
+            <!-- /column -->
+        <form method="post" action="">
+            <div class="row gx-4">
+                <div class="col-12">
+                    <div class="row g-3">
+                        <label class="col-sm-2 col-form-label" for="form-block">{{Trans "ARTICLE_EDIT.block"}}</label>
+                        <div class="col-auto">
+                            <select class="form-select" id="form-block" name="block">
+                            <option value="" selected disabled>{{Trans "ARTICLE_EDIT.block_placeholder"}}</option>
+                            {{ range $idx, $block := .Article.Blocks }}
+                            <option value="{{$block.Value}}">{{$block.Name}}</option>
+                            {{end}}
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <input type="submit" class="btn btn-primary mb-3" name="action" value="add-block">
+                                {{Trans "ARTICLE_EDIT.block_submit"}}
+                            </input>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
         <!-- /form -->
       </div>

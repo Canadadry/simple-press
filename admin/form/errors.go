@@ -7,6 +7,7 @@ const (
 	errorNotAPath      = "not_a_path"
 	errorInvalidId     = "invalid_id"
 	errorInvalidJson   = "invalid_json"
+	errorInvalidAction = "invalid_action"
 	maxTitleLen        = 255
 	maxAuthorLen       = 255
 	maxSlugLen         = 255

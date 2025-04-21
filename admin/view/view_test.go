@@ -14,9 +14,12 @@ func TestView(t *testing.T) {
 		"article_list": ArticlesList(ArticlesListData{
 			Articles: []ArticleListData{ArticleListData{}},
 		}),
-		"article_add":             ArticleAdd(ArticleAddData{}, ArticleAddError{}),
-		"article_add with error":  ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
-		"article_edit":            ArticleEdit(ArticleEditData{Layouts: []LayoutSelector{{Name: "test", Value: 1}}}, ArticleEditError{}),
+		"article_add":            ArticleAdd(ArticleAddData{}, ArticleAddError{}),
+		"article_add with error": ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
+		"article_edit": ArticleEdit(ArticleEditData{
+			Layouts: []LayoutSelector{{Name: "test", Value: 1}},
+			Blocks:  []LayoutSelector{{Name: "test", Value: 1}},
+		}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5"}),
 		"template_list": TemplatesList(TemplatesListData{
 			Templates: []TemplateListData{TemplateListData{}},

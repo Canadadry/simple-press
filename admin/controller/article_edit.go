@@ -27,6 +27,15 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
 
+	blocks, err := c.Repository.SelectAllBlock(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot select all layouts : %w", err)
+	}
+	blockSelector := []view.LayoutSelector{}
+	for _, b := range blocks {
+		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
+	}
+
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
 		Title:    a.Title,
 		Author:   a.Author,
@@ -35,6 +44,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		Draft:    a.Draft,
 		LayoutID: a.LayoutID,
 		Layouts:  layoutSelector,
+		Blocks:   blockSelector,
 	}, view.ArticleEditError{}))
 }
 
@@ -76,6 +86,16 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
 
+	blocks, err := c.Repository.SelectAllBlock(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot select all layouts : %w", err)
+	}
+
+	blockSelector := []view.LayoutSelector{}
+	for _, b := range blocks {
+		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
+	}
+
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
 		Title:    a.Title,
 		Author:   a.Author,
@@ -84,5 +104,6 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		Draft:    a.Draft,
 		LayoutID: a.LayoutID,
 		Layouts:  layoutSelector,
+		Blocks:   blockSelector,
 	}, view.ArticleEditError(errors)))
 }

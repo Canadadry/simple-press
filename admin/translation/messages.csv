@@ -22,7 +22,7 @@ footer.address_value,address_value,address_value
 footer.copyright,copyright,copyright
 FORM_ERROR.empty,cannot be empty,cannot be empty
 FORM_ERROR.too_big,Too big,Too big
-FORM_ERROR.errorNotASlug,Not a slug,Not a slug
+FORM_ERROR.not_a_slug,Not a slug,Not a slug
 FORM_ERROR.invalid_id,invalid_id,invalid_id
 FORM_ERROR.invalid_json,invalid_json,invalid_json
 TEMPLATE_EDIT.errors.not_a_path,Not a path,Not a path
@@ -34,11 +34,18 @@ ARTICLE_ADD.author_placeholder,author_placeholder,author_placeholder
 ARTICLE_ADD.author,author,author
 ARTICLE_ADD.draft,draft,draft
 ARTICLE_ADD.submit,submit,submit
-ARTICLE_EDIT.page_title,page title, page title
+ARTICLE_EDIT.page_title,Edit article,Edit article
 ARTICLE_EDIT.slug,slug,slug
 ARTICLE_EDIT.content,content,content
+ARTICLE_EDIT.blocks,blocks,blocks
+ARTICLE_EDIT.metadata,metadata,metadata
+ARTICLE_EDIT.block_placeholder,block_placeholder,block_placeholder
+ARTICLE_EDIT.block,add a block,add a block
+ARTICLE_EDIT.block_submit,add,add
 ARTICLE_EDIT.submit,submit,submit
+ARTICLE_EDIT.save,save,save
 ARTICLE_EDIT.layout,layout,layout
+ARTICLE_ADD.content,content,content
 ARTICLE_LIST.page_title,page title,page title
 ARTICLE_LIST.column_name,name,name
 ARTICLE_LIST.column_author,author,author
