@@ -51,11 +51,11 @@ type ParsedArticleEditError struct {
 	EditedBlockPosition string
 	AddedBlockID        string
 	Action              string
-	ActionError         string
+	Form                string
 }
 
 func (pe ParsedArticleEditError) HasError() bool {
-	if pe.ActionError != "" {
+	if pe.Form != "" {
 		return true
 	}
 	switch pe.Action {
@@ -105,10 +105,10 @@ func (ae ParsedArticleEditError) HasMetadataError() bool {
 }
 
 type ParseArticleEditParam struct {
-	Request          *http.Request
-	CheckLayoutID    func(context.Context, int64) (int, error)
-	CheckBlockdataID func(context.Context, int64) (int, error)
-	GetPreviousData  func(int64) (map[string]any, bool)
+	Request         *http.Request
+	CheckLayoutID   func(context.Context, int64) (int, error)
+	CheckBlockID    func(context.Context, int64) (int, error)
+	GetPreviousData func(int64) (map[string]any, bool)
 }
 
 func ParseArticleEdit(param ParseArticleEditParam) (ParsedArticleEdit, ParsedArticleEditError, error) {
@@ -124,10 +124,10 @@ func ParseArticleEdit(param ParseArticleEditParam) (ParsedArticleEdit, ParsedArt
 	case ArticleEditActionBlockEdit:
 		return parseArticleEditBlockEdit(param.Request, param.GetPreviousData)
 	case ArticleEditActionBlockAdd:
-		return parseArticleEditBlockAdd(param.Request, param.CheckBlockdataID)
+		return parseArticleEditBlockAdd(param.Request, param.CheckBlockID)
 	}
 	return ParsedArticleEdit{}, ParsedArticleEditError{
-		ActionError: errorInvalidAction,
+		Form: errorInvalidAction,
 	}, nil
 }
 
@@ -179,7 +179,7 @@ func parseArticleEditContent(r *http.Request) (ParsedArticleEdit, ParsedArticleE
 		Content: r.PostForm.Get(articleEditContent),
 		Action:  ArticleEditActionContent,
 	}
-	errors := ParsedArticleEditError{}
+	errors := ParsedArticleEditError{Action: ArticleEditActionContent}
 	if pae.Content == "" {
 		errors.Content = errorCannotBeEmpty
 	}
@@ -192,10 +192,10 @@ func parseArticleEditContent(r *http.Request) (ParsedArticleEdit, ParsedArticleE
 func parseArticleEditBlockEdit(r *http.Request, get_previous_data func(int64) (map[string]any, bool)) (ParsedArticleEdit, ParsedArticleEditError, error) {
 	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditEditedBlockID), 10, 64)
 	a := ParsedArticleEdit{
-		Action:  ArticleEditActionBlockAdd,
+		Action:  ArticleEditActionBlockEdit,
 		BlockID: id,
 	}
-	errors := ParsedArticleEditError{}
+	errors := ParsedArticleEditError{Action: ArticleEditActionBlockEdit}
 	form_data, ok := get_previous_data(id)
 	if !ok {
 		errors.EditedBlockID = errorInvalidId
@@ -216,7 +216,7 @@ func parseArticleEditBlockAdd(r *http.Request, check_id func(context.Context, in
 		Action:  ArticleEditActionBlockAdd,
 		BlockID: id,
 	}
-	errors := ParsedArticleEditError{}
+	errors := ParsedArticleEditError{Action: ArticleEditActionBlockAdd}
 	c, err := check_id(r.Context(), id)
 	if err != nil {
 		return a, errors, err

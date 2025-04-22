@@ -46,7 +46,6 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 	for _, b := range blocks {
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
 	}
-
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
 		Title:      a.Title,
 		Author:     a.Author,
@@ -81,9 +80,9 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	}
 
 	a, errors, err := form.ParseArticleEdit(form.ParseArticleEditParam{
-		Request:          r,
-		CheckLayoutID:    c.Repository.CountLayoutByID,
-		CheckBlockdataID: c.Repository.CountBlockDataByID,
+		Request:       r,
+		CheckLayoutID: c.Repository.CountLayoutByID,
+		CheckBlockID:  c.Repository.CountBlockByID,
 		GetPreviousData: func(id int64) (map[string]any, bool) {
 			for _, bd := range blockDatas {
 				if bd.ID == id {
@@ -107,7 +106,6 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	case form.ArticleEditActionContent:
 		article.Content = a.Content
 	}
-	fmt.Println("will patch", a.Action, article)
 
 	if !errors.HasError() {
 		switch a.Action {

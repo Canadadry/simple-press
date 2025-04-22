@@ -37,7 +37,7 @@ type ArticleEditError struct {
 	EditedBlockPosition string
 	AddedBlockID        string
 	Action              string
-	ActionError         string
+	Form                string
 }
 
 func ArticleEdit(a ArticleEditData, errors ArticleEditError) ViewFunc {

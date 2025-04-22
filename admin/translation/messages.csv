@@ -25,6 +25,7 @@ FORM_ERROR.too_big,Too big,Too big
 FORM_ERROR.not_a_slug,Not a slug,Not a slug
 FORM_ERROR.invalid_id,invalid_id,invalid_id
 FORM_ERROR.invalid_json,invalid_json,invalid_json
+FORM_ERROR.invalid_action,invalid_action,invalid_action
 TEMPLATE_EDIT.errors.not_a_path,Not a path,Not a path
 ARTICLE.add,add,add
 ARTICLE_ADD.page_title,page title,page title

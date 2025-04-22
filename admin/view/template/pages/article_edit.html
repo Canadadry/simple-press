@@ -8,6 +8,14 @@
       <div class="col-xl-10 mx-auto">
         <div class="row gx-4">
             <div class="col-12 mb-4">
+                {{if not (eq .Errors.Form "") }}
+                <div class="alert alert-danger" role="alert">
+                    {{Trans (print "FORM_ERROR." .Errors.Form)}}
+                </div>
+                {{end}}
+            </div>
+
+            <div class="col-12 mb-4">
                 <h2 >{{Trans "ARTICLE_EDIT.metadata"}}</h2>
             </div>
             <!-- /column -->
@@ -61,7 +69,7 @@
                     <label for="form_author">{{Trans "ARTICLE_ADD.author"}} *</label>
                     {{if not (eq .Errors.Author "") }}
                     <div class="invalid-feedback  d-block">
-                        {{Trans (print "FORM_ERROR." .Errors.Title)}}
+                        {{Trans (print "FORM_ERROR." .Errors.Author)}}
                     </div>
                     {{ end }}
                     </div>
@@ -143,15 +151,20 @@
                     <div class="row g-3">
                         <label class="col-sm-2 col-form-label" for="form-block">{{Trans "ARTICLE_EDIT.block"}}</label>
                         <div class="col-auto">
-                            <select class="form-select" id="form-block" name="block">
+                            <select class="form-select" id="form-block" name="new_block">
                             <option value="" selected disabled>{{Trans "ARTICLE_EDIT.block_placeholder"}}</option>
                             {{ range $idx, $block := .Article.Blocks }}
                             <option value="{{$block.Value}}">{{$block.Name}}</option>
                             {{end}}
                             </select>
+                            {{if not (eq .Errors.AddedBlockID "") }}
+                            <div class="invalid-feedback  d-block">
+                                {{Trans (print "FORM_ERROR." .Errors.AddedBlockID)}}
+                            </div>
+                            {{ end }}
                         </div>
                         <div class="col-auto">
-                            <input type="submit" class="btn btn-primary mb-3" name="action" value="add-block">
+                            <input type="submit" class="btn btn-primary mb-3" name="action" value="block_add">
                                 {{Trans "ARTICLE_EDIT.block_submit"}}
                             </input>
                         </div>
