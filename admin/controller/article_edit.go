@@ -150,6 +150,11 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 			if err != nil {
 				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
 			}
+			for i, p := range blockDataView {
+				if p.ID == a.EditedBlockID {
+					blockDataView[i].Data = a.EditedBlockData
+				}
+			}
 		}
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())

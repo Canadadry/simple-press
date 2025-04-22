@@ -206,6 +206,7 @@ func parseArticleEditBlockEdit(r *http.Request, get_previous_data func(int64) (m
 		errors.EditedBlockData = errorInvalidJson
 		return a, errors, nil
 	}
+	a.EditedBlockID = id
 	a.EditedBlockData = form_data
 	return a, errors, nil
 }
