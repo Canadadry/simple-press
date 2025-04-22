@@ -19,8 +19,9 @@ func (c *Controller) GetBlockEdit(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	return c.render(w, r, view.BlockEdit(view.BlockEditData{
-		Name:    l.Name,
-		Content: l.Content,
+		Name:       l.Name,
+		Content:    l.Content,
+		Definition: l.Definition,
 	}, view.BlockEditError{}))
 }
 
