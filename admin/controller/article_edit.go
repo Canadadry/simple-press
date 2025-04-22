@@ -115,7 +115,7 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 				return fmt.Errorf("cannot update %s article : %w", slug, err)
 			}
 		case form.ArticleEditActionBlockAdd:
-			err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
+			id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
 				ArticleID: article.ID,
 				Block:     repository.Block{ID: a.BlockID},
 				Position:  0,
@@ -123,6 +123,8 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 			if err != nil {
 				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
 			}
+
+			blockDataView = append(blockDataView, view.BlockData{ID: id})
 
 		case form.ArticleEditActionBlockEdit:
 			err := c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
@@ -153,6 +155,9 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	blockSelector := []view.LayoutSelector{}
 	for _, b := range blocks {
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
+		if b.ID == blockDataView[len(blockDataView)-1].ID {
+			blockDataView[len(blockDataView)-1].Data = b.Definition
+		}
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{

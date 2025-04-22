@@ -37,21 +37,21 @@ type CreateBlockDataParams struct {
 	ArticleID int64
 }
 
-func (r *Repository) CreateBlockData(ctx context.Context, l CreateBlockDataParams) error {
+func (r *Repository) CreateBlockData(ctx context.Context, l CreateBlockDataParams) (int64, error) {
 	data, err := json.Marshal(l.Block.Definition)
 	if err != nil {
-		return stacktrace.From(err)
+		return 0, stacktrace.From(err)
 	}
-	_, err = adminmodel.New(r.Db).CreateBlockData(ctx, adminmodel.CreateBlockDataParams{
+	id, err := adminmodel.New(r.Db).CreateBlockData(ctx, adminmodel.CreateBlockDataParams{
 		ArticleID: l.ArticleID,
 		Position:  l.Position,
 		BlockID:   l.Block.ID,
 		Data:      string(data),
 	})
 	if err != nil {
-		return stacktrace.From(err)
+		return 0, stacktrace.From(err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *Repository) DeleteBlockData(ctx context.Context, id int64) error {
