@@ -38,6 +38,9 @@ type CreateBlockDataParams struct {
 }
 
 func (r *Repository) CreateBlockData(ctx context.Context, l CreateBlockDataParams) (int64, error) {
+	if len(l.Block.Definition) == 0 {
+		return 0, stacktrace.Errorf("empty block definition")
+	}
 	data, err := json.Marshal(l.Block.Definition)
 	if err != nil {
 		return 0, stacktrace.From(err)

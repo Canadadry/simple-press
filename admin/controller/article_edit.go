@@ -107,6 +107,15 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 		article.Content = a.Content
 	}
 
+	blocks, err := c.Repository.SelectAllBlock(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot select all layouts : %w", err)
+	}
+	blockSelector := []view.LayoutSelector{}
+	for _, b := range blocks {
+		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
+	}
+
 	if !errors.HasError() {
 		switch a.Action {
 		case form.ArticleEditActionMetadata, form.ArticleEditActionContent:
@@ -115,16 +124,22 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 				return fmt.Errorf("cannot update %s article : %w", slug, err)
 			}
 		case form.ArticleEditActionBlockAdd:
+			def := map[string]any{}
+			for _, b := range blocks {
+				if b.ID == a.BlockID {
+					def = b.Definition
+				}
+			}
 			id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
 				ArticleID: article.ID,
-				Block:     repository.Block{ID: a.BlockID},
+				Block:     repository.Block{ID: a.BlockID, Definition: def},
 				Position:  0,
 			})
 			if err != nil {
 				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
 			}
 
-			blockDataView = append(blockDataView, view.BlockData{ID: id})
+			blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
 
 		case form.ArticleEditActionBlockEdit:
 			err := c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
@@ -145,19 +160,6 @@ func (c *Controller) PostArticleEdit(w http.ResponseWriter, r *http.Request) err
 	layoutSelector := []view.LayoutSelector{}
 	for _, p := range layouts {
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
-	}
-
-	blocks, err := c.Repository.SelectAllBlock(r.Context())
-	if err != nil {
-		return fmt.Errorf("cannot select all layouts : %w", err)
-	}
-
-	blockSelector := []view.LayoutSelector{}
-	for _, b := range blocks {
-		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
-		if b.ID == blockDataView[len(blockDataView)-1].ID {
-			blockDataView[len(blockDataView)-1].Data = b.Definition
-		}
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
