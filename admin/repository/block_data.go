@@ -14,13 +14,15 @@ type BlockData struct {
 	Data      map[string]any
 	ArticleID int64
 	BlockID   int64
+	BlockName string
 }
 
-func blockDataFromModel(model adminmodel.BlockDatum) (BlockData, error) {
+func blockDataFromModel(model adminmodel.SelectBlockDataByArticleRow) (BlockData, error) {
 	out := BlockData{
-		ID:       model.ID,
-		Position: model.Position,
-		BlockID:  model.BlockID,
+		ID:        model.ID,
+		Position:  model.Position,
+		BlockID:   model.BlockID,
+		BlockName: model.Name.String,
 	}
 	err := json.Unmarshal([]byte(model.Data), &out.Data)
 	return out, err

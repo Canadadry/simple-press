@@ -7,6 +7,7 @@ package adminmodel
 
 import (
 	"context"
+	"database/sql"
 )
 
 const countBlockDataByID = `-- name: CountBlockDataByID :one
@@ -65,30 +66,46 @@ func (q *Queries) DeleteBlockData(ctx context.Context, id int64) error {
 
 const selectBlockDataByArticle = `-- name: SelectBlockDataByArticle :many
 SELECT
-    id, position, data, article_id, block_id
+    bd.id as ` + "`" + `id` + "`" + `,
+    bd.position as ` + "`" + `position` + "`" + `,
+    bd.data as ` + "`" + `data` + "`" + `,
+    bd.article_id as ` + "`" + `article_id` + "`" + `,
+    bd.block_id as ` + "`" + `block_id` + "`" + `,
+    b.name as ` + "`" + `name` + "`" + `
 FROM
-    block_data
+    block_data as bd
+    LEFT JOIN block as b on b.id = bd.block_id
 WHERE
-    article_id = ?
+    bd.article_id = ?
 ORDER BY
-    position DESC
+    bd.position DESC
 `
 
-func (q *Queries) SelectBlockDataByArticle(ctx context.Context, articleID int64) ([]BlockDatum, error) {
+type SelectBlockDataByArticleRow struct {
+	ID        int64
+	Position  int64
+	Data      string
+	ArticleID int64
+	BlockID   int64
+	Name      sql.NullString
+}
+
+func (q *Queries) SelectBlockDataByArticle(ctx context.Context, articleID int64) ([]SelectBlockDataByArticleRow, error) {
 	rows, err := q.db.QueryContext(ctx, selectBlockDataByArticle, articleID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []BlockDatum
+	var items []SelectBlockDataByArticleRow
 	for rows.Next() {
-		var i BlockDatum
+		var i SelectBlockDataByArticleRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Position,
 			&i.Data,
 			&i.ArticleID,
 			&i.BlockID,
+			&i.Name,
 		); err != nil {
 			return nil, err
 		}
