@@ -5,18 +5,27 @@ import (
 	"app/pkg/sqlutil"
 	"app/pkg/stacktrace"
 	"context"
+	"encoding/json"
 )
 
 type BlockData struct {
-	ID          int64
-	Position    int64
-	Data        string
-	ArticleID   int64
-	BlockDataID int64
+	ID        int64
+	Position  int64
+	Data      map[string]any
+	ArticleID int64
+	BlockID   int64
+	BlockName string
 }
 
-func blockDataFromModel(model publicmodel.BlockDatum) (BlockData, error) {
-	return BlockData{}, nil
+func blockDataFromModel(model publicmodel.SelectBlockDataByArticleRow) (BlockData, error) {
+	out := BlockData{
+		ID:        model.ID,
+		Position:  model.Position,
+		BlockID:   model.BlockID,
+		BlockName: model.Name.String,
+	}
+	err := json.Unmarshal([]byte(model.Data), &out.Data)
+	return out, err
 }
 
 func (r *Repository) SelectBlockDataByArticle(ctx context.Context, articleID int64) ([]BlockData, error) {
