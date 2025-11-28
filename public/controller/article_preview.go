@@ -1,15 +1,10 @@
 package controller
 
 import (
+	"app/page"
 	"app/pkg/router"
-	"app/public/repository"
-	"bytes"
 	"fmt"
-	"html/template"
-	"io"
 	"net/http"
-
-	"github.com/yuin/goldmark"
 )
 
 func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) error {
@@ -59,61 +54,11 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 	for _, p := range blockDatas {
 		blockDataView[p.BlockName] = p.Data
 	}
-	return renderPreview(w, files, blockSelector, blockDataView, a)
-}
-
-func renderPreview(w io.Writer, files map[string]string, blocks map[string]string, ArticleBlocks map[string]map[string]any, pageData repository.Article) error {
-	const baseTemplate = "baseof.html"
-	if _, ok := files[baseTemplate]; !ok {
-		return fmt.Errorf("base template %s not defined", baseTemplate)
-	}
-	funcMap := template.FuncMap{
-		"markdownify": func(source string) template.HTML {
-			var buf bytes.Buffer
-			if err := goldmark.Convert([]byte(source), &buf); err != nil {
-				return template.HTML(err.Error())
-			}
-			return template.HTML(buf.String())
-		},
-		"partial": func(name string, data map[string]any) (template.HTML, error) {
-			content, ok := blocks[name]
-			if !ok {
-				return "", fmt.Errorf("unknown block %s", name)
-			}
-			buf := &bytes.Buffer{}
-			tmpl, err := template.New("block").Parse(content)
-			if err != nil {
-				return "", fmt.Errorf("cannot parse block %s: %w", name, err)
-			}
-			err = tmpl.Execute(buf, data)
-			if err != nil {
-				return "", fmt.Errorf("cannot render block %s: %w", name, err)
-			}
-			return template.HTML(buf.String()), nil
-		},
-	}
-	tmpl := template.New("").Funcs(funcMap)
-	for name, content := range files {
-		if name == baseTemplate {
-			continue
-		}
-		_, err := tmpl.New(name).Parse(content)
-		if err != nil {
-			return err
-		}
-	}
-	_, err := tmpl.New(baseTemplate).Parse(files[baseTemplate])
-	if err != nil {
-		return err
-	}
-	type PageData struct {
-		Title   string
-		Blocks  map[string]map[string]any
-		Content string
-	}
-	return tmpl.ExecuteTemplate(w, baseTemplate, PageData{
-		Content: pageData.Content,
-		Blocks:  ArticleBlocks,
-		Title:   pageData.Title,
+	return page.Render(w, page.Data{
+		Title:         a.Title,
+		Content:       a.Content,
+		Files:         files,
+		Blocks:        blockSelector,
+		ArticleBlocks: blockDataView,
 	})
 }
