@@ -6,6 +6,7 @@
 500.Message,"Oops! An error occured...","Oups ! Un problème est survenu..."
 500.TryAgain,"An error occured while loading the page. Please try again later.","Un problème est survenu lors du chargement de la page. Veuillez réessayer plus tard."
 FORM.field_requiered,These fields are required.,These fields are required.
+DASHBOARD.title,title,title
 LAYOUT.title,title,title
 HEADER.title,title,title
 HEADER.home,home,home
@@ -97,6 +98,7 @@ BLOCK_EDIT.submit,submit,submit
 BLOCK_LIST.page_title, page title, page title
 BLOCK_LIST.column_name,name,name
 BLOCK_LIST.column_action,action,action
+MENU.dashboard,dashboard,dashboard
 MENU.articles,articles,articles
 MENU.template,template,template
 MENU.layout,layout,layout

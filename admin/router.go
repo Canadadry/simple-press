@@ -39,6 +39,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 		return nil, fmt.Errorf("cannot create admin controller : %w", err)
 	}
 
+	r.Get("/admin", c.GetDashboard)
 	r.Get("/admin/articles", c.GetArticleList)
 	r.Get("/admin/article/add", c.GetArticleAdd)
 	r.Post("/admin/article/add", c.PostArticleAdd)

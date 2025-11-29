@@ -2,9 +2,12 @@ package view
 
 import (
 	"app/pkg/eval"
+	"bytes"
 	"embed"
 	"html/template"
 	"io"
+
+	"github.com/yuin/goldmark"
 )
 
 //go:embed template
@@ -50,6 +53,13 @@ func render[T any](w io.Writer, tr func(string) string, pageTemplatePath string,
 		"DateFormat":   formatDateTemplate(tr),
 		"JsonMarshal":  json_marshal,
 		"RenderData":   RenderData,
+		"markdownify": func(source string) template.HTML {
+			var buf bytes.Buffer
+			if err := goldmark.Convert([]byte(source), &buf); err != nil {
+				return template.HTML(err.Error())
+			}
+			return template.HTML(buf.String())
+		},
 	}
 	templates, err := template.New(baseTemplate).Funcs(funcMap).ParseFS(templates, allFiles...)
 	if err != nil {
@@ -64,6 +74,7 @@ func TemplateData[T any](pageTitle string, pageData T) BasePage[T] {
 		PageTitle: pageTitle,
 		PageData:  pageData,
 		Menu: []MenuItem{
+			{Name: "MENU.dashboard", Path: "/admin", Icon: "bi bi-house-fill"},
 			{Name: "MENU.articles", Path: "/admin/articles", Icon: "bi bi-body-text"},
 			{Name: "MENU.template", Path: "/admin/template", Icon: "bi bi-palette-fill"},
 			{Name: "MENU.layout", Path: "/admin/layout", Icon: "bi bi-columns-gap"},
