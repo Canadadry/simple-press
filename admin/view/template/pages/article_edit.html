@@ -20,7 +20,7 @@
             </div>
             <!-- /column -->
         </div>
-        <form method="post" action="">
+        <form method="post" action="/admin/articles/{{.Article.Slug}}/edit/metadata">
             <div class="row gx-4">
                 <div class="col-md-8">
                     <div class="form-floating mb-4">
@@ -98,7 +98,7 @@
                 <h2 >{{Trans "ARTICLE_EDIT.content"}}</h2>
             </div>
         </div>
-        <form method="post" action="">
+        <form method="post" action="/admin/articles/{{.Article.Slug}}/edit/content">
             <div class="row gx-4">
                 <div class="col-12">
                   <div class="mb-4">
@@ -125,7 +125,7 @@
             </div>
         </div>
         {{ range $idx, $data := .Article.BlockDatas }}
-        <form method="post" action="">
+        <form method="post" action="/admin/articles/{{.Article.Slug}}/edit/block_edit">
             <div class="row gx-4">
                 <div class="col-12">
                     <div class="row g-3">
@@ -145,7 +145,7 @@
         </form>
         <!-- /form -->
         {{end}}
-        <form method="post" action="">
+        <form method="post" action="/admin/articles/{{.Article.Slug}}/edit/block_add">
             <div class="row gx-4">
                 <div class="col-12">
                     <div class="row g-3">

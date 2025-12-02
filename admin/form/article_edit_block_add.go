@@ -11,12 +11,7 @@ import (
 )
 
 const (
-	articleEditTitle           = "title"
-	articleEditAuthor          = "author"
-	articleEditDraft           = "draft"
 	articleEditContent         = "content"
-	articleEditSlug            = "slug"
-	articleEditLayout          = "layout"
 	articleEditEditedBlockID   = "edited_block_id"
 	articleEditNewBlock        = "new_block"
 	articleEditAction          = "action"
