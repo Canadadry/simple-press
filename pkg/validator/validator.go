@@ -31,6 +31,7 @@ type Binder interface {
 	RequiredStringVar(name string, ptr *string, fns ...func(string) error)
 	RequiredFloat64Var(name string, ptr *float64, fns ...func(float64) error)
 	RequiredIntVar(name string, ptr *int, fns ...func(int) error)
+	RequiredInt64Var(name string, ptr *int64, fns ...func(int64) error)
 	RequiredTimeVar(name string, ptr *time.Time, format string, fns ...func(time.Time) error)
 	RequiredBoolVar(name string, ptr *bool, trueChoice []string, falseChoice []string)
 	RequiredAnyFunc(name string, fn func(string, bool, any, *Errors))
@@ -39,6 +40,7 @@ type Binder interface {
 	StringVar(name string, ptr *null.Nullable[string], fns ...func(string) error)
 	Float64Var(name string, ptr *null.Nullable[float64], fns ...func(float64) error)
 	IntVar(name string, ptr *null.Nullable[int], fns ...func(int) error)
+	Int64Var(name string, ptr *null.Nullable[int64], fns ...func(int64) error)
 	TimeVar(name string, ptr *null.Nullable[time.Time], format string, fns ...func(time.Time) error)
 	BoolVar(name string, ptr *null.Nullable[bool], trueChoice []string, falseChoice []string)
 	AnyFunc(name string, fn func(string, bool, any, *Errors))
@@ -129,6 +131,21 @@ func ParseToInt(val any) (int, error) {
 		parsed, err := strconv.Atoi(v)
 		if err == nil {
 			return parsed, nil
+		}
+	}
+	return 0, fmt.Errorf("cannot cast '%v':%T to int", val, val)
+}
+
+func ParseToInt64(val any) (int64, error) {
+	switch v := val.(type) {
+	case int:
+		return int64(v), nil
+	case float64:
+		return int64(v), nil
+	case string:
+		parsed, err := strconv.Atoi(v)
+		if err == nil {
+			return int64(parsed), nil
 		}
 	}
 	return 0, fmt.Errorf("cannot cast '%v':%T to int", val, val)

@@ -1,12 +1,13 @@
 package form
 
 import (
+	"app/pkg/null"
 	"app/pkg/router"
+	"app/pkg/validator"
 	"context"
 	"fmt"
 	"net/http"
-	"regexp"
-	"strconv"
+	"strings"
 )
 
 const (
@@ -20,7 +21,7 @@ const (
 type ParsedArticleEditMetadata struct {
 	Title    string
 	Author   string
-	Draft    bool
+	Draft    null.Nullable[bool]
 	Slug     string
 	LayoutID int64
 }
@@ -32,64 +33,50 @@ type ParsedArticleEditMetadataError struct {
 	LayoutID string
 }
 
-func (ae ParsedArticleEditMetadataError) HasError() bool {
-	if ae.Title != "" {
-		return true
-	}
-	if ae.Author != "" {
-		return true
-	}
-	if ae.Slug != "" {
-		return true
-	}
-	if ae.LayoutID != "" {
-		return true
-	}
-	return false
+func (e ParsedArticleEditMetadataError) HasError() bool {
+	return e.Title != "" ||
+		e.Author != "" ||
+		e.Slug != "" ||
+		e.LayoutID != ""
 }
 
-func ParseArticleEditMetadata(r *http.Request, check_id func(context.Context, int64) (int, error)) (ParsedArticleEditMetadata, ParsedArticleEditMetadataError, error) {
-	err := r.ParseForm()
+func (p *ParsedArticleEditMetadata) Bind(check_id func(int64) error) func(b validator.Binder) {
+	return func(b validator.Binder) {
+		b.RequiredStringVar(articleEditTitle, &p.Title, validator.Length(1, maxTitleLen))
+		b.RequiredStringVar(articleEditAuthor, &p.Author, validator.Length(1, maxAuthorLen))
+
+		b.RequiredStringVar(articleEditSlug, &p.Slug,
+			validator.Length(1, maxSlugLen),
+			validator.Regexp("^"+router.SlugRegexp+"$"),
+		)
+		b.RequiredInt64Var(articleEditLayout, &p.LayoutID, validator.Min(int64(1)), check_id)
+		b.BoolVar(articleEditDraft, &p.Draft, validator.TrueChoice, validator.FalseChoice)
+	}
+}
+
+func ParseArticleEditMetadata(
+	r *http.Request,
+	checkID func(context.Context, int64) (int, error),
+) (ParsedArticleEditMetadata, ParsedArticleEditMetadataError, error) {
+
+	parsed := ParsedArticleEditMetadata{}
+	errs, err := validator.BindWithForm(r, parsed.Bind(func(val int64) error {
+		count, err := checkID(r.Context(), val)
+		if err != nil || count == 0 {
+			return fmt.Errorf("invalid id")
+		}
+		return nil
+	}))
 	if err != nil {
 		return ParsedArticleEditMetadata{}, ParsedArticleEditMetadataError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditLayout), 10, 64)
-	a := ParsedArticleEditMetadata{
-		Title:    r.PostForm.Get(articleEditTitle),
-		Author:   r.PostForm.Get(articleEditAuthor),
-		Slug:     r.PostForm.Get(articleEditSlug),
-		LayoutID: id,
-		Draft:    r.PostForm.Get(articleEditDraft) != "",
+
+	resultErr := ParsedArticleEditMetadataError{
+		Title:    strings.Join(errs.Errors[articleEditTitle], " ,"),
+		Author:   strings.Join(errs.Errors[articleEditAuthor], " ,"),
+		Slug:     strings.Join(errs.Errors[articleEditSlug], " ,"),
+		LayoutID: strings.Join(errs.Errors[articleEditLayout], " ,"),
 	}
-	errors := ParsedArticleEditMetadataError{}
-	if a.Title == "" {
-		errors.Title = errorCannotBeEmpty
-	}
-	if a.Slug == "" {
-		errors.Slug = errorCannotBeEmpty
-	}
-	if a.Author == "" {
-		errors.Author = errorCannotBeEmpty
-	}
-	if len(a.Title) > maxTitleLen {
-		errors.Title = errorTagetToBig
-	}
-	if len(a.Author) > maxAuthorLen {
-		errors.Author = errorTagetToBig
-	}
-	if len(a.Slug) > maxSlugLen {
-		errors.Slug = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.SlugRegexp + "$")
-	if !re.Match([]byte(a.Slug)) {
-		errors.Slug = errorNotASlug
-	}
-	c, err := check_id(r.Context(), id)
-	if err != nil {
-		return a, errors, err
-	}
-	if c == 0 {
-		errors.LayoutID = errorInvalidId
-	}
-	return a, errors, nil
+
+	return parsed, resultErr, nil
 }

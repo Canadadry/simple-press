@@ -77,7 +77,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	article.Title = a.Title
 	article.Author = a.Author
 	article.Slug = a.Slug
-	article.Draft = a.Draft
+	article.Draft = a.Draft.V
 	article.LayoutID = a.LayoutID
 
 	if !errors.HasError() {

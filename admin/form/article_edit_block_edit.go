@@ -2,9 +2,10 @@ package form
 
 import (
 	"app/pkg/data"
+	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"strconv"
+	"strings"
 )
 
 const (
@@ -23,40 +24,42 @@ type ParsedArticleEditErrorBlockEdit struct {
 	EditedBlockPosition string
 }
 
-func (pe ParsedArticleEditErrorBlockEdit) HasError() bool {
-	if pe.EditedBlockID != "" {
-		return true
-	}
-	if pe.EditedBlockData != "" {
-		return true
-	}
-	if pe.EditedBlockPosition != "" {
-		return true
-	}
-	return false
+func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
+	return e.EditedBlockID != "" ||
+		e.EditedBlockData != "" ||
+		e.EditedBlockPosition != ""
 }
 
-func ParseArticleEditBlockEdit(r *http.Request, get_previous_data func(int64) (map[string]any, bool)) (ParsedArticleEditBlockEdit, ParsedArticleEditErrorBlockEdit, error) {
-	err := r.ParseForm()
+func (p *ParsedArticleEditBlockEdit) Bind(b validator.Binder) {
+	b.RequiredInt64Var(articleEditEditedBlockID, &p.EditedBlockID, validator.Min(int64(1)))
+}
+
+func ParseArticleEditBlockEdit(
+	r *http.Request,
+	get_previous_data func(int64) (map[string]any, bool),
+) (ParsedArticleEditBlockEdit, ParsedArticleEditErrorBlockEdit, error) {
+
+	parsed := ParsedArticleEditBlockEdit{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return ParsedArticleEditBlockEdit{}, ParsedArticleEditErrorBlockEdit{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditEditedBlockID), 10, 64)
-	a := ParsedArticleEditBlockEdit{
-		EditedBlockID: id,
+
+	resultErr := ParsedArticleEditErrorBlockEdit{
+		EditedBlockID: strings.Join(errs.Errors[articleEditEditedBlockID], ", "),
 	}
-	errors := ParsedArticleEditErrorBlockEdit{}
-	form_data, ok := get_previous_data(id)
+
+	form_data, ok := get_previous_data(parsed.EditedBlockID)
 	if !ok {
-		errors.EditedBlockID = errorInvalidId
-		return a, errors, nil
+		resultErr.EditedBlockID = errorInvalidId
+		return parsed, resultErr, nil
 	}
 	form_data, err = data.ParseFormData(r, form_data)
 	if err != nil {
-		errors.EditedBlockData = errorInvalidJson
-		return a, errors, nil
+		resultErr.EditedBlockData = errorInvalidJson
+		return parsed, resultErr, nil
 	}
-	a.EditedBlockID = id
-	a.EditedBlockData = form_data
-	return a, errors, nil
+	parsed.EditedBlockData = form_data
+	return parsed, resultErr, nil
 }

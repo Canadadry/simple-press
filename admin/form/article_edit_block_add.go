@@ -1,10 +1,11 @@
 package form
 
 import (
+	"app/pkg/validator"
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
+	"strings"
 )
 
 const (
@@ -19,29 +20,40 @@ type ParsedArticleEditErrorBlockAdd struct {
 	AddedBlockID string
 }
 
-func (pe ParsedArticleEditErrorBlockAdd) HasError() bool {
-	if pe.AddedBlockID != "" {
-		return true
-	}
-	return false
+func (e ParsedArticleEditErrorBlockAdd) HasError() bool {
+	return e.AddedBlockID != ""
 }
 
-func ParseArticleEditBlockAdd(r *http.Request, check_id func(context.Context, int64) (int, error)) (ParsedArticleEditBlockAdd, ParsedArticleEditErrorBlockAdd, error) {
-	err := r.ParseForm()
+func (p *ParsedArticleEditBlockAdd) Bind(check_id func(int64) error) func(b validator.Binder) {
+	return func(b validator.Binder) {
+		b.RequiredInt64Var(articleEditNewBlock, &p.AddedBlockID,
+			validator.Min(int64(1)),
+			check_id,
+		)
+	}
+}
+
+func ParseArticleEditBlockAdd(
+	r *http.Request,
+	checkID func(context.Context, int64) (int, error),
+) (ParsedArticleEditBlockAdd, ParsedArticleEditErrorBlockAdd, error) {
+
+	parsed := ParsedArticleEditBlockAdd{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind(func(val int64) error {
+		count, err := checkID(r.Context(), val)
+		if err != nil || count == 0 {
+			return fmt.Errorf("invalid id")
+		}
+		return nil
+	}))
 	if err != nil {
 		return ParsedArticleEditBlockAdd{}, ParsedArticleEditErrorBlockAdd{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	id, _ := strconv.ParseInt(r.PostForm.Get(articleEditNewBlock), 10, 64)
-	a := ParsedArticleEditBlockAdd{
-		AddedBlockID: id,
+
+	resultErr := ParsedArticleEditErrorBlockAdd{
+		AddedBlockID: strings.Join(errs.Errors[articleEditNewBlock], ", "),
 	}
-	errors := ParsedArticleEditErrorBlockAdd{}
-	c, err := check_id(r.Context(), id)
-	if err != nil {
-		return a, errors, err
-	}
-	if c == 0 {
-		errors.AddedBlockID = errorInvalidId
-	}
-	return a, errors, nil
+
+	return parsed, resultErr, nil
 }

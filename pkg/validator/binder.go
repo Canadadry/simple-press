@@ -119,6 +119,10 @@ func (bm *BinderMap) RequiredIntVar(name string, ptr *int, fns ...func(int) erro
 	bm.intVar(name, true, ptr, fns...)
 }
 
+func (bm *BinderMap) RequiredInt64Var(name string, ptr *int64, fns ...func(int64) error) {
+	bm.int64Var(name, true, ptr, fns...)
+}
+
 func (bm *BinderMap) RequiredTimeVar(name string, ptr *time.Time, format string, fns ...func(time.Time) error) {
 	bm.timeVar(name, true, ptr, format, fns...)
 }
@@ -137,6 +141,10 @@ func (bm *BinderMap) Float64Var(name string, ptr *null.Nullable[float64], fns ..
 
 func (bm *BinderMap) IntVar(name string, ptr *null.Nullable[int], fns ...func(int) error) {
 	ptr.Valid = bm.intVar(name, false, &ptr.V, fns...)
+}
+
+func (bm *BinderMap) Int64Var(name string, ptr *null.Nullable[int64], fns ...func(int64) error) {
+	ptr.Valid = bm.int64Var(name, false, &ptr.V, fns...)
 }
 
 func (bm *BinderMap) TimeVar(name string, ptr *null.Nullable[time.Time], format string, fns ...func(time.Time) error) {
@@ -160,6 +168,10 @@ func (bm *BinderMap) float64Var(name string, requiered bool, ptr *float64, fns .
 
 func (bm *BinderMap) intVar(name string, requiered bool, ptr *int, fns ...func(int) error) bool {
 	return bm.anyFunc(name, requiered, ParseAndValidate[any, int](ptr, ParseToInt, fns...))
+}
+
+func (bm *BinderMap) int64Var(name string, requiered bool, ptr *int64, fns ...func(int64) error) bool {
+	return bm.anyFunc(name, requiered, ParseAndValidate[any, int64](ptr, ParseToInt64, fns...))
 }
 
 func (bm *BinderMap) timeVar(name string, requiered bool, ptr *time.Time, format string, fns ...func(time.Time) error) bool {

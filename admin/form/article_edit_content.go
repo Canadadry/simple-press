@@ -1,8 +1,10 @@
 package form
 
 import (
+	"app/pkg/validator"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -18,27 +20,24 @@ type ParsedArticleEditErrorContent struct {
 }
 
 func (pe ParsedArticleEditErrorContent) HasError() bool {
-	if pe.Content != "" {
-		return true
-	}
-	return false
+	return pe.Content != ""
+}
+
+func (p *ParsedArticleEditContent) Bind(b validator.Binder) {
+	b.RequiredStringVar(articleEditContent, &p.Content, validator.Length(1, maxContentLen))
 }
 
 func ParseArticleEditContent(r *http.Request) (ParsedArticleEditContent, ParsedArticleEditErrorContent, error) {
-	err := r.ParseForm()
+	parsed := ParsedArticleEditContent{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return ParsedArticleEditContent{}, ParsedArticleEditErrorContent{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 
-	pae := ParsedArticleEditContent{
-		Content: r.PostForm.Get(articleEditContent),
+	resultErr := ParsedArticleEditErrorContent{
+		Content: strings.Join(errs.Errors[articleEditContent], ", "),
 	}
-	errors := ParsedArticleEditErrorContent{}
-	if pae.Content == "" {
-		errors.Content = errorCannotBeEmpty
-	}
-	if len(pae.Content) > maxContentLen {
-		errors.Content = errorTagetToBig
-	}
-	return pae, errors, nil
+
+	return parsed, resultErr, nil
 }
