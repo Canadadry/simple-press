@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	articleEditContent         = "content"
 	articleEditEditedBlockID   = "edited_block_id"
 	articleEditNewBlock        = "new_block"
 	articleEditAction          = "action"
