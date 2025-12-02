@@ -1,8 +1,11 @@
 package form
 
 import (
+	"app/pkg/null"
+	"app/pkg/validator"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -14,7 +17,13 @@ const (
 type Article struct {
 	Title  string
 	Author string
-	Draft  bool
+	Draft  null.Nullable[bool]
+}
+
+func (a *Article) Bind(b validator.Binder) {
+	b.RequiredStringVar(articleAddTitle, &a.Title, validator.Length(3, maxTitleLen))
+	b.RequiredStringVar(articleAddAuthor, &a.Author, validator.Length(3, maxAuthorLen))
+	b.BoolVar(articleAddDraft, &a.Draft, validator.TrueChoice, validator.FalseChoice)
 }
 
 type ArticleError struct {
@@ -33,27 +42,14 @@ func (ae ArticleError) HasError() bool {
 }
 
 func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
-	err := r.ParseForm()
+	article := Article{}
+	errs, err := validator.BindWithForm(r, article.Bind)
 	if err != nil {
 		return Article{}, ArticleError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	a := Article{
-		Title:  r.PostForm.Get(articleAddTitle),
-		Author: r.PostForm.Get(articleAddAuthor),
-		Draft:  r.PostForm.Get(articleAddDraft) != "",
+	ae := ArticleError{
+		Title:  strings.Join(errs.Errors[articleAddTitle], ", "),
+		Author: strings.Join(errs.Errors[articleAddAuthor], ", "),
 	}
-	errors := ArticleError{}
-	if a.Title == "" {
-		errors.Title = errorCannotBeEmpty
-	}
-	if a.Author == "" {
-		errors.Author = errorCannotBeEmpty
-	}
-	if len(a.Title) > maxTitleLen {
-		errors.Title = errorTagetToBig
-	}
-	if len(a.Author) > maxAuthorLen {
-		errors.Author = errorTagetToBig
-	}
-	return a, errors, nil
+	return article, ae, nil
 }

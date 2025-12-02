@@ -19,7 +19,11 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	if errors.HasError() {
-		return c.render(w, r, view.ArticleAdd(view.ArticleAddData(a), view.ArticleAddError(errors)))
+		return c.render(w, r, view.ArticleAdd(view.ArticleAddData{
+			Title:  a.Title,
+			Author: a.Author,
+			Draft:  a.Draft.V,
+		}, view.ArticleAddError(errors)))
 	}
 
 	layouts, err := c.Repository.GetLayoutList(r.Context(), 1, 0)
@@ -33,7 +37,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	slug, err := c.Repository.CreateArticle(r.Context(), repository.CreateArticleParams{
 		Title:    a.Title,
 		Author:   a.Author,
-		Draft:    a.Draft,
+		Draft:    a.Draft.V,
 		LayoutID: layouts[0].ID,
 	})
 	if err != nil {
