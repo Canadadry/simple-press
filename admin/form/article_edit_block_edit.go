@@ -12,7 +12,6 @@ import (
 
 const (
 	articleEditEditedBlockID   = "edited_block_id"
-	articleEditNewBlock        = "new_block"
 	articleEditAction          = "action"
 	ArticleEditActionMetadata  = "metadata"
 	ArticleEditActionContent   = "content"

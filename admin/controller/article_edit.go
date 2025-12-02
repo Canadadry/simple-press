@@ -200,6 +200,7 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		Content: errors.Content,
 	}))
 }
+
 func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Request) error {
 	slug := router.GetField(r, 0)
 	article, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
@@ -320,6 +321,7 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 		BlockDatas: blockDataView,
 	}, view.ArticleEditError(errors)))
 }
+
 func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Request) error {
 	slug := router.GetField(r, 0)
 	article, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
@@ -340,32 +342,9 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
 	}
 
-	a, errors, err := form.ParseArticleEdit(form.ParseArticleEditParam{
-		Request:       r,
-		CheckLayoutID: c.Repository.CountLayoutByID,
-		CheckBlockID:  c.Repository.CountBlockByID,
-		GetPreviousData: func(id int64) (map[string]any, bool) {
-			for _, bd := range blockDatas {
-				if bd.ID == id {
-					return bd.Data, true
-				}
-			}
-			return nil, false
-		},
-	})
+	a, errors, err := form.ParseArticleEditBlockAdd(r, c.Repository.CountBlockByID)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
-	}
-
-	switch a.Action {
-	case form.ArticleEditActionMetadata:
-		article.Title = a.Title
-		article.Author = a.Author
-		article.Slug = a.Slug
-		article.Draft = a.Draft
-		article.LayoutID = a.LayoutID
-	case form.ArticleEditActionContent:
-		article.Content = a.Content
 	}
 
 	blocks, err := c.Repository.SelectAllBlock(r.Context())
@@ -378,45 +357,22 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	}
 
 	if !errors.HasError() {
-		switch a.Action {
-		case form.ArticleEditActionMetadata, form.ArticleEditActionContent:
-			err := c.Repository.UpdateArticle(r.Context(), slug, article)
-			if err != nil {
-				return fmt.Errorf("cannot update %s article : %w", slug, err)
-			}
-		case form.ArticleEditActionBlockAdd:
-			def := map[string]any{}
-			for _, b := range blocks {
-				if b.ID == a.BlockID {
-					def = b.Definition
-				}
-			}
-			id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
-				ArticleID: article.ID,
-				Block:     repository.Block{ID: a.BlockID, Definition: def},
-				Position:  0,
-			})
-			if err != nil {
-				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
-			}
-
-			blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
-
-		case form.ArticleEditActionBlockEdit:
-			err := c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
-				ID:       a.EditedBlockID,
-				Data:     a.EditedBlockData,
-				Position: int64(a.EditedBlockPosition),
-			})
-			if err != nil {
-				return fmt.Errorf("cannot add block %v to article : %w", a.BlockID, err)
-			}
-			for i, p := range blockDataView {
-				if p.ID == a.EditedBlockID {
-					blockDataView[i].Data = a.EditedBlockData
-				}
+		def := map[string]any{}
+		for _, b := range blocks {
+			if b.ID == a.AddedBlockID {
+				def = b.Definition
 			}
 		}
+		id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
+			ArticleID: article.ID,
+			Block:     repository.Block{ID: a.AddedBlockID, Definition: def},
+			Position:  0,
+		})
+		if err != nil {
+			return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
+		}
+
+		blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
@@ -438,5 +394,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError(errors)))
+	}, view.ArticleEditError{
+		AddedBlockID: errors.AddedBlockID,
+	}))
 }
