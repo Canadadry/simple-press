@@ -2,10 +2,10 @@ package form
 
 import (
 	"app/pkg/router"
-	"encoding/json"
+	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -26,45 +26,43 @@ type BlockEditError struct {
 	Definition string
 }
 
-func (le BlockEditError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Content != "" {
-		return true
-	}
-	if le.Definition != "" {
-		return true
-	}
-	return false
+func (e BlockEditError) HasError() bool {
+	return e.Name != "" ||
+		e.Content != "" ||
+		e.Definition != ""
+}
+
+func (b *BlockEdit) Bind(bind validator.Binder) {
+
+	bind.RequiredStringVar(
+		blockEditName,
+		&b.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
+
+	bind.RequiredStringVar(
+		blockEditContent,
+		&b.Content,
+		validator.Length(0, maxContentLen),
+	)
+
+	bind.RequiredMapVar(blockEditDefinition, &b.Definition)
 }
 
 func ParseBlockEdit(r *http.Request) (BlockEdit, BlockEditError, error) {
-	err := r.ParseForm()
+	parsed := BlockEdit{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return BlockEdit{}, BlockEditError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	a := BlockEdit{
-		Name:    r.PostForm.Get(blockEditName),
-		Content: r.PostForm.Get(blockEditContent),
-	}
-	errors := BlockEditError{}
-	if err := json.Unmarshal([]byte(r.PostForm.Get(blockEditDefinition)), &a.Definition); err != nil {
-		errors.Definition = errorInvalidJson
-	}
-	if a.Name == "" {
-		errors.Name = errorCannotBeEmpty
+
+	resultErr := BlockEditError{
+		Name:       strings.Join(errs.Errors[blockEditName], ", "),
+		Content:    strings.Join(errs.Errors[blockEditContent], ", "),
+		Definition: strings.Join(errs.Errors[blockEditDefinition], ", "),
 	}
 
-	if len(a.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	if len(a.Content) > maxContentLen {
-		errors.Content = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(a.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return a, errors, nil
+	return parsed, resultErr, nil
 }

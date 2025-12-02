@@ -2,9 +2,9 @@ package form
 
 import (
 	"app/pkg/router"
-	"fmt"
+	"app/pkg/validator"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -20,33 +20,29 @@ type LayoutError struct {
 }
 
 func (le LayoutError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Name != "" {
-		return true
-	}
-	return false
+	return le.Name != ""
+}
+
+func (l *Layout) Bind(b validator.Binder) {
+	b.RequiredStringVar(
+		layoutAddName,
+		&l.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
 }
 
 func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
-	err := r.ParseForm()
+	parsed := Layout{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return Layout{}, LayoutError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Layout{}, LayoutError{}, err
 	}
-	l := Layout{
-		Name: r.PostForm.Get(layoutAddName),
+
+	resultErr := LayoutError{
+		Name: strings.Join(errs.Errors[layoutAddName], ", "),
 	}
-	errors := LayoutError{}
-	if l.Name == "" {
-		errors.Name = errorCannotBeEmpty
-	}
-	if len(l.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(l.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return l, errors, nil
+
+	return parsed, resultErr, nil
 }

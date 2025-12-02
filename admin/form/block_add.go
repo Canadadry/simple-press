@@ -2,9 +2,10 @@ package form
 
 import (
 	"app/pkg/router"
+	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -19,34 +20,30 @@ type BlockError struct {
 	Name string
 }
 
-func (le BlockError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Name != "" {
-		return true
-	}
-	return false
+func (e BlockError) HasError() bool {
+	return e.Name != ""
+}
+
+func (b *Block) Bind(binder validator.Binder) {
+	binder.RequiredStringVar(
+		blockAddName,
+		&b.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
 }
 
 func ParseBlockAdd(r *http.Request) (Block, BlockError, error) {
-	err := r.ParseForm()
+	parsed := Block{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return Block{}, BlockError{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	l := Block{
-		Name: r.PostForm.Get(blockAddName),
+
+	resultErr := BlockError{
+		Name: strings.Join(errs.Errors[blockAddName], ", "),
 	}
-	errors := BlockError{}
-	if l.Name == "" {
-		errors.Name = errorCannotBeEmpty
-	}
-	if len(l.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(l.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return l, errors, nil
+
+	return parsed, resultErr, nil
 }

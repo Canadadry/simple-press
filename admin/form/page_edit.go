@@ -2,9 +2,9 @@ package form
 
 import (
 	"app/pkg/router"
-	"fmt"
+	"app/pkg/validator"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -23,40 +23,35 @@ type LayoutEditError struct {
 }
 
 func (le LayoutEditError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Content != "" {
-		return true
-	}
-	return false
+	return le.Name != "" || le.Content != ""
+}
+
+func (l *LayoutEdit) Bind(b validator.Binder) {
+	b.RequiredStringVar(
+		layoutEditName,
+		&l.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
+	b.RequiredStringVar(
+		layoutEditContent,
+		&l.Content,
+		validator.Length(1, maxContentLen),
+	)
 }
 
 func ParseLayoutEdit(r *http.Request) (LayoutEdit, LayoutEditError, error) {
-	err := r.ParseForm()
+	parsed := LayoutEdit{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return LayoutEdit{}, LayoutEditError{}, fmt.Errorf("cannot parse form : %w", err)
+		return LayoutEdit{}, LayoutEditError{}, err
 	}
-	a := LayoutEdit{
-		Name:    r.PostForm.Get(layoutEditName),
-		Content: r.PostForm.Get(layoutEditContent),
+
+	resultErr := LayoutEditError{
+		Name:    strings.Join(errs.Errors[layoutEditName], ", "),
+		Content: strings.Join(errs.Errors[layoutEditContent], ", "),
 	}
-	errors := LayoutEditError{}
-	if a.Name == "" {
-		errors.Name = errorCannotBeEmpty
-	}
-	if a.Content == "" {
-		errors.Content = errorCannotBeEmpty
-	}
-	if len(a.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	if len(a.Content) > maxContentLen {
-		errors.Content = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(a.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return a, errors, nil
+
+	return parsed, resultErr, nil
 }

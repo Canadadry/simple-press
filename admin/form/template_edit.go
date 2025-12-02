@@ -2,9 +2,9 @@ package form
 
 import (
 	"app/pkg/router"
-	"fmt"
+	"app/pkg/validator"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -22,41 +22,36 @@ type TemplateEditError struct {
 	Content string
 }
 
-func (le TemplateEditError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Content != "" {
-		return true
-	}
-	return false
+func (te TemplateEditError) HasError() bool {
+	return te.Name != "" || te.Content != ""
+}
+
+func (t *TemplateEdit) Bind(b validator.Binder) {
+	b.RequiredStringVar(
+		templateEditName,
+		&t.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
+	b.RequiredStringVar(
+		templateEditContent,
+		&t.Content,
+		validator.Length(1, maxContentLen),
+	)
 }
 
 func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error) {
-	err := r.ParseForm()
+	parsed := TemplateEdit{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return TemplateEdit{}, TemplateEditError{}, fmt.Errorf("cannot parse form : %w", err)
+		return TemplateEdit{}, TemplateEditError{}, err
 	}
-	a := TemplateEdit{
-		Name:    r.PostForm.Get(templateEditName),
-		Content: r.PostForm.Get(templateEditContent),
+
+	resultErr := TemplateEditError{
+		Name:    strings.Join(errs.Errors[templateEditName], ", "),
+		Content: strings.Join(errs.Errors[templateEditContent], ", "),
 	}
-	errors := TemplateEditError{}
-	if a.Name == "" {
-		errors.Name = errorCannotBeEmpty
-	}
-	if a.Content == "" {
-		errors.Content = errorCannotBeEmpty
-	}
-	if len(a.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	if len(a.Content) > maxContentLen {
-		errors.Content = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(a.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return a, errors, nil
+
+	return parsed, resultErr, nil
 }

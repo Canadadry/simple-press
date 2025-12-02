@@ -2,9 +2,9 @@ package form
 
 import (
 	"app/pkg/router"
-	"fmt"
+	"app/pkg/validator"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 const (
@@ -19,34 +19,30 @@ type TemplateError struct {
 	Name string
 }
 
-func (le TemplateError) HasError() bool {
-	if le.Name != "" {
-		return true
-	}
-	if le.Name != "" {
-		return true
-	}
-	return false
+func (te TemplateError) HasError() bool {
+	return te.Name != ""
+}
+
+func (t *Template) Bind(b validator.Binder) {
+	b.RequiredStringVar(
+		templateAddName,
+		&t.Name,
+		validator.Length(1, maxTitleLen),
+		validator.Regexp("^"+router.PathRegexp+"$"),
+	)
 }
 
 func ParseTemplateAdd(r *http.Request) (Template, TemplateError, error) {
-	err := r.ParseForm()
+	parsed := Template{}
+
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return Template{}, TemplateError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Template{}, TemplateError{}, err
 	}
-	l := Template{
-		Name: r.PostForm.Get(templateAddName),
+
+	resultErr := TemplateError{
+		Name: strings.Join(errs.Errors[templateAddName], ", "),
 	}
-	errors := TemplateError{}
-	if l.Name == "" {
-		errors.Name = errorCannotBeEmpty
-	}
-	if len(l.Name) > maxTitleLen {
-		errors.Name = errorTagetToBig
-	}
-	re := regexp.MustCompile("^" + router.PathRegexp + "$")
-	if !re.Match([]byte(l.Name)) {
-		errors.Name = errorNotAPath
-	}
-	return l, errors, nil
+
+	return parsed, resultErr, nil
 }
