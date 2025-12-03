@@ -3,7 +3,9 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/repository"
+	"app/admin/serializer"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"fmt"
 	"net/http"
 )
@@ -19,11 +21,17 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	if errors.HasError() {
+		if r.Header.Get("Content-Type") == "application/json" {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
 		return c.render(w, r, view.ArticleAdd(view.ArticleAddData{
 			Title:  a.Title,
 			Author: a.Author,
 			Draft:  a.Draft.V,
-		}, view.ArticleAddError(errors)))
+		}, view.ArticleAddError{
+			Title:  errors.Title,
+			Author: errors.Author,
+		}))
 	}
 
 	layouts, err := c.Repository.GetLayoutList(r.Context(), 1, 0)
@@ -42,6 +50,13 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	})
 	if err != nil {
 		return fmt.Errorf("cannot create article : %w", err)
+	}
+	if r.Header.Get("Content-Type") == "application/json" {
+		return serializer.ArticleCreated(w, serializer.ArticleAdded{
+			Title:  a.Title,
+			Author: a.Author,
+			Draft:  a.Draft.V && a.Draft.Valid,
+		})
 	}
 
 	http.Redirect(w, r, "/admin/articles/"+slug+"/edit", http.StatusSeeOther)

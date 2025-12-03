@@ -29,6 +29,7 @@ func (a *Article) Bind(b validator.Binder) {
 type ArticleError struct {
 	Title  string
 	Author string
+	Raw    validator.Errors
 }
 
 func (ae ArticleError) HasError() bool {
@@ -50,6 +51,7 @@ func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
 	ae := ArticleError{
 		Title:  strings.Join(errs.Errors[articleAddTitle], ", "),
 		Author: strings.Join(errs.Errors[articleAddAuthor], ", "),
+		Raw:    errs,
 	}
 	return article, ae, nil
 }
