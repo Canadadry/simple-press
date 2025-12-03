@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/cmd/admin"
+	"app/cmd/fixture"
 	"app/cmd/migration"
 	"app/cmd/public"
 	"app/config"
@@ -23,6 +24,7 @@ func run(args []string) error {
 		admin.Action:     admin.Run,
 		public.Action:    public.Run,
 		migration.Action: migration.Run,
+		fixture.Action:   fixture.Run,
 	}
 
 	c, err := config.New(args)

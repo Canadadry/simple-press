@@ -26,5 +26,9 @@ runp: blog.sqlite ## run public server
 	go test ./...
 	go run main.go
 
-unit-test: ## unit test
+test: ## unit test then end2end
 	go test ./...
+	ulimit -n 1000 ; cd tests; madelyne test -in conf.yml
+
+fixture: ## build fixture
+	go run main.go -action=fixture

@@ -1,0 +1,9 @@
+url: http://localhost:8080
+groups:
+  admin:
+    setupCommand: cp blog.sqlite ../blog.sqlite ; echo "" > ../outtest.log
+    teardownCommand: ~
+    environment: ../fixture.json
+    cookie: yes
+    tests:
+      - article_add.yaml

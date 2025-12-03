@@ -124,8 +124,9 @@
                 <h2 >{{Trans "ARTICLE_EDIT.blocks"}}</h2>
             </div>
         </div>
+        {{$slug := .Article.Slug}}
         {{ range $idx, $data := .Article.BlockDatas }}
-        <form method="post" action="/admin/articles/{{.Article.Slug}}/edit/block_edit">
+        <form method="post" action="/admin/articles/{{$slug}}/edit/block_edit">
             <div class="row gx-4">
                 <div class="col-12">
                     <div class="row g-3">

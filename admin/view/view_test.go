@@ -17,6 +17,7 @@ func TestView(t *testing.T) {
 		"article_add":            ArticleAdd(ArticleAddData{}, ArticleAddError{}),
 		"article_add with error": ArticleAdd(ArticleAddData{}, ArticleAddError{"test1", "test2"}),
 		"article_edit": ArticleEdit(ArticleEditData{
+			Slug:    "slug",
 			Layouts: []LayoutSelector{{Name: "test", Value: 1}},
 			Blocks:  []LayoutSelector{{Name: "test", Value: 1}},
 			BlockDatas: []BlockData{

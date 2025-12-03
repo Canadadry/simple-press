@@ -1,0 +1,23 @@
+unit_tests:
+  POST:
+    - { url: "/admin/article/add"       , status: 201, in: "ok/article_add", out: "ok/article_add"}
+
+# scenario:
+#   get_sync_after:
+#   get_after_post:
+#     - { action: "GET",  url: "/data/fixture"   , status: 200, headers: 'Cookie : X-Auth-Token=#user_0_token#', out: "ok/get_sync_fixture"}
+#     - { action: "POST", url: "/data"           , status: 204, headers: 'Cookie : X-Auth-Token=#user_0_token#',in: "ok/sync_post"}
+#     - { action: "GET",  url: "/data/fixture"   , status: 200, headers: 'Cookie : X-Auth-Token=#user_0_token#', out: "ok/get_sync_fixture_after"}
+
+files:
+  payloads/ok/article_add.json: >
+    {
+      "title": "first",
+      "author":"metoo"
+    }
+  responses/ok/article_add.json: >
+    {
+      "title": "first",
+      "slug": "first",
+      "author":"metoo"
+    }
