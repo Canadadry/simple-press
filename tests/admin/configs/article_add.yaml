@@ -9,9 +9,9 @@ unit_tests:
     - { url: "/admin/article/add"       , status: 405}
   POST:
     - { url: "/admin/article/add"       , status: 201, in: "ok/article_add", out: "ok/article_add"}
-    - { url: "/admin/article/add"       , status: 201, in: "ok/draft", out: "ok/draft"}
-    - { url: "/admin/article/add"       , status: 400, in: "bad_request/no_title", out: "bad_request/no_title"}
-    - { url: "/admin/article/add"       , status: 400, in: "bad_request/no_author", out: "bad_request/no_author"}
+    - { url: "/admin/article/add"       , status: 201, in: "ok/article_add_draft", out: "ok/article_add_draft"}
+    - { url: "/admin/article/add"       , status: 400, in: "bad_request/article_add_no_title",  out: "bad_request/article_add_no_title"}
+    - { url: "/admin/article/add"       , status: 400, in: "bad_request/article_add_no_author", out: "bad_request/article_add_no_author"}
 
 # scenario:
 #   get_sync_after:
@@ -33,34 +33,34 @@ files:
       "author":"metoo",
       "draft":false
     }
-  payloads/ok/draft.json: >
+  payloads/ok/article_add_draft.json: >
     {
       "title": "first",
       "author":"metoo",
       "draft":true
     }
-  responses/ok/draft.json: >
+  responses/ok/article_add_draft.json: >
     {
       "title": "first",
       "slug": "first",
       "author":"metoo",
       "draft":true
     }
-  payloads/bad_request/no_title.json: >
+  payloads/bad_request/article_add_no_title.json: >
     {
       "author":"metoo"
     }
-  responses/bad_request/no_title.json: >
+  responses/bad_request/article_add_no_title.json: >
     {
       "author":[],
       "draft":[],
       "title":["this value should not be blank"]
     }
-  payloads/bad_request/no_author.json: >
+  payloads/bad_request/article_add_no_author.json: >
     {
       "title":"first"
     }
-  responses/bad_request/no_author.json: >
+  responses/bad_request/article_add_no_author.json: >
     {
       "title":[],
       "draft":[],

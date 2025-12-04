@@ -25,7 +25,52 @@ const (
 
 var FixedNow = "2025-05-02T17:51:53+02:00"
 
-const layoutFile = "data/layouts.csv"
+func readLayoutData(layoutFile string) ([]form.Layout, error) {
+	f, err := data.Open(layoutFile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read embed file %s : %w", layoutFile, err)
+	}
+	defer f.Close()
+	layoutReader := csv.NewReader(f)
+	layout, err := layoutReader.ReadAll()
+	layoutData := []form.Layout{}
+	for idx, l := range layout {
+		if idx == 0 {
+			continue
+		}
+		layoutData = append(layoutData, form.Layout{
+			Name: l[1],
+			// Content: l[2],
+		})
+	}
+	return layoutData, nil
+}
+
+func readArticleData(articleFile string) ([]form.Article, error) {
+	f, err := data.Open(articleFile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read embed file %s : %w", articleFile, err)
+	}
+	defer f.Close()
+	articleReader := csv.NewReader(f)
+	article, err := articleReader.ReadAll()
+	articleData := []form.Article{}
+	for idx, l := range article {
+		if idx == 0 {
+			continue
+		}
+		articleData = append(articleData, form.Article{
+			Title: l[1],
+			// Date:   l[2],
+			Author: l[3],
+			// Content: l[4],
+			// Slug:l[5],
+			// Draft: l[6],
+			// LayoutId: l[7],
+		})
+	}
+	return articleData, nil
+}
 
 func Run(c config.Parameters) error {
 	_ = os.Remove(c.DatabaseUrl)
@@ -37,28 +82,20 @@ func Run(c config.Parameters) error {
 	if err != nil {
 		return fmt.Errorf("invalid fixed clock date '%s': %w", FixedNow, err)
 	}
-	f, err := data.Open(layoutFile)
+	layoutData, err := readLayoutData("data/layouts.csv")
 	if err != nil {
-		return fmt.Errorf("cannot read embed file %s : %w", layoutFile, err)
+		return fmt.Errorf("cannot read layout data : %w", err)
 	}
-	defer f.Close()
-	layoutReader := csv.NewReader(f)
-	layout, err := layoutReader.ReadAll()
-	layoutData := []form.Layout{}
-	for _, l := range layout {
-		layoutData = append(layoutData, form.Layout{
-			Name: l[1],
-			// Content: l[2],
-		})
+	articleData, err := readArticleData("data/articles.csv")
+	if err != nil {
+		return fmt.Errorf("cannot read layout data : %w", err)
 	}
 	env, err := fixtures.Run(
 		httpcaller.New(fmt.Sprintf("http://localhost:%d", c.Port), http.DefaultClient),
 		&clock.Fixed{At: now},
 		fixtures.FixtureData{
-			Layouts: []form.Layout{
-				{Name: "first"},
-			},
-			Articles: []form.Article{},
+			Layouts:  layoutData,
+			Articles: articleData,
 		},
 	)
 	if err != nil {

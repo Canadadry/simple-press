@@ -7,3 +7,4 @@ groups:
     cookie: yes
     tests:
       - article_add.yaml
+      - article_edit.yaml
