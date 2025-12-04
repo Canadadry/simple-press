@@ -1,4 +1,12 @@
 unit_tests:
+  # GET:
+  #   - { url: "/admin/article/add"       , status: 405}
+  PATCH:
+    - { url: "/admin/article/add"       , status: 405}
+  PUT:
+    - { url: "/admin/article/add"       , status: 405}
+  DELETE:
+    - { url: "/admin/article/add"       , status: 405}
   POST:
     - { url: "/admin/article/add"       , status: 201, in: "ok/article_add", out: "ok/article_add"}
     - { url: "/admin/article/add"       , status: 201, in: "ok/draft", out: "ok/draft"}
