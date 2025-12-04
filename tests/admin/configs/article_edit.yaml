@@ -16,25 +16,20 @@ unit_tests:
 files:
   responses/ok/article_get.json: >
     {
-      "title": "My Article",
-      "author": "John",
-      "slug": "my-article",
-      "content": "Lorem ipsum",
-      "draft": false,
-      "layout_id": 1,
-      "layouts": [
-        { "name": "default", "value": 1 }
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"",
+      "draft":false,
+      "layout_id":3,
+      "layouts":[
+        {"name":"header.html","value":4},
+        {"name":"script.html","value":3},
+        {"name":"head.html","value":2},
+        {"name":"baseof.html","value":1}
       ],
-      "blocks": [
-        { "name": "text", "value": 10 },
-        { "name": "image", "value": 11 }
-      ],
-      "block_datas": [
-        {
-          "id": "#block_data_uuid={{@string@}}",
-          "data": { "text": "hello world" }
-        }
-      ]
+      "blocks":[],
+      "block_datas":[]
     }
 
   payloads/ok/article_edit_metadata_update.json: >
@@ -43,35 +38,32 @@ files:
       "author": "Alice",
       "slug": "my-article",
       "draft": false,
-      "layout_id": 1
+      "layout": 1
     }
 
   responses/ok/article_edit_metadata_update.json: >
     {
-      "title": "Updated",
-      "author": "Alice",
-      "slug": "my-article",
-      "content": "Lorem ipsum",
-      "draft": false,
-      "layout_id": 1,
-      "layouts": [
-        { "name": "default", "value": 1 }
+      "title":"Updated",
+      "author":"Alice",
+      "slug":"my-article",
+      "content":"",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+        {"name":"header.html","value":4},
+        {"name":"script.html","value":3},
+        {"name":"head.html","value":2},
+        {"name":"baseof.html","value":1}
       ],
-      "blocks": [
-        { "name": "text", "value": 10 }
-      ],
-      "block_datas": [
-        {
-          "id": "#block_data_uuid#",
-          "data": { "text": "hello world" }
-        }
-      ]
+      "blocks":[],
+      "block_datas":[]
     }
 
   payloads/bad_request/article_edit_no_title.json: >
     {
       "author": "Alice",
-      "slug": "my-article"
+      "slug": "my-article",
+      "layout":1
     }
 
   responses/bad_request/article_edit_no_title.json: >
@@ -79,7 +71,7 @@ files:
       "title": ["this value should not be blank"],
       "author": [],
       "slug": [],
-      "layout_id": [],
+      "layout": [],
       "draft": []
     }
 
@@ -87,7 +79,8 @@ files:
   payloads/bad_request/article_edit_no_author.json: >
     {
       "title": "Updated",
-      "slug": "my-article"
+      "slug": "my-article",
+      "layout":1
     }
 
   responses/bad_request/article_edit_no_author.json: >
@@ -95,7 +88,7 @@ files:
       "title": [],
       "author": ["this value should not be blank"],
       "slug": [],
-      "layout_id": [],
+      "layout": [],
       "draft": []
     }
 
@@ -107,17 +100,20 @@ files:
 
   responses/ok/article_edit_content_update.json: >
     {
-      "title": "My Article",
-      "author": "John",
-      "slug": "my-article",
-      "content": "New body content",
-      "draft": false,
-      "layout_id": 1,
-      "layouts": [{ "name":"default", "value":1 }],
-      "blocks": [{ "name":"text", "value":10 }],
-      "block_datas": [
-        { "id": "#block_data_uuid#", "data": { "text":"hello world" } }
-      ]
+    "title":"index",
+    "author":"metoo",
+    "slug":"index",
+    "content":"New body content",
+    "draft":false,
+    "layout_id":3,
+    "layouts":[
+      {"name":"header.html","value":4},
+      {"name":"script.html","value":3},
+      {"name":"head.html","value":2},
+      {"name":"baseof.html","value":1}
+    ],
+    "blocks":[],
+    "block_datas":[]
     }
 
   payloads/bad_request/article_edit_no_content.json: >
