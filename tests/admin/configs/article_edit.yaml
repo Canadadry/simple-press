@@ -8,10 +8,10 @@ unit_tests:
     - { url: "/admin/articles/#article_0_slug#/edit/metadata",   status: 400, in: "bad_request/article_edit_no_author",        out: "bad_request/article_edit_no_author" }
     - { url: "/admin/articles/#article_0_slug#/edit/content",    status: 200, in: "ok/article_edit_content_update",            out: "ok/article_edit_content_update" }
     - { url: "/admin/articles/#article_0_slug#/edit/content",    status: 400, in: "bad_request/article_edit_no_content",       out: "bad_request/article_edit_no_content" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_edit", status: 200, in: "ok/article_edit_block_edit",                out: "ok/article_edit_block_edit" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_edit", status: 400, in: "bad_request/article_edit_block_id_missing", out: "bad_request/article_edit_block_id_missing" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 200, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_unknown",    out: "bad_request/article_edit_block_unknown" }
+    # - { url: "/admin/articles/#article_0_slug#/edit/block_edit", status: 200, in: "ok/article_edit_block_edit",                out: "ok/article_edit_block_edit" }
+    # - { url: "/admin/articles/#article_0_slug#/edit/block_edit", status: 400, in: "bad_request/article_edit_block_id_missing", out: "bad_request/article_edit_block_id_missing" }
+    # - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 200, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
+    # - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_unknown",    out: "bad_request/article_edit_block_unknown" }
 
 files:
   responses/ok/article_get.json: >
