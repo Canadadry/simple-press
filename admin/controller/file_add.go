@@ -4,6 +4,7 @@ import (
 	"app/admin/form"
 	"app/admin/repository"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"fmt"
 	"net/http"
 )
@@ -20,6 +21,10 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if errors.HasError() {
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+
 		return c.render(w, r, view.FileAdd(
 			view.FileAddError{Content: errors.Content},
 		))

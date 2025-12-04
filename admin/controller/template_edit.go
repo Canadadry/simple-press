@@ -3,6 +3,7 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"app/pkg/router"
 	"fmt"
 	"net/http"
@@ -43,6 +44,10 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 	template.Content = l.Content
 
 	if !errors.HasError() {
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+
 		err := c.Repository.UpdateTemplate(r.Context(), name, template)
 		if err != nil {
 			return fmt.Errorf("cannot update %s template : %w", name, err)
@@ -52,5 +57,8 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.TemplateEditError(errors)))
+	}, view.TemplateEditError{
+		Name:    errors.Name,
+		Content: errors.Content,
+	}))
 }

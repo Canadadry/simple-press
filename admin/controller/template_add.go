@@ -4,6 +4,7 @@ import (
 	"app/admin/form"
 	"app/admin/repository"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"fmt"
 	"net/http"
 )
@@ -20,7 +21,13 @@ func (c *Controller) PostTemplateAdd(w http.ResponseWriter, r *http.Request) err
 	}
 
 	if errors.HasError() {
-		return c.render(w, r, view.TemplateAdd(view.TemplateAddData(l), view.TemplateAddError(errors)))
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+
+		return c.render(w, r, view.TemplateAdd(view.TemplateAddData(l), view.TemplateAddError{
+			Name: errors.Name,
+		}))
 	}
 
 	err = c.Repository.CreateTemplate(r.Context(), repository.CreateTemplateParams(l))

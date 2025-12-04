@@ -17,6 +17,7 @@ type ParsedArticleEditContent struct {
 
 type ParsedArticleEditErrorContent struct {
 	Content string
+	Raw     validator.Errors
 }
 
 func (pe ParsedArticleEditErrorContent) HasError() bool {
@@ -37,6 +38,7 @@ func ParseArticleEditContent(r *http.Request) (ParsedArticleEditContent, ParsedA
 
 	resultErr := ParsedArticleEditErrorContent{
 		Content: strings.Join(errs.Errors[articleEditContent], ", "),
+		Raw:     errs,
 	}
 
 	return parsed, resultErr, nil

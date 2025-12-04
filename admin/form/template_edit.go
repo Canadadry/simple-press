@@ -20,6 +20,7 @@ type TemplateEdit struct {
 type TemplateEditError struct {
 	Name    string
 	Content string
+	Raw     validator.Errors
 }
 
 func (te TemplateEditError) HasError() bool {
@@ -51,6 +52,7 @@ func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error)
 	resultErr := TemplateEditError{
 		Name:    strings.Join(errs.Errors[templateEditName], ", "),
 		Content: strings.Join(errs.Errors[templateEditContent], ", "),
+		Raw:     errs,
 	}
 
 	return parsed, resultErr, nil

@@ -24,6 +24,7 @@ type BlockEditError struct {
 	Name       string
 	Content    string
 	Definition string
+	Raw        validator.Errors
 }
 
 func (e BlockEditError) HasError() bool {
@@ -62,6 +63,7 @@ func ParseBlockEdit(r *http.Request) (BlockEdit, BlockEditError, error) {
 		Name:       strings.Join(errs.Errors[blockEditName], ", "),
 		Content:    strings.Join(errs.Errors[blockEditContent], ", "),
 		Definition: strings.Join(errs.Errors[blockEditDefinition], ", "),
+		Raw:        errs,
 	}
 
 	return parsed, resultErr, nil

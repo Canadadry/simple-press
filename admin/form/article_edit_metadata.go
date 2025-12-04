@@ -31,6 +31,7 @@ type ParsedArticleEditMetadataError struct {
 	Author   string
 	Slug     string
 	LayoutID string
+	Raw      validator.Errors
 }
 
 func (e ParsedArticleEditMetadataError) HasError() bool {
@@ -76,6 +77,7 @@ func ParseArticleEditMetadata(
 		Author:   strings.Join(errs.Errors[articleEditAuthor], " ,"),
 		Slug:     strings.Join(errs.Errors[articleEditSlug], " ,"),
 		LayoutID: strings.Join(errs.Errors[articleEditLayout], " ,"),
+		Raw:      errs,
 	}
 
 	return parsed, resultErr, nil

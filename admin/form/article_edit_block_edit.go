@@ -22,6 +22,7 @@ type ParsedArticleEditErrorBlockEdit struct {
 	EditedBlockID       string
 	EditedBlockData     string
 	EditedBlockPosition string
+	Raw                 validator.Errors
 }
 
 func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
@@ -48,6 +49,7 @@ func ParseArticleEditBlockEdit(
 
 	resultErr := ParsedArticleEditErrorBlockEdit{
 		EditedBlockID: strings.Join(errs.Errors[articleEditEditedBlockID], ", "),
+		Raw:           errs,
 	}
 
 	form_data, ok := get_previous_data(parsed.EditedBlockID)

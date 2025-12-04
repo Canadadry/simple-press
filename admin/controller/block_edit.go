@@ -3,6 +3,7 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"app/pkg/router"
 	"fmt"
 	"net/http"
@@ -45,6 +46,10 @@ func (c *Controller) PostBlockEdit(w http.ResponseWriter, r *http.Request) error
 	block.Definition = b.Definition
 
 	if !errors.HasError() {
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+
 		err := c.Repository.UpdateBlock(r.Context(), name, block)
 		if err != nil {
 			return fmt.Errorf("cannot update %s block : %w", name, err)
@@ -55,5 +60,9 @@ func (c *Controller) PostBlockEdit(w http.ResponseWriter, r *http.Request) error
 		Name:       b.Name,
 		Content:    b.Content,
 		Definition: b.Definition,
-	}, view.BlockEditError(errors)))
+	}, view.BlockEditError{
+		Name:       errors.Name,
+		Content:    errors.Content,
+		Definition: errors.Definition,
+	}))
 }

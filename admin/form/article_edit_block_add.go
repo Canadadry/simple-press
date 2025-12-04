@@ -18,6 +18,7 @@ type ParsedArticleEditBlockAdd struct {
 
 type ParsedArticleEditErrorBlockAdd struct {
 	AddedBlockID string
+	Raw          validator.Errors
 }
 
 func (e ParsedArticleEditErrorBlockAdd) HasError() bool {
@@ -53,6 +54,7 @@ func ParseArticleEditBlockAdd(
 
 	resultErr := ParsedArticleEditErrorBlockAdd{
 		AddedBlockID: strings.Join(errs.Errors[articleEditNewBlock], ", "),
+		Raw:          errs,
 	}
 
 	return parsed, resultErr, nil

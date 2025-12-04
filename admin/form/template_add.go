@@ -17,6 +17,7 @@ type Template struct {
 
 type TemplateError struct {
 	Name string
+	Raw  validator.Errors
 }
 
 func (te TemplateError) HasError() bool {
@@ -42,6 +43,7 @@ func ParseTemplateAdd(r *http.Request) (Template, TemplateError, error) {
 
 	resultErr := TemplateError{
 		Name: strings.Join(errs.Errors[templateAddName], ", "),
+		Raw:  errs,
 	}
 
 	return parsed, resultErr, nil

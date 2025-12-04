@@ -20,7 +20,9 @@ func (c *Controller) PostBlockAdd(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	if errors.HasError() {
-		return c.render(w, r, view.BlockAdd(view.BlockAddData(l), view.BlockAddError(errors)))
+		return c.render(w, r, view.BlockAdd(view.BlockAddData(l), view.BlockAddError{
+			Name: errors.Name,
+		}))
 	}
 
 	err = c.Repository.CreateBlock(r.Context(), repository.CreateBlockParams(l))

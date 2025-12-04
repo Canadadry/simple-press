@@ -1,6 +1,7 @@
 package form
 
 import (
+	"app/pkg/validator"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,6 +18,7 @@ type File struct {
 
 type FileError struct {
 	Content string
+	Raw     validator.Errors
 }
 
 func (le FileError) HasError() bool {

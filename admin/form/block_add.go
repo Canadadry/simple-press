@@ -18,6 +18,7 @@ type Block struct {
 
 type BlockError struct {
 	Name string
+	Raw  validator.Errors
 }
 
 func (e BlockError) HasError() bool {
@@ -43,6 +44,7 @@ func ParseBlockAdd(r *http.Request) (Block, BlockError, error) {
 
 	resultErr := BlockError{
 		Name: strings.Join(errs.Errors[blockAddName], ", "),
+		Raw:  errs,
 	}
 
 	return parsed, resultErr, nil

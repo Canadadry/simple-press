@@ -4,6 +4,7 @@ import (
 	"app/admin/form"
 	"app/admin/repository"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"app/pkg/router"
 	"fmt"
 	"net/http"
@@ -81,6 +82,10 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	article.LayoutID = a.LayoutID
 
 	if !errors.HasError() {
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+
 		err = c.Repository.UpdateArticle(r.Context(), slug, article)
 		if err != nil {
 			return fmt.Errorf("cannot update %s article : %w", slug, err)
