@@ -1,0 +1,16 @@
+id,name,content
+1,single.html,"{{define ""body""}}
+
+<h1>Single {{.Title}}</h1>
+
+{{ markdownify .Content }}
+
+{{end}}
+"
+2,list.html,"{{define ""body""}}
+
+<h1>List {{.Title}}</h1>
+
+{{ markdownify .Content }}
+
+{{end}}"
