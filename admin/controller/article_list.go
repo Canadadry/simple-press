@@ -46,5 +46,9 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 		Articles: articles,
 	}
 
+	if IsJsonRequest(r) {
+		return view.ArticlesListOk(w, l)
+	}
+
 	return c.render(w, r, view.ArticlesList(l))
 }

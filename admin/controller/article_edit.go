@@ -47,6 +47,21 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 	for _, b := range blocks {
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
 	}
+
+	if IsJsonRequest(r) {
+		return view.ArticleOk(w, view.ArticleEditData{
+			Title:      a.Title,
+			Author:     a.Author,
+			Slug:       a.Slug,
+			Content:    a.Content,
+			Draft:      a.Draft,
+			LayoutID:   a.LayoutID,
+			Layouts:    layoutSelector,
+			Blocks:     blockSelector,
+			BlockDatas: blockDataView,
+		})
+	}
+
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
 		Title:      a.Title,
 		Author:     a.Author,
@@ -86,9 +101,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 		if err != nil {
 			return fmt.Errorf("cannot update %s article : %w", slug, err)
 		}
-	}
-
-	if IsJsonRequest(r) {
+	} else if IsJsonRequest(r) {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
 
@@ -174,7 +187,10 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		if err != nil {
 			return fmt.Errorf("cannot update %s article : %w", slug, err)
 		}
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
+
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select all layouts : %w", err)
@@ -202,6 +218,19 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+	}
+	if IsJsonRequest(r) {
+		return view.ArticleOk(w, view.ArticleEditData{
+			Title:      article.Title,
+			Author:     article.Author,
+			Slug:       article.Slug,
+			Content:    article.Content,
+			Draft:      article.Draft,
+			LayoutID:   article.LayoutID,
+			Layouts:    layoutSelector,
+			Blocks:     blockSelector,
+			BlockDatas: blockDataView,
+		})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
@@ -274,6 +303,8 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 				blockDataView[i].Data = a.EditedBlockData
 			}
 		}
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
@@ -283,6 +314,19 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 	layoutSelector := []view.LayoutSelector{}
 	for _, p := range layouts {
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
+	}
+	if IsJsonRequest(r) {
+		return view.ArticleOk(w, view.ArticleEditData{
+			Title:      article.Title,
+			Author:     article.Author,
+			Slug:       article.Slug,
+			Content:    article.Content,
+			Draft:      article.Draft,
+			LayoutID:   article.LayoutID,
+			Layouts:    layoutSelector,
+			Blocks:     blockSelector,
+			BlockDatas: blockDataView,
+		})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
@@ -353,6 +397,8 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		}
 
 		blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
@@ -362,6 +408,19 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	layoutSelector := []view.LayoutSelector{}
 	for _, p := range layouts {
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
+	}
+	if IsJsonRequest(r) {
+		return view.ArticleOk(w, view.ArticleEditData{
+			Title:      article.Title,
+			Author:     article.Author,
+			Slug:       article.Slug,
+			Content:    article.Content,
+			Draft:      article.Draft,
+			LayoutID:   article.LayoutID,
+			Layouts:    layoutSelector,
+			Blocks:     blockSelector,
+			BlockDatas: blockDataView,
+		})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{

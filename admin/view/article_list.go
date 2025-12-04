@@ -1,9 +1,11 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"app/pkg/paginator"
 	"io"
 	"math"
+	"net/http"
 	"time"
 )
 
@@ -12,18 +14,18 @@ const (
 )
 
 type ArticlesListData struct {
-	Articles []ArticleListData
-	Total    int
-	Page     int
-	Limit    int
+	Articles []ArticleListData `json:"articles"`
+	Total    int               `json:"total"`
+	Page     int               `json:"page"`
+	Limit    int               `json:"limit"`
 }
 
 type ArticleListData struct {
-	Title  string
-	Date   time.Time
-	Author string
-	Slug   string
-	Draft  bool
+	Title  string    `json:"title"`
+	Date   time.Time `json:"date"`
+	Author string    `json:"author"`
+	Slug   string    `json:"slug"`
+	Draft  bool      `json:"draft"`
 }
 
 func ArticlesList(data ArticlesListData) ViewFunc {
@@ -42,4 +44,7 @@ func ArticlesList(data ArticlesListData) ViewFunc {
 			}),
 		)
 	}
+}
+func ArticlesListOk(w http.ResponseWriter, a ArticlesListData) error {
+	return httpresponse.Ok(w, a)
 }
