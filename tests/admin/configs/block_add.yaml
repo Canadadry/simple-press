@@ -1,0 +1,43 @@
+unit_tests:
+  # GET:
+  #   - { url: "/admin/block/add"       , status: 405}
+  PATCH:
+    - { url: "/admin/block/add"       , status: 405}
+  PUT:
+    - { url: "/admin/block/add"       , status: 405}
+  DELETE:
+    - { url: "/admin/block/add"       , status: 405}
+  POST:
+    - { url: "/admin/block/add"       , status: 201, in: "ok/block_add", out: "ok/block_add"}
+    - { url: "/admin/block/add"       , status: 400, in: "bad_request/block_add_no_name",  out: "bad_request/block_add_no_name"}
+    - { url: "/admin/block/add"       , status: 400, in: "bad_request/block_add_dont_match_regexp",  out: "bad_request/block_add_dont_match_regexp"}
+
+# scenario:
+#   get_sync_after:
+#   get_after_post:
+#     - { action: "GET",  url: "/data/fixture"   , status: 200, headers: 'Cookie : X-Auth-Token=#user_0_token#', out: "ok/get_sync_fixture"}
+#     - { action: "POST", url: "/data"           , status: 204, headers: 'Cookie : X-Auth-Token=#user_0_token#',in: "ok/sync_post"}
+#     - { action: "GET",  url: "/data/fixture"   , status: 200, headers: 'Cookie : X-Auth-Token=#user_0_token#', out: "ok/get_sync_fixture_after"}
+
+files:
+  payloads/ok/block_add.json: >
+    {
+      "name": "first"
+    }
+  responses/ok/block_add.json: >
+    {
+      "name": "first"
+    }
+  payloads/bad_request/block_add_no_name.json: >
+    {
+    }
+  responses/bad_request/block_add_no_name.json: >
+    {
+      "name":["this value should not be blank"]
+    }
+  payloads/bad_request/block_add_dont_match_regexp.json: >
+    {
+      "name":"no space allowed"
+    }
+  responses/bad_request/block_add_dont_match_regexp.json: >
+    {"name":["value dont match format"]}

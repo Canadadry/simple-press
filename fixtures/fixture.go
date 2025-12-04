@@ -12,6 +12,7 @@ import (
 type FixtureData struct {
 	Layouts  []form.Layout
 	Articles []form.Article
+	Blocks   []form.Block
 }
 
 func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.Environment, error) {
@@ -31,6 +32,13 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 			return env, fmt.Errorf("cannot add article %s : %w", a.Title, err)
 		}
 		env.Store(fmt.Sprintf("article_%d_slug", i), slug)
+	}
+	for i, b := range fd.Blocks {
+		name, err := api.AddBlock(b.Name)
+		if err != nil {
+			return env, fmt.Errorf("cannot add article %s : %w", b.Name, err)
+		}
+		env.Store(fmt.Sprintf("block_%d_name", i), name)
 	}
 	return env, nil
 }

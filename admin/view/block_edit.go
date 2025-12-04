@@ -1,13 +1,15 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"io"
+	"net/http"
 )
 
 type BlockEditData struct {
-	Name       string
-	Content    string
-	Definition map[string]any
+	Name       string         `json:"name"`
+	Content    string         `json:"content"`
+	Definition map[string]any `json:"definition"`
 }
 
 type BlockEditError struct {
@@ -27,4 +29,7 @@ func BlockEdit(a BlockEditData, errors BlockEditError) ViewFunc {
 			TemplateData("BLOCK_EDIT.page_title", viewData{a, errors}),
 		)
 	}
+}
+func BlockOk(w http.ResponseWriter, a BlockEditData) error {
+	return httpresponse.Ok(w, a)
 }

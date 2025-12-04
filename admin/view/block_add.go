@@ -1,11 +1,13 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"io"
+	"net/http"
 )
 
 type BlockAddData struct {
-	Name string
+	Name string `json:"name"`
 }
 
 type BlockAddError struct {
@@ -23,4 +25,8 @@ func BlockAdd(a BlockAddData, errors BlockAddError) ViewFunc {
 			TemplateData("BLOCK_ADD.page_title", viewData{a, errors}),
 		)
 	}
+}
+
+func BlockCreated(w http.ResponseWriter, a BlockAddData) error {
+	return httpresponse.Created(w, a)
 }

@@ -55,3 +55,22 @@ func (c *Client) AddLayout(name string) (int64, error) {
 	}
 	return layout.ID, nil
 }
+
+func (c *Client) AddBlock(name string) (string, error) {
+	block := view.BlockAddData{}
+	errs := map[string]any{}
+	rsp := map[int]any{
+		http.StatusCreated:    &block,
+		http.StatusBadRequest: &errs,
+	}
+	st, err := c.client.Post(c.ctx, "/admin/block/add", view.BlockAddData{
+		Name: name,
+	}, rsp)
+	if err != nil {
+		return "", fmt.Errorf("cannot add block : %w", err)
+	}
+	if st != http.StatusCreated {
+		return "", fmt.Errorf("cannot add block invalid status code %d\n%v", st, errs)
+	}
+	return block.Name, nil
+}

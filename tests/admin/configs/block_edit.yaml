@@ -1,0 +1,195 @@
+unit_tests:
+  GET:
+    - { url: "/admin/block/#block_0_name#/edit", status: 200, out: "ok/block_get" }
+
+  POST:
+    - { url: "/admin/block/#block_0_name#/edit/metadata",   status: 200, in: "ok/block_edit_metadata_update",           out: "ok/block_edit_metadata_update" }
+    - { url: "/admin/block/#block_0_name#/edit/metadata",   status: 400, in: "bad_request/block_edit_no_title",         out: "bad_request/block_edit_no_title" }
+    - { url: "/admin/block/#block_0_name#/edit/metadata",   status: 400, in: "bad_request/block_edit_no_author",        out: "bad_request/block_edit_no_author" }
+    - { url: "/admin/block/#block_0_name#/edit/content",    status: 200, in: "ok/block_edit_content_update",            out: "ok/block_edit_content_update" }
+    - { url: "/admin/block/#block_0_name#/edit/content",    status: 400, in: "bad_request/block_edit_no_content",       out: "bad_request/block_edit_no_content" }
+    # - { url: "/admin/block/#block_0_name#/edit/block_edit", status: 200, in: "ok/block_edit_block_edit",                out: "ok/block_edit_block_edit" }
+    # - { url: "/admin/block/#block_0_name#/edit/block_edit", status: 400, in: "bad_request/block_edit_block_id_missing", out: "bad_request/block_edit_block_id_missing" }
+    # - { url: "/admin/block/#block_0_name#/edit/block_add",  status: 200, in: "ok/block_edit_block_add",                 out: "ok/block_edit_block_add" }
+    # - { url: "/admin/block/#block_0_name#/edit/block_add",  status: 400, in: "bad_request/block_edit_block_unknown",    out: "bad_request/block_edit_block_unknown" }
+
+files:
+  responses/ok/block_get.json: >
+    {
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"",
+      "draft":false,
+      "layout_id":3,
+      "layouts":[
+        {"name":"header.html","value":4},
+        {"name":"script.html","value":3},
+        {"name":"head.html","value":2},
+        {"name":"baseof.html","value":1}
+      ],
+      "blocks":[],
+      "block_datas":[]
+    }
+
+  payloads/ok/block_edit_metadata_update.json: >
+    {
+      "title": "Updated",
+      "author": "Alice",
+      "slug": "my-block",
+      "draft": false,
+      "layout": 1
+    }
+
+  responses/ok/block_edit_metadata_update.json: >
+    {
+      "title":"Updated",
+      "author":"Alice",
+      "slug":"my-block",
+      "content":"",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+        {"name":"header.html","value":4},
+        {"name":"script.html","value":3},
+        {"name":"head.html","value":2},
+        {"name":"baseof.html","value":1}
+      ],
+      "blocks":[],
+      "block_datas":[]
+    }
+
+  payloads/bad_request/block_edit_no_title.json: >
+    {
+      "author": "Alice",
+      "slug": "my-block",
+      "layout":1
+    }
+
+  responses/bad_request/block_edit_no_title.json: >
+    {
+      "title": ["this value should not be blank"],
+      "author": [],
+      "slug": [],
+      "layout": [],
+      "draft": []
+    }
+
+
+  payloads/bad_request/block_edit_no_author.json: >
+    {
+      "title": "Updated",
+      "slug": "my-block",
+      "layout":1
+    }
+
+  responses/bad_request/block_edit_no_author.json: >
+    {
+      "title": [],
+      "author": ["this value should not be blank"],
+      "slug": [],
+      "layout": [],
+      "draft": []
+    }
+
+
+  payloads/ok/block_edit_content_update.json: >
+    {
+      "content": "New body content"
+    }
+
+  responses/ok/block_edit_content_update.json: >
+    {
+    "title":"index",
+    "author":"metoo",
+    "slug":"index",
+    "content":"New body content",
+    "draft":false,
+    "layout_id":3,
+    "layouts":[
+      {"name":"header.html","value":4},
+      {"name":"script.html","value":3},
+      {"name":"head.html","value":2},
+      {"name":"baseof.html","value":1}
+    ],
+    "blocks":[],
+    "block_datas":[]
+    }
+
+  payloads/bad_request/block_edit_no_content.json: >
+    {}
+
+  responses/bad_request/block_edit_no_content.json: >
+    {
+      "content": ["this value should not be blank"]
+    }
+
+  payloads/ok/block_edit_block_edit.json: >
+    {
+      "edited_block_id": "#block_data_uuid#",
+      "edited_block_position": 0,
+      "edited_block_data": { "text": "updated text" }
+    }
+
+  responses/ok/block_edit_block_edit.json: >
+    {
+      "title": "My block",
+      "author": "John",
+      "slug": "my-block",
+      "content": "Lorem ipsum",
+      "draft": false,
+      "layout_id": 1,
+      "layouts": [{ "name":"default", "value":1 }],
+      "blocks": [
+        { "name": "text", "value": 10 }
+      ],
+      "block_datas": [
+        {
+          "id": "#block_data_uuid#",
+          "data": { "text": "updated text" }
+        }
+      ]
+    }
+
+  payloads/bad_request/block_edit_block_id_missing.json: >
+    {
+      "edited_block_data": {"text":"x"}
+    }
+
+  responses/bad_request/block_edit_block_id_missing.json: >
+    {
+      "edited_block_id": ["this value is required"]
+    }
+
+  payloads/ok/block_edit_block_add.json: >
+    {
+      "added_block_id": 10
+    }
+
+  responses/ok/block_edit_block_add.json: >
+    {
+      "title": "My block",
+      "author": "John",
+      "slug": "my-block",
+      "content": "Lorem ipsum",
+      "draft": false,
+      "layout_id": 1,
+      "layouts": [{ "name":"default", "value":1 }],
+      "blocks": [
+        { "name":"text", "value":10 }
+      ],
+      "block_datas": [
+        { "id":"#block_data_uuid#", "data":{ "text":"hello world" } },
+        { "id":"#new_block_uuid={{@string@}}", "data":{ "text":"" } }
+      ]
+    }
+
+  payloads/bad_request/block_edit_block_unknown.json: >
+    {
+      "added_block_id": 999
+    }
+
+  responses/bad_request/block_edit_block_unknown.json: >
+    {
+      "added_block_id": ["unknown block id"]
+    }

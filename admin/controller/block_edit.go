@@ -18,6 +18,13 @@ func (c *Controller) GetBlockEdit(w http.ResponseWriter, r *http.Request) error 
 	if !ok {
 		http.Redirect(w, r, "/admin/block", http.StatusSeeOther)
 	}
+	if IsJsonRequest(r) {
+		return view.BlockOk(w, view.BlockEditData{
+			Name:       l.Name,
+			Content:    l.Content,
+			Definition: l.Definition,
+		})
+	}
 
 	return c.render(w, r, view.BlockEdit(view.BlockEditData{
 		Name:       l.Name,

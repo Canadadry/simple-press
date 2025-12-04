@@ -72,6 +72,27 @@ func readArticleData(articleFile string) ([]form.Article, error) {
 	return articleData, nil
 }
 
+func readBlockData(blockFile string) ([]form.Block, error) {
+	f, err := data.Open(blockFile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read embed file %s : %w", blockFile, err)
+	}
+	defer f.Close()
+	blockReader := csv.NewReader(f)
+	block, err := blockReader.ReadAll()
+	blockData := []form.Block{}
+	for idx, l := range block {
+		if idx == 0 {
+			continue
+		}
+		blockData = append(blockData, form.Block{
+			Name: l[1],
+			// Content: l[2],
+		})
+	}
+	return blockData, nil
+}
+
 func Run(c config.Parameters) error {
 	_ = os.Remove(c.DatabaseUrl)
 	err := migration.Run(c)
@@ -88,7 +109,11 @@ func Run(c config.Parameters) error {
 	}
 	articleData, err := readArticleData("data/articles.csv")
 	if err != nil {
-		return fmt.Errorf("cannot read layout data : %w", err)
+		return fmt.Errorf("cannot read article data : %w", err)
+	}
+	blockData, err := readBlockData("data/blocks.csv")
+	if err != nil {
+		return fmt.Errorf("cannot read block data : %w", err)
 	}
 	env, err := fixtures.Run(
 		httpcaller.New(fmt.Sprintf("http://localhost:%d", c.Port), http.DefaultClient),
@@ -96,6 +121,7 @@ func Run(c config.Parameters) error {
 		fixtures.FixtureData{
 			Layouts:  layoutData,
 			Articles: articleData,
+			Blocks:   blockData,
 		},
 	)
 	if err != nil {
