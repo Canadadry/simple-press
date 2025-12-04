@@ -1,7 +1,7 @@
 package api
 
 import (
-	"app/admin/serializer"
+	"app/admin/view"
 	"app/pkg/http/httpcaller"
 	"context"
 	"fmt"
@@ -18,12 +18,12 @@ func New(client httpcaller.Caller) *Client {
 }
 
 func (c *Client) AddArticle(title, author string) (string, error) {
-	article := serializer.ArticleAdded{}
+	article := view.ArticleAddData{}
 	rsp := map[int]any{
 		http.StatusCreated:    &article,
 		http.StatusBadRequest: nil,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/article/add", serializer.ArticleAdded{
+	st, err := c.client.Post(c.ctx, "/admin/article/add", view.ArticleAddData{
 		Title:  title,
 		Author: author,
 	}, rsp)
@@ -37,12 +37,12 @@ func (c *Client) AddArticle(title, author string) (string, error) {
 }
 
 func (c *Client) AddLayout(name string) (int64, error) {
-	layout := serializer.LayoutAdded{}
+	layout := view.LayoutAddData{}
 	rsp := map[int]any{
 		http.StatusCreated:    &layout,
 		http.StatusBadRequest: nil,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/layout/add", serializer.LayoutAdded{
+	st, err := c.client.Post(c.ctx, "/admin/layout/add", view.LayoutAddData{
 		Name: name,
 	}, rsp)
 	if err != nil {

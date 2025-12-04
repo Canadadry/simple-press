@@ -3,7 +3,6 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/repository"
-	"app/admin/serializer"
 	"app/admin/view"
 	"app/pkg/http/httpresponse"
 	"fmt"
@@ -25,7 +24,10 @@ func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error
 		if IsJsonRequest(r) {
 			return httpresponse.BadRequest(w, errors.Raw)
 		}
-		return c.render(w, r, view.LayoutAdd(view.LayoutAddData(l), view.LayoutAddError{Name: errors.Name}))
+		return c.render(w, r, view.LayoutAdd(
+			view.LayoutAddData{Name: l.Name},
+			view.LayoutAddError{Name: errors.Name},
+		))
 	}
 
 	id, err := c.Repository.CreateLayout(r.Context(), repository.CreateLayoutParams(l))
@@ -34,7 +36,7 @@ func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if IsJsonRequest(r) {
-		return serializer.LayoutCreated(w, serializer.LayoutAdded{
+		return view.LayoutCreated(w, view.LayoutAddData{
 			Name: l.Name,
 			ID:   id,
 		})

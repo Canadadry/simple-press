@@ -82,14 +82,14 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	article.LayoutID = a.LayoutID
 
 	if !errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
-
 		err = c.Repository.UpdateArticle(r.Context(), slug, article)
 		if err != nil {
 			return fmt.Errorf("cannot update %s article : %w", slug, err)
 		}
+	}
+
+	if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -119,6 +119,19 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+	}
+	if IsJsonRequest(r) {
+		return view.ArticleOk(w, view.ArticleEditData{
+			Title:      article.Title,
+			Author:     article.Author,
+			Slug:       article.Slug,
+			Content:    article.Content,
+			Draft:      article.Draft,
+			LayoutID:   article.LayoutID,
+			Layouts:    layoutSelector,
+			Blocks:     blockSelector,
+			BlockDatas: blockDataView,
+		})
 	}
 
 	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{

@@ -1,13 +1,16 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"io"
+	"net/http"
 )
 
 type ArticleAddData struct {
-	Title  string
-	Author string
-	Draft  bool
+	Title  string `json:"title"`
+	Author string `json:"author"`
+	Draft  bool   `json:"draft"`
+	Slug   string `json:"slug"`
 }
 
 type ArticleAddError struct {
@@ -26,4 +29,8 @@ func ArticleAdd(a ArticleAddData, errors ArticleAddError) ViewFunc {
 			TemplateData("ARTICLE_ADD.page_title", viewData{a, errors}),
 		)
 	}
+}
+
+func ArticleCreated(w http.ResponseWriter, a ArticleAddData) error {
+	return httpresponse.Created(w, a)
 }

@@ -3,7 +3,6 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/repository"
-	"app/admin/serializer"
 	"app/admin/view"
 	"app/pkg/http/httpresponse"
 	"fmt"
@@ -52,7 +51,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot create article : %w", err)
 	}
 	if IsJsonRequest(r) {
-		return serializer.ArticleCreated(w, serializer.ArticleAdded{
+		return view.ArticleCreated(w, view.ArticleAddData{
 			Title:  a.Title,
 			Author: a.Author,
 			Draft:  a.Draft.V && a.Draft.Valid,
