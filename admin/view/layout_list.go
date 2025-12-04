@@ -31,7 +31,7 @@ func LayoutsList(data LayoutsListData) ViewFunc {
 		lastLayout := int(math.Ceil(float64(data.Total) / float64(data.Limit)))
 		p := paginator.New(data.Page, lastLayout, MaxLayoutPaginationItem, "/pages?page=%page%")
 		return render(w, tr,
-			"template/pages/page_list.html",
+			"template/pages/layout_list.html",
 			TemplateData("LAYOUT_LIST.page_title", viewData{
 				Total:   data.Total,
 				Pages:   p,

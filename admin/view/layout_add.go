@@ -19,7 +19,7 @@ func LayoutAdd(a LayoutAddData, errors LayoutAddError) ViewFunc {
 	}
 	return func(w io.Writer, tr func(string) string) error {
 		return render(w, tr,
-			"template/pages/page_add.html",
+			"template/pages/layout_add.html",
 			TemplateData("LAYOUT_ADD.page_title", viewData{a, errors}),
 		)
 	}
