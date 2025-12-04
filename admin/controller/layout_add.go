@@ -3,7 +3,9 @@ package controller
 import (
 	"app/admin/form"
 	"app/admin/repository"
+	"app/admin/serializer"
 	"app/admin/view"
+	"app/pkg/http/httpresponse"
 	"fmt"
 	"net/http"
 )
@@ -20,12 +22,22 @@ func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if errors.HasError() {
-		return c.render(w, r, view.LayoutAdd(view.LayoutAddData(l), view.LayoutAddError(errors)))
+		if IsJsonRequest(r) {
+			return httpresponse.BadRequest(w, errors.Raw)
+		}
+		return c.render(w, r, view.LayoutAdd(view.LayoutAddData(l), view.LayoutAddError{Name: errors.Name}))
 	}
 
-	err = c.Repository.CreateLayout(r.Context(), repository.CreateLayoutParams(l))
+	id, err := c.Repository.CreateLayout(r.Context(), repository.CreateLayoutParams(l))
 	if err != nil {
 		return fmt.Errorf("cannot create Layout : %w", err)
+	}
+
+	if IsJsonRequest(r) {
+		return serializer.LayoutCreated(w, serializer.LayoutAdded{
+			Name: l.Name,
+			ID:   id,
+		})
 	}
 
 	http.Redirect(w, r, "/admin/layout/"+l.Name+"/edit", http.StatusSeeOther)

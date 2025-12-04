@@ -19,5 +19,6 @@ files:
     {
       "title": "first",
       "slug": "first",
-      "author":"metoo"
+      "author":"metoo",
+      "draft":false
     }

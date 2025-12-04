@@ -41,3 +41,7 @@ func (c *Controller) redirect(w http.ResponseWriter, r *http.Request, url string
 	http.Redirect(w, r, url, http.StatusSeeOther)
 	return nil
 }
+
+func IsJsonRequest(r *http.Request) bool {
+	return r.Header.Get("Content-Type") == "application/json"
+}

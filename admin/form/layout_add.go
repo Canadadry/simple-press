@@ -17,6 +17,7 @@ type Layout struct {
 
 type LayoutError struct {
 	Name string
+	Raw  validator.Errors
 }
 
 func (le LayoutError) HasError() bool {
@@ -42,6 +43,7 @@ func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
 
 	resultErr := LayoutError{
 		Name: strings.Join(errs.Errors[layoutAddName], ", "),
+		Raw:  errs,
 	}
 
 	return parsed, resultErr, nil

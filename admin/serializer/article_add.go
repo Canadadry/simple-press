@@ -9,6 +9,7 @@ type ArticleAdded struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Draft  bool   `json:"draft"`
+	Slug   string `json:"slug"`
 }
 
 func ArticleCreated(w http.ResponseWriter, a ArticleAdded) error {

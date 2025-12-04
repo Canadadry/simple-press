@@ -32,14 +32,14 @@ type CreateLayoutParams struct {
 	Name string
 }
 
-func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) error {
-	_, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
+func (r *Repository) CreateLayout(ctx context.Context, l CreateLayoutParams) (int64, error) {
+	id, err := adminmodel.New(r.Db).CreateLayout(ctx, adminmodel.CreateLayoutParams{
 		Name: l.Name,
 	})
 	if err != nil {
-		return stacktrace.From(err)
+		return 0, stacktrace.From(err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *Repository) DeleteLayout(ctx context.Context, name string) error {

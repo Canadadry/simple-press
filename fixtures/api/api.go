@@ -18,10 +18,7 @@ func New(client httpcaller.Caller) *Client {
 }
 
 func (c *Client) AddArticle(title, author string) (string, error) {
-	type AddArticleRsp struct {
-		Slug string `json:"slug"`
-	}
-	article := AddArticleRsp{}
+	article := serializer.ArticleAdded{}
 	rsp := map[int]any{
 		http.StatusCreated:    &article,
 		http.StatusBadRequest: nil,
@@ -37,4 +34,22 @@ func (c *Client) AddArticle(title, author string) (string, error) {
 		return "", fmt.Errorf("cannot add article invalid status code %d", st)
 	}
 	return article.Slug, nil
+}
+
+func (c *Client) AddLayout(name string) (int64, error) {
+	layout := serializer.LayoutAdded{}
+	rsp := map[int]any{
+		http.StatusCreated:    &layout,
+		http.StatusBadRequest: nil,
+	}
+	st, err := c.client.Post(c.ctx, "/admin/layout/add", serializer.LayoutAdded{
+		Name: name,
+	}, rsp)
+	if err != nil {
+		return 0, fmt.Errorf("cannot add layout : %w", err)
+	}
+	if st != http.StatusCreated {
+		return 0, fmt.Errorf("cannot add layout invalid status code %d", st)
+	}
+	return layout.ID, nil
 }

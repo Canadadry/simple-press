@@ -21,7 +21,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	if errors.HasError() {
-		if r.Header.Get("Content-Type") == "application/json" {
+		if IsJsonRequest(r) {
 			return httpresponse.BadRequest(w, errors.Raw)
 		}
 		return c.render(w, r, view.ArticleAdd(view.ArticleAddData{
@@ -51,11 +51,12 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		return fmt.Errorf("cannot create article : %w", err)
 	}
-	if r.Header.Get("Content-Type") == "application/json" {
+	if IsJsonRequest(r) {
 		return serializer.ArticleCreated(w, serializer.ArticleAdded{
 			Title:  a.Title,
 			Author: a.Author,
 			Draft:  a.Draft.V && a.Draft.Valid,
+			Slug:   slug,
 		})
 	}
 

@@ -1,6 +1,7 @@
 package fixture
 
 import (
+	"app/admin/form"
 	"app/cmd/migration"
 	"app/config"
 	"app/fixtures"
@@ -25,7 +26,6 @@ func Run(c config.Parameters) error {
 	if err != nil {
 		return fmt.Errorf("migration failed : %w", err)
 	}
-	users := []fixtures.Article{}
 	now, err := time.Parse(config.SerializerDateTimeFormat, FixedNow)
 	if err != nil {
 		return fmt.Errorf("invalid fixed clock date '%s': %w", FixedNow, err)
@@ -33,7 +33,12 @@ func Run(c config.Parameters) error {
 	env, err := fixtures.Run(
 		httpcaller.New(fmt.Sprintf("http://localhost:%d", c.Port), http.DefaultClient),
 		&clock.Fixed{At: now},
-		users,
+		fixtures.FixtureData{
+			Layouts: []form.Layout{
+				{Name: "first"},
+			},
+			Articles: []form.Article{},
+		},
 	)
 	if err != nil {
 		return fmt.Errorf("fixture failed : %w", err)
