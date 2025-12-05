@@ -56,6 +56,25 @@ func (c *Client) AddLayout(name string) (int64, error) {
 	return layout.ID, nil
 }
 
+func (c *Client) AddTemplate(name string) (int64, error) {
+	template := view.TemplateAddData{}
+	errs := map[string]any{}
+	rsp := map[int]any{
+		http.StatusCreated:    &template,
+		http.StatusBadRequest: &errs,
+	}
+	st, err := c.client.Post(c.ctx, "/admin/template/add", view.TemplateAddData{
+		Name: name,
+	}, rsp)
+	if err != nil {
+		return 0, fmt.Errorf("cannot add template : %w", err)
+	}
+	if st != http.StatusCreated {
+		return 0, fmt.Errorf("cannot add template invalid status code %d\n%v", st, errs)
+	}
+	return template.ID, nil
+}
+
 func (c *Client) AddBlock(name string) (string, error) {
 	block := view.BlockAddData{}
 	errs := map[string]any{}

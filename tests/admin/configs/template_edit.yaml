@@ -1,0 +1,49 @@
+unit_tests:
+  GET:
+    - { url: "/admin/template/#template_0_name#/edit", status: 200, out: "ok/template_get" }
+
+  POST:
+  - { url: "/admin/template/#template_0_name#/edit", status: 200, in: "ok/template_edit_update",        out: "ok/template_edit_update" }
+  - { url: "/admin/template/#template_0_name#/edit", status: 400, in: "bad_request/template_no_name",   out: "bad_request/template_no_name" }
+  - { url: "/admin/template/#template_0_name#/edit", status: 400, in: "bad_request/template_no_content", out: "bad_request/template_no_content" }
+
+files:
+  responses/ok/template_get.json: >
+    {
+      "name": "baseof.html",
+      "content": ""
+    }
+
+  payloads/ok/template_edit_update.json: >
+    {
+      "name": "baseof.html",
+      "content": "<html>Updated</html>"
+    }
+
+  responses/ok/template_edit_update.json: >
+    {
+      "name": "baseof.html",
+      "content": "<html>Updated</html>"
+    }
+
+  payloads/bad_request/template_no_name.json: >
+    {
+      "content": "xxxxx"
+    }
+
+  responses/bad_request/template_no_name.json: >
+    {
+      "name": ["this value should not be blank"],
+      "content": []
+    }
+
+  payloads/bad_request/template_no_content.json: >
+    {
+      "name": "baseof.html"
+    }
+
+  responses/bad_request/template_no_content.json: >
+    {
+      "name": [],
+      "content": ["this value should not be blank"]
+    }

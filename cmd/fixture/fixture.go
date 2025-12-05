@@ -46,6 +46,27 @@ func readLayoutData(layoutFile string) ([]form.Layout, error) {
 	return layoutData, nil
 }
 
+func readTemplateData(templateFile string) ([]form.Template, error) {
+	f, err := data.Open(templateFile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read embed file %s : %w", templateFile, err)
+	}
+	defer f.Close()
+	templateReader := csv.NewReader(f)
+	template, err := templateReader.ReadAll()
+	templateData := []form.Template{}
+	for idx, l := range template {
+		if idx == 0 {
+			continue
+		}
+		templateData = append(templateData, form.Template{
+			Name: l[1],
+			// Content: l[2],
+		})
+	}
+	return templateData, nil
+}
+
 func readArticleData(articleFile string) ([]form.Article, error) {
 	f, err := data.Open(articleFile)
 	if err != nil {
@@ -107,6 +128,10 @@ func Run(c config.Parameters) error {
 	if err != nil {
 		return fmt.Errorf("cannot read layout data : %w", err)
 	}
+	templateData, err := readTemplateData("data/templates.csv")
+	if err != nil {
+		return fmt.Errorf("cannot read layout data : %w", err)
+	}
 	articleData, err := readArticleData("data/articles.csv")
 	if err != nil {
 		return fmt.Errorf("cannot read article data : %w", err)
@@ -119,9 +144,10 @@ func Run(c config.Parameters) error {
 		httpcaller.New(fmt.Sprintf("http://localhost:%d", c.Port), http.DefaultClient),
 		&clock.Fixed{At: now},
 		fixtures.FixtureData{
-			Layouts:  layoutData,
-			Articles: articleData,
-			Blocks:   blockData,
+			Layouts:   layoutData,
+			Templates: templateData,
+			Articles:  articleData,
+			Blocks:    blockData,
 		},
 	)
 	if err != nil {

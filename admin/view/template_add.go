@@ -1,11 +1,14 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"io"
+	"net/http"
 )
 
 type TemplateAddData struct {
-	Name string
+	Name string `json:"name"`
+	ID   int64  `json:"id"`
 }
 
 type TemplateAddError struct {
@@ -23,4 +26,8 @@ func TemplateAdd(a TemplateAddData, errors TemplateAddError) ViewFunc {
 			TemplateData("TEMPLATE_ADD.page_title", viewData{a, errors}),
 		)
 	}
+}
+
+func TemplateCreated(w http.ResponseWriter, l TemplateAddData) error {
+	return httpresponse.Created(w, l)
 }

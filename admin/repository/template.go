@@ -27,14 +27,14 @@ type CreateTemplateParams struct {
 	Name string
 }
 
-func (r *Repository) CreateTemplate(ctx context.Context, l CreateTemplateParams) error {
-	_, err := adminmodel.New(r.Db).CreateTemplate(ctx, adminmodel.CreateTemplateParams{
+func (r *Repository) CreateTemplate(ctx context.Context, l CreateTemplateParams) (int64, error) {
+	id, err := adminmodel.New(r.Db).CreateTemplate(ctx, adminmodel.CreateTemplateParams{
 		Name: l.Name,
 	})
 	if err != nil {
-		return stacktrace.From(err)
+		return 0, stacktrace.From(err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *Repository) DeleteTemplate(ctx context.Context, name string) error {

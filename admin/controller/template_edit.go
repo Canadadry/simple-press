@@ -17,8 +17,15 @@ func (c *Controller) GetTemplateEdit(w http.ResponseWriter, r *http.Request) err
 	}
 	if !ok {
 		http.Redirect(w, r, "/admin/template", http.StatusSeeOther)
+		return nil
 	}
 
+	if IsJsonRequest(r) {
+		return view.TemplateOk(w, view.TemplateEditData{
+			Name:    l.Name,
+			Content: l.Content,
+		})
+	}
 	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
 		Name:    l.Name,
 		Content: l.Content,
@@ -44,16 +51,20 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 	template.Content = l.Content
 
 	if !errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
 
 		err := c.Repository.UpdateTemplate(r.Context(), name, template)
 		if err != nil {
 			return fmt.Errorf("cannot update %s template : %w", name, err)
 		}
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
-
+	if IsJsonRequest(r) {
+		return view.TemplateOk(w, view.TemplateEditData{
+			Name:    l.Name,
+			Content: l.Content,
+		})
+	}
 	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
 		Name:    l.Name,
 		Content: l.Content,

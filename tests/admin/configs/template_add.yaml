@@ -1,0 +1,32 @@
+unit_tests:
+  PATCH:
+    - { url: "/admin/template/add", status: 405 }
+  PUT:
+    - { url: "/admin/template/add", status: 405 }
+  DELETE:
+    - { url: "/admin/template/add", status: 405 }
+
+  POST:
+    - { url: "/admin/template/add", status: 201, in: "template_add", out: "template_add" }
+    - { url: "/admin/template/add", status: 400, in: "template_add_no_name", out: "template_add_no_name" }
+
+files:
+  payloads/template_add.json: >
+    {
+      "name": "header.html"
+    }
+
+  responses/template_add.json: >
+    {
+      "name": "header.html",
+      "id": "@number@"
+    }
+
+  payloads/template_add_no_name.json: >
+    {
+    }
+
+  responses/template_add_no_name.json: >
+    {
+      "name": ["this value should not be blank"]
+    }

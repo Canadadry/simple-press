@@ -27,6 +27,7 @@ func LayoutAdd(a LayoutAddData, errors LayoutAddError) ViewFunc {
 		)
 	}
 }
+
 func LayoutCreated(w http.ResponseWriter, l LayoutAddData) error {
 	return httpresponse.Created(w, l)
 }

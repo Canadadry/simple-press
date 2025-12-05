@@ -17,6 +17,14 @@ func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error
 	}
 	if !ok {
 		http.Redirect(w, r, "/admin/layout", http.StatusSeeOther)
+		return nil
+	}
+
+	if IsJsonRequest(r) {
+		return view.LayoutOk(w, view.LayoutEditData{
+			Name:    l.Name,
+			Content: l.Content,
+		})
 	}
 
 	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{
@@ -44,14 +52,20 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 	layout.Content = l.Content
 
 	if !errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
 
 		err := c.Repository.UpdateLayout(r.Context(), name, layout)
 		if err != nil {
 			return fmt.Errorf("cannot update %s layout : %w", name, err)
 		}
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
+	}
+
+	if IsJsonRequest(r) {
+		return view.LayoutOk(w, view.LayoutEditData{
+			Name:    l.Name,
+			Content: l.Content,
+		})
 	}
 
 	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{

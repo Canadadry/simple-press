@@ -1,0 +1,32 @@
+unit_tests:
+  PATCH:
+    - { url: "/admin/layout/add", status: 405 }
+  PUT:
+    - { url: "/admin/layout/add", status: 405 }
+  DELETE:
+    - { url: "/admin/layout/add", status: 405 }
+
+  POST:
+    - { url: "/admin/layout/add", status: 201, in: "layout_add", out: "layout_add" }
+    - { url: "/admin/layout/add", status: 400, in: "layout_add_no_name", out: "layout_add_no_name" }
+
+files:
+  payloads/layout_add.json: >
+    {
+      "name": "header.html"
+    }
+
+  responses/layout_add.json: >
+    {
+      "name": "header.html",
+      "id": "@number@"
+    }
+
+  payloads/layout_add_no_name.json: >
+    {
+    }
+
+  responses/layout_add_no_name.json: >
+    {
+      "name": ["this value should not be blank"]
+    }

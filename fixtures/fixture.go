@@ -10,9 +10,10 @@ import (
 )
 
 type FixtureData struct {
-	Layouts  []form.Layout
-	Articles []form.Article
-	Blocks   []form.Block
+	Layouts   []form.Layout
+	Templates []form.Template
+	Articles  []form.Article
+	Blocks    []form.Block
 }
 
 func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.Environment, error) {
@@ -20,11 +21,19 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 	api := api.New(client)
 
 	for i, l := range fd.Layouts {
-		id, err := api.AddLayout(l.Name)
+		_, err := api.AddLayout(l.Name)
 		if err != nil {
-			return env, fmt.Errorf("cannot add article %s : %w", l.Name, err)
+			return env, fmt.Errorf("cannot add layout %s : %w", l.Name, err)
 		}
-		env.Store(fmt.Sprintf("layout_%d_id", i), fmt.Sprintf("%v", id))
+		env.Store(fmt.Sprintf("layout_%d_name", i), l.Name)
+	}
+
+	for i, t := range fd.Templates {
+		_, err := api.AddTemplate(t.Name)
+		if err != nil {
+			return env, fmt.Errorf("cannot add template %s : %w", t.Name, err)
+		}
+		env.Store(fmt.Sprintf("template_%d_name", i), t.Name)
 	}
 	for i, a := range fd.Articles {
 		slug, err := api.AddArticle(a.Title, a.Author)
