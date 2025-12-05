@@ -39,6 +39,28 @@ func TestRender(t *testing.T) {
 			exp: `<html><head></head><body><h1>Test Title</h1><p>Test Content</p></body></html>`,
 			err: "",
 		},
+		"test with two files for layout and body with block": {
+			input: Data{
+				Files: map[string]string{
+					"baseof.html": `<html><head></head><body>{{template "body" .}}</body></html>`,
+					"main_layout": `{{define "body"}}<h1>{{.Title}}</h1><p>{{.Content}}</p>{{ range $name, $data := .Blocks }}<p>{{partial $name $data}}</p>{{end}}{{end}}`,
+				},
+				Blocks: map[string]string{
+					"basic": "{{.Data.Content}}",
+				},
+				ArticleBlocks: map[string]map[string]any{
+					"basic": map[string]any{
+						"Data": map[string]any{
+							"Content": "something",
+						},
+					},
+				},
+				Content: "Test Content",
+				Title:   "Test Title",
+			},
+			exp: `<html><head></head><body><h1>Test Title</h1><p>Test Content</p><p>something</p></body></html>`,
+			err: "",
+		},
 	}
 
 	for name, tt := range tests {

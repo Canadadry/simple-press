@@ -31,6 +31,9 @@ func Render(w io.Writer, preview_data Data) error {
 			}
 			return template.HTML(buf.String())
 		},
+		"get_data": func(name string) map[string]any {
+			return preview_data.ArticleBlocks[name]
+		},
 		"partial": func(name string, data map[string]any) (template.HTML, error) {
 			content, ok := preview_data.Blocks[name]
 			if !ok {

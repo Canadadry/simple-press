@@ -47,7 +47,7 @@ func main() {
 	http.HandleFunc("/submit", handleSubmit)
 
 	log.Println("Listening on http://localhost:8080 ...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
 
 func handleForm(w http.ResponseWriter, r *http.Request) {

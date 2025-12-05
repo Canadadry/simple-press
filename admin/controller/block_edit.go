@@ -53,14 +53,20 @@ func (c *Controller) PostBlockEdit(w http.ResponseWriter, r *http.Request) error
 	block.Definition = b.Definition
 
 	if !errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
-
 		err := c.Repository.UpdateBlock(r.Context(), name, block)
 		if err != nil {
 			return fmt.Errorf("cannot update %s block : %w", name, err)
 		}
+	} else if IsJsonRequest(r) {
+		return httpresponse.BadRequest(w, errors.Raw)
+	}
+
+	if IsJsonRequest(r) {
+		return view.BlockOk(w, view.BlockEditData{
+			Name:       b.Name,
+			Content:    b.Content,
+			Definition: b.Definition,
+		})
 	}
 
 	return c.render(w, r, view.BlockEdit(view.BlockEditData{
