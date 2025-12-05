@@ -3,10 +3,11 @@ unit_tests:
     - { url: "/admin/block/#block_0_name#/edit", status: 200, out: "block_get" }
 
   POST:
-    - { url: "/admin/block/#block_0_name#/edit",   status: 200, in: "block_edit",           out: "block_edit" }
-    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_name",         out: "block_edit_no_name" }
-    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_conent",        out: "block_edit_no_conent" }
-    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_description",        out: "block_edit_no_description" }
+    - { url: "/admin/block/#block_0_name#/edit",   status: 200, in: "block_edit",                out: "block_edit" }
+    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_name",        out: "block_edit_no_name" }
+    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_conent",      out: "block_edit_no_conent" }
+    - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_no_definition",  out: "block_edit_no_definition" }
+    # - { url: "/admin/block/#block_0_name#/edit",   status: 400, in: "block_edit_bad_definition", out: "block_edit_bad_definition" }
 
 files:
   responses/block_get.json: >
@@ -32,57 +33,55 @@ files:
 
   payloads/block_edit_no_name.json: >
     {
-      "author": "Alice",
-      "slug": "my-block",
-      "layout":1
+      "content":"{{.Data}}",
+      "definition":{"Data":"my data"}
     }
 
   responses/block_edit_no_name.json: >
     {
-      "title": ["this value should not be blank"],
-      "author": [],
-      "slug": [],
-      "layout": [],
-      "draft": []
+      "content":[],
+      "definition":[],
+      "name":["this value should not be blank"]
     }
 
 
   payloads/block_edit_no_conent.json: >
     {
-      "title": "Updated",
-      "slug": "my-block",
-      "layout":1
+      "name":"first_block",
+      "definition":{"Data":"my data"}
     }
 
   responses/block_edit_no_conent.json: >
     {
-      "title": [],
-      "author": ["this value should not be blank"],
-      "slug": [],
-      "layout": [],
-      "draft": []
+      "name":[],
+      "definition":[],
+      "content":["this value should not be blank"]
     }
 
 
-  payloads/block_edit_no_description.json: >
+  payloads/block_edit_no_definition.json: >
     {
+      "name":"first_block",
       "content": "New body content"
     }
 
-  responses/block_edit_no_description.json: >
+  responses/block_edit_no_definition.json: >
     {
-    "title":"index",
-    "author":"metoo",
-    "slug":"index",
-    "content":"New body content",
-    "draft":false,
-    "layout_id":3,
-    "layouts":[
-      {"name":"header.html","value":4},
-      {"name":"script.html","value":3},
-      {"name":"head.html","value":2},
-      {"name":"baseof.html","value":1}
-    ],
-    "blocks":[],
-    "block_datas":[]
+      "name":[],
+      "content":[],
+      "definition":["this value should not be blank"]
+    }
+
+  payloads/block_edit_bad_definition.json: >
+    {
+      "name":"first_block",
+      "content": "New body content"
+      "definition": "this should be a map"
+    }
+
+  responses/block_edit_bad_definition.json: >
+    {
+      "name":[],
+      "content":[],
+      "definition":["this value should a map"]
     }
