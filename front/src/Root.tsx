@@ -1,4 +1,4 @@
-import { Theme } from "@radix-ui/themes";
+import { Theme, ThemePanel } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { useTheme } from "./hooks/useTheme";
 import App from "./App";
@@ -9,6 +9,7 @@ export function Root() {
   return (
     <Theme appearance={theme} accentColor="indigo" radius="medium">
       <App toggleTheme={toggleTheme} />
+      <ThemePanel />
     </Theme>
   );
 }
