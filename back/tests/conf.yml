@@ -8,6 +8,7 @@ groups:
     tests:
       - article_add.yaml
       - article_edit.yaml
+      - article_list.yaml
       - block_add.yaml
       - block_edit.yaml
       - layout_add.yaml
