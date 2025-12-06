@@ -24,7 +24,7 @@ func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/layout", http.StatusFound)
+		http.Redirect(w, r, "/admin/layouts", http.StatusFound)
 		return nil
 	}
 

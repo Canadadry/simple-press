@@ -16,7 +16,7 @@ func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("cannot select Layout : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/layout", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
 		return nil
 	}
 
@@ -40,7 +40,7 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot select layout : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/layout", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
 	}
 
 	l, errors, err := form.ParseLayoutEdit(r)

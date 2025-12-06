@@ -24,7 +24,7 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 	}
 
 	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/template", http.StatusFound)
+		http.Redirect(w, r, "/admin/templates", http.StatusFound)
 		return nil
 	}
 

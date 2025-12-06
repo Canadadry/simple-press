@@ -76,9 +76,9 @@ func TemplateData[T any](pageTitle string, pageData T) BasePage[T] {
 		Menu: []MenuItem{
 			{Name: "MENU.dashboard", Path: "/admin", Icon: "bi bi-house-fill"},
 			{Name: "MENU.articles", Path: "/admin/articles", Icon: "bi bi-body-text"},
-			{Name: "MENU.template", Path: "/admin/template", Icon: "bi bi-palette-fill"},
-			{Name: "MENU.layout", Path: "/admin/layout", Icon: "bi bi-columns-gap"},
-			{Name: "MENU.block", Path: "/admin/block", Icon: "bi bi-hammer"},
+			{Name: "MENU.template", Path: "/admin/templates", Icon: "bi bi-palette-fill"},
+			{Name: "MENU.layout", Path: "/admin/layouts", Icon: "bi bi-columns-gap"},
+			{Name: "MENU.block", Path: "/admin/blocks", Icon: "bi bi-hammer"},
 			{Name: "MENU.file", Path: "/admin/files", Icon: "bi bi-file-image"},
 			{Name: "MENU.settings", Path: "/admin/settings", Icon: "bi bi-gear-wide"},
 		},

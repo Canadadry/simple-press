@@ -13,17 +13,17 @@
                     <td>{{$idx}}</td>
                     <td>{{$template.Name}}</td>
                     <td>
-                        <a href="/admin/template/{{$template.Name}}/edit">
+                        <a href="/admin/templates/{{$template.Name}}/edit">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <a href="/admin/template/{{$template.Name}}/delete">
+                        <a href="/admin/templates/{{$template.Name}}/delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>
                 </tr>
                 {{end}}
             </table>
-            <a href="/admin/template/add" class="btn btn-primary rounded-pill"
+            <a href="/admin/templates/add" class="btn btn-primary rounded-pill"
                 >{{Trans "TEMPLATE.add"}}</a
             >
             {{template "pagination" .Pages}}

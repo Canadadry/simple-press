@@ -24,7 +24,7 @@ func (c *Controller) GetBlockList(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/block", http.StatusFound)
+		http.Redirect(w, r, "/admin/blocks", http.StatusFound)
 		return nil
 	}
 

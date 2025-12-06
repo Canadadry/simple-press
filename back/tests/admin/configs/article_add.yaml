@@ -1,17 +1,17 @@
 unit_tests:
   # GET:
-  #   - { url: "/admin/article/add"       , status: 405}
+  #   - { url: "/admin/articles/add"       , status: 405}
   PATCH:
-    - { url: "/admin/article/add"       , status: 405}
+    - { url: "/admin/articles/add"       , status: 405}
   PUT:
-    - { url: "/admin/article/add"       , status: 405}
+    - { url: "/admin/articles/add"       , status: 405}
   DELETE:
-    - { url: "/admin/article/add"       , status: 405}
+    - { url: "/admin/articles/add"       , status: 405}
   POST:
-    - { url: "/admin/article/add"       , status: 201, in: "ok/article_add", out: "ok/article_add"}
-    - { url: "/admin/article/add"       , status: 201, in: "ok/article_add_draft", out: "ok/article_add_draft"}
-    - { url: "/admin/article/add"       , status: 400, in: "bad_request/article_add_no_title",  out: "bad_request/article_add_no_title"}
-    - { url: "/admin/article/add"       , status: 400, in: "bad_request/article_add_no_author", out: "bad_request/article_add_no_author"}
+    - { url: "/admin/articles/add"       , status: 201, in: "ok/article_add", out: "ok/article_add"}
+    - { url: "/admin/articles/add"       , status: 201, in: "ok/article_add_draft", out: "ok/article_add_draft"}
+    - { url: "/admin/articles/add"       , status: 400, in: "bad_request/article_add_no_title",  out: "bad_request/article_add_no_title"}
+    - { url: "/admin/articles/add"       , status: 400, in: "bad_request/article_add_no_author", out: "bad_request/article_add_no_author"}
 
 # scenario:
 #   get_sync_after:

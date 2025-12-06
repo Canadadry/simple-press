@@ -24,7 +24,7 @@ func (c *Client) AddArticle(title, author string) (string, error) {
 		http.StatusCreated:    &article,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/article/add", view.ArticleAddData{
+	st, err := c.client.Post(c.ctx, "/admin/articles/add", view.ArticleAddData{
 		Title:  title,
 		Author: author,
 	}, rsp)
@@ -44,7 +44,7 @@ func (c *Client) AddLayout(name string) (int64, error) {
 		http.StatusCreated:    &layout,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/layout/add", view.LayoutAddData{
+	st, err := c.client.Post(c.ctx, "/admin/layouts/add", view.LayoutAddData{
 		Name: name,
 	}, rsp)
 	if err != nil {
@@ -63,7 +63,7 @@ func (c *Client) AddTemplate(name string) (int64, error) {
 		http.StatusCreated:    &template,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/template/add", view.TemplateAddData{
+	st, err := c.client.Post(c.ctx, "/admin/templates/add", view.TemplateAddData{
 		Name: name,
 	}, rsp)
 	if err != nil {
@@ -82,7 +82,7 @@ func (c *Client) AddBlock(name string) (string, error) {
 		http.StatusCreated:    &block,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/block/add", view.BlockAddData{
+	st, err := c.client.Post(c.ctx, "/admin/blocks/add", view.BlockAddData{
 		Name: name,
 	}, rsp)
 	if err != nil {

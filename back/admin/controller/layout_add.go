@@ -42,6 +42,6 @@ func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error
 		})
 	}
 
-	http.Redirect(w, r, "/admin/layout/"+l.Name+"/edit", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/layouts/"+l.Name+"/edit", http.StatusSeeOther)
 	return nil
 }

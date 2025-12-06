@@ -1,14 +1,14 @@
 unit_tests:
   PATCH:
-    - { url: "/admin/layout/add", status: 405 }
+    - { url: "/admin/layouts/add", status: 405 }
   PUT:
-    - { url: "/admin/layout/add", status: 405 }
+    - { url: "/admin/layouts/add", status: 405 }
   DELETE:
-    - { url: "/admin/layout/add", status: 405 }
+    - { url: "/admin/layouts/add", status: 405 }
 
   POST:
-    - { url: "/admin/layout/add", status: 201, in: "layout_add", out: "layout_add" }
-    - { url: "/admin/layout/add", status: 400, in: "layout_add_no_name", out: "layout_add_no_name" }
+    - { url: "/admin/layouts/add", status: 201, in: "layout_add", out: "layout_add" }
+    - { url: "/admin/layouts/add", status: 400, in: "layout_add_no_name", out: "layout_add_no_name" }
 
 files:
   payloads/layout_add.json: >

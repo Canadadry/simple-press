@@ -7,7 +7,7 @@ In this tutorial, we will create a **minimal theme** using a single base file an
 
 The `baseof.html` file will contain the overall HTML structure of your page. It will include a placeholder for the content (using `{{template "body" .}}`), which will be populated by the layout file.
 
-Go to the **[Templates](/admin/template)** section of the admin panel and create a new template called `baseof.html`. This file defines the base structure of your page.
+Go to the **[Templates](/admin/templates)** section of the admin panel and create a new template called `baseof.html`. This file defines the base structure of your page.
 
 Example content for `baseof.html`:
 

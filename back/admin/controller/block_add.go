@@ -40,6 +40,6 @@ func (c *Controller) PostBlockAdd(w http.ResponseWriter, r *http.Request) error 
 		})
 	}
 
-	http.Redirect(w, r, "/admin/block/"+b.Name+"/edit", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/blocks/"+b.Name+"/edit", http.StatusSeeOther)
 	return nil
 }

@@ -13,17 +13,17 @@
                     <td>{{$idx}}</td>
                     <td>{{$block.Name}}</td>
                     <td>
-                        <a href="/admin/block/{{$block.Name}}/edit">
+                        <a href="/admin/blocks/{{$block.Name}}/edit">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <a href="/admin/block/{{$block.Name}}/delete">
+                        <a href="/admin/blocks/{{$block.Name}}/delete">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>
                 </tr>
                 {{end}}
             </table>
-            <a href="/admin/block/add" class="btn btn-primary rounded-pill">
+            <a href="/admin/blocks/add" class="btn btn-primary rounded-pill">
                 {{Trans "BLOCK.add"}}
             </a>
             {{template "pagination" .Pages}}

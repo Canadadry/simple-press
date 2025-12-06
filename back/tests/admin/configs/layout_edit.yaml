@@ -1,11 +1,11 @@
 unit_tests:
   GET:
-    - { url: "/admin/layout/#layout_0_name#/edit", status: 200, out: "ok/layout_get" }
+    - { url: "/admin/layouts/#layout_0_name#/edit", status: 200, out: "ok/layout_get" }
 
   POST:
-  - { url: "/admin/layout/#layout_0_name#/edit", status: 200, in: "ok/layout_edit_update",        out: "ok/layout_edit_update" }
-  - { url: "/admin/layout/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_name",   out: "bad_request/layout_no_name" }
-  - { url: "/admin/layout/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_content", out: "bad_request/layout_no_content" }
+  - { url: "/admin/layouts/#layout_0_name#/edit", status: 200, in: "ok/layout_edit_update",        out: "ok/layout_edit_update" }
+  - { url: "/admin/layouts/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_name",   out: "bad_request/layout_no_name" }
+  - { url: "/admin/layouts/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_content", out: "bad_request/layout_no_content" }
 
 files:
   responses/ok/layout_get.json: >

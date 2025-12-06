@@ -16,7 +16,7 @@ func (c *Controller) GetTemplateEdit(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("cannot select Template : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/template", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/templates", http.StatusSeeOther)
 		return nil
 	}
 
@@ -39,7 +39,7 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 		return fmt.Errorf("cannot select template : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/template", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/templates", http.StatusSeeOther)
 	}
 
 	l, errors, err := form.ParseTemplateEdit(r)

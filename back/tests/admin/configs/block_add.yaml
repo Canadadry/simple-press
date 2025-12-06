@@ -1,16 +1,16 @@
 unit_tests:
   # GET:
-  #   - { url: "/admin/block/add"       , status: 405}
+  #   - { url: "/admin/blocks/add"       , status: 405}
   PATCH:
-    - { url: "/admin/block/add"       , status: 405}
+    - { url: "/admin/blocks/add"       , status: 405}
   PUT:
-    - { url: "/admin/block/add"       , status: 405}
+    - { url: "/admin/blocks/add"       , status: 405}
   DELETE:
-    - { url: "/admin/block/add"       , status: 405}
+    - { url: "/admin/blocks/add"       , status: 405}
   POST:
-    - { url: "/admin/block/add"       , status: 201, in: "ok/block_add", out: "ok/block_add"}
-    - { url: "/admin/block/add"       , status: 400, in: "bad_request/block_add_no_name",  out: "bad_request/block_add_no_name"}
-    - { url: "/admin/block/add"       , status: 400, in: "bad_request/block_add_dont_match_regexp",  out: "bad_request/block_add_dont_match_regexp"}
+    - { url: "/admin/blocks/add"       , status: 201, in: "ok/block_add", out: "ok/block_add"}
+    - { url: "/admin/blocks/add"       , status: 400, in: "bad_request/block_add_no_name",  out: "bad_request/block_add_no_name"}
+    - { url: "/admin/blocks/add"       , status: 400, in: "bad_request/block_add_dont_match_regexp",  out: "bad_request/block_add_dont_match_regexp"}
 
 # scenario:
 #   get_sync_after:

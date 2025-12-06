@@ -16,7 +16,7 @@ func (c *Controller) GetBlockEdit(w http.ResponseWriter, r *http.Request) error 
 		return fmt.Errorf("cannot select Block : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/block", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/blocks", http.StatusSeeOther)
 	}
 	if IsJsonRequest(r) {
 		return view.BlockOk(w, view.BlockEditData{
@@ -40,7 +40,7 @@ func (c *Controller) PostBlockEdit(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("cannot select block : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/block", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/blocks", http.StatusSeeOther)
 	}
 
 	b, errors, err := form.ParseBlockEdit(r)

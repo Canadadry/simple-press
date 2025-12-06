@@ -42,6 +42,6 @@ func (c *Controller) PostTemplateAdd(w http.ResponseWriter, r *http.Request) err
 		})
 	}
 
-	http.Redirect(w, r, "/admin/template/"+l.Name+"/edit", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/templates/"+l.Name+"/edit", http.StatusSeeOther)
 	return nil
 }
