@@ -26,6 +26,9 @@ runp: blog.sqlite ## run public server
 	go test ./...
 	go run main.go
 
+reflex: ## install reflex
+	go install github.com/cespare/reflex@latest
+
 dev: ## watch go file and restart on change
 	ulimit -n 4096 ; reflex -r '\.go$$' -s -- sh -c "go run main.go -action admin"
 
