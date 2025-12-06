@@ -14,7 +14,7 @@ export function NavItem({ active, onClick, children }: NavItemProps) {
       <Box
         style={{
           cursor: "pointer",
-          borderRadius: "var(--radius-3)",
+          borderRadius: "calc(var(--radius-4) * var(--radius-factor))",
           padding: "var(--space-2)",
           backgroundColor: active ? "var(--accent-a2)" : "transparent",
         }}
