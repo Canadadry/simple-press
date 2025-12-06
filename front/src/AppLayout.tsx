@@ -27,9 +27,16 @@ export function AppLayout({ children, toggleTheme }: AppLayoutProps) {
         p="4"
         style={{ borderRight: "1px solid var(--gray-a5)" }}
       >
-        <Text size="5" weight="bold" mb="4">
-          Mon SaaS
-        </Text>
+        <Flex direction="row" gap="2" mb="4" align="center">
+          <img
+            src="/logo.svg"
+            alt="Logo Mon SaaS"
+            style={{ width: 36, height: 36 }}
+          />
+          <Text size="5" weight="bold">
+            Mon SaaS
+          </Text>
+        </Flex>
 
         <NavigationMenu.Root orientation="vertical">
           <NavigationMenu.List style={{ listStyle: "none", padding: 0 }}>
