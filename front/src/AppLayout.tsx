@@ -14,8 +14,7 @@ export function AppLayout({ children, toggleTheme }: AppLayoutProps) {
 
   const menu = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Utilisateurs", path: "/users" },
-    { label: "Paramètres", path: "/settings" },
+    { label: "Articles", path: "/articles" },
   ];
 
   return (
