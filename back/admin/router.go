@@ -21,7 +21,13 @@ type Services struct {
 }
 
 func GetRouter(services Services) (http.HandlerFunc, error) {
-	r := router.Group{}
+	r := router.Group{
+		Cors: router.CorsOption{
+			Origin:  "http://localhost:5173",
+			Methods: []string{http.MethodGet, http.MethodPatch, http.MethodPost, http.MethodDelete},
+			Headers: []string{"Content-Type"},
+		},
+	}
 	r.Use(middleware.Logger(services.Out, services.Clock, func(path string) bool {
 		return strings.HasPrefix(path, "/public/")
 	}))

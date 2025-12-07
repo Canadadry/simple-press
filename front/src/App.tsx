@@ -1,6 +1,6 @@
 import { AppLayout } from "./AppLayout";
 import Dashboard from "./pages/Dashboard";
-import Articles from "./pages/Articles";
+import Articles from "./pages/articles/Articles";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 interface AppProps {

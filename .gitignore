@@ -1,3 +1,4 @@
 *.sqlite
 back/tests/fixture.json
 back/outtest.log
+.env

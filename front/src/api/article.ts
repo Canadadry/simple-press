@@ -1,13 +1,12 @@
 import { apiRequest } from "./api.ts";
+import type { List } from "./api.ts";
 
 const ARTICLE_BASE_URL = "/admin/articles";
 
-export interface List<T> {
-  items: T[];
-}
 export interface Article {
   title: string;
   author: string;
+  image: string;
   slug: string;
   content?: string;
   draft?: boolean;

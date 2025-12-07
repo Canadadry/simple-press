@@ -14,10 +14,10 @@ const (
 )
 
 type ArticlesListData struct {
-	Articles []ArticleListData `json:"articles"`
-	Total    int               `json:"total"`
-	Page     int               `json:"page"`
-	Limit    int               `json:"limit"`
+	Items []ArticleListData `json:"items"`
+	Total int               `json:"total"`
+	Page  int               `json:"page"`
+	Limit int               `json:"limit"`
 }
 
 type ArticleListData struct {
@@ -40,7 +40,7 @@ func ArticlesList(data ArticlesListData) ViewFunc {
 			TemplateData("ARTICLE_LIST.page_title", viewData{
 				Total:    data.Total,
 				Pages:    paginator.New(data.Page, int(math.Ceil(float64(data.Total)/float64(data.Limit))), MaxPaginationItem, "/articles?page=%page%"),
-				Articles: data.Articles,
+				Articles: data.Items,
 			}),
 		)
 	}

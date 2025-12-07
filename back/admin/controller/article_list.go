@@ -40,10 +40,10 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	l := view.ArticlesListData{
-		Total:    count,
-		Limit:    limit,
-		Page:     page,
-		Articles: articles,
+		Total: count,
+		Limit: limit,
+		Page:  page,
+		Items: articles,
 	}
 
 	if IsJsonRequest(r) {

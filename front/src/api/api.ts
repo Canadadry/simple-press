@@ -1,3 +1,7 @@
+export interface List<T> {
+  items: T[];
+}
+
 export async function apiRequest<T>(
   url: string,
   method: string,
@@ -6,8 +10,8 @@ export async function apiRequest<T>(
   const headers = {
     "Content-Type": "application/json",
   };
-
-  const response = await fetch(url, {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const response = await fetch(apiUrl + url, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
