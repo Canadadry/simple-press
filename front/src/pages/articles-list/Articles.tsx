@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, Flex, Spinner } from "@radix-ui/themes";
+import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 // import * as Accordion from "@radix-ui/react-accordion";
 import { getArticleList } from "../../api/article";
 import type { Article } from "../../api/article";
@@ -34,11 +34,20 @@ export default function Articles() {
       <Text size="7" weight="bold">
         Liste des articles
       </Text>
-      {articles.map((val, idx) => {
-        return (
-          <Line tabIndex={idx} article={val} portalContainer={null}></Line>
-        );
-      })}
+      <Card>
+        <Flex direction="column">
+          {articles.map((val, idx) => {
+            return (
+              <Line
+                key={idx}
+                tabIndex={idx}
+                article={val}
+                portalContainer={null}
+              ></Line>
+            );
+          })}
+        </Flex>
+      </Card>
     </Flex>
   );
 }
