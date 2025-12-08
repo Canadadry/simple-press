@@ -2,6 +2,7 @@
   "title": "@string@",
   "date": "@string@",
   "author": "@string@",
+  "content": "@string@",
   "slug": "@string@",
   "draft": false
 }

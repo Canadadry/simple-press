@@ -97,6 +97,7 @@ SELECT
     title,
     date,
     author,
+    content,
     slug,
     draft
 FROM
@@ -115,11 +116,12 @@ type GetArticleListParams struct {
 }
 
 type GetArticleListRow struct {
-	Title  string
-	Date   time.Time
-	Author string
-	Slug   string
-	Draft  int64
+	Title   string
+	Date    time.Time
+	Author  string
+	Content string
+	Slug    string
+	Draft   int64
 }
 
 func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) ([]GetArticleListRow, error) {
@@ -135,6 +137,7 @@ func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) 
 			&i.Title,
 			&i.Date,
 			&i.Author,
+			&i.Content,
 			&i.Slug,
 			&i.Draft,
 		); err != nil {

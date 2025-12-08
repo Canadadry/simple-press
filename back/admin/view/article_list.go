@@ -21,11 +21,12 @@ type ArticlesListData struct {
 }
 
 type ArticleListData struct {
-	Title  string    `json:"title"`
-	Date   time.Time `json:"date"`
-	Author string    `json:"author"`
-	Slug   string    `json:"slug"`
-	Draft  bool      `json:"draft"`
+	Title   string    `json:"title"`
+	Date    time.Time `json:"date"`
+	Author  string    `json:"author"`
+	Slug    string    `json:"slug"`
+	Draft   bool      `json:"draft"`
+	Content string    `json:"content"`
 }
 
 func ArticlesList(data ArticlesListData) ViewFunc {

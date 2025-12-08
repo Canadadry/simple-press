@@ -74,11 +74,12 @@ func (r *Repository) GetArticleList(ctx context.Context, limit, offset int) ([]A
 	}
 	return sqlutil.Map(list, func(a adminmodel.GetArticleListRow) Article {
 		return Article{
-			Title:  a.Title,
-			Date:   a.Date,
-			Author: a.Author,
-			Slug:   a.Slug,
-			Draft:  a.Draft == 1,
+			Title:   a.Title,
+			Date:    a.Date,
+			Author:  a.Author,
+			Content: a.Content,
+			Slug:    a.Slug,
+			Draft:   a.Draft == 1,
 		}
 	}), nil
 }

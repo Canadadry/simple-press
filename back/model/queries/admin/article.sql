@@ -59,6 +59,7 @@ SELECT
     title,
     date,
     author,
+    content,
     slug,
     draft
 FROM
