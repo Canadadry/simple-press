@@ -44,7 +44,7 @@ func TestView(t *testing.T) {
 		"template_edit":            TemplateEdit(TemplateEditData{}, TemplateEditError{}),
 		"template_edit with error": TemplateEdit(TemplateEditData{}, TemplateEditError{"test1", "test2"}),
 		"layout_list": LayoutsList(LayoutsListData{
-			Layouts: []LayoutListData{LayoutListData{}},
+			Items: []LayoutListData{LayoutListData{}},
 		}),
 		"layout_add":             LayoutAdd(LayoutAddData{}, LayoutAddError{}),
 		"layout_add with error":  LayoutAdd(LayoutAddData{}, LayoutAddError{"test1"}),

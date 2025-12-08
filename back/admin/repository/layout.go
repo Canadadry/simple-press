@@ -58,10 +58,11 @@ func (r *Repository) GetLayoutList(ctx context.Context, limit, offset int) ([]La
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(p adminmodel.Layout) Layout {
+	return sqlutil.Map(list, func(p adminmodel.GetLayoutListRow) Layout {
 		return Layout{
-			Name: p.Name,
-			ID:   p.ID,
+			Name:    p.Name,
+			Content: p.Content,
+			ID:      p.ID,
 		}
 	}), nil
 }
@@ -71,7 +72,7 @@ func (r *Repository) GetAllLayout(ctx context.Context) ([]Layout, error) {
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(p adminmodel.Layout) Layout {
+	return sqlutil.Map(list, func(p adminmodel.GetAllLayoutRow) Layout {
 		return Layout{
 			Name: p.Name,
 			ID:   p.ID,

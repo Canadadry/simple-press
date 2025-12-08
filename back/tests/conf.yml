@@ -13,5 +13,6 @@ groups:
       - block_edit.yaml
       - layout_add.yaml
       - layout_edit.yaml
+      - layout_list.yaml
       - template_add.yaml
       - template_edit.yaml

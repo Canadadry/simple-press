@@ -61,7 +61,9 @@ LIMIT
 
 -- name: GetLayoutList :many
 SELECT
-    *
+    id,
+    name,
+    substr(content,0,50) as `content`
 FROM
     layout
 ORDER BY
@@ -71,10 +73,13 @@ LIMIT
 OFFSET
     ?;
 
+
 -- name: GetAllLayout :many
 SELECT
-    *
+    id,
+    name
 FROM
     layout
 ORDER BY
-    id DESC;
+    id DESC
+;

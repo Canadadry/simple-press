@@ -16,6 +16,10 @@ func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("cannot select Layout : %w", err)
 	}
 	if !ok {
+		if IsJsonRequest(r) {
+			return httpresponse.NotFound(w)
+		}
+
 		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
 		return nil
 	}
@@ -40,6 +44,9 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot select layout : %w", err)
 	}
 	if !ok {
+		if IsJsonRequest(r) {
+			return httpresponse.NotFound(w)
+		}
 		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
 	}
 

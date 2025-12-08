@@ -31,15 +31,21 @@ func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error
 	layouts := []view.LayoutListData{}
 	for _, a := range list {
 		layouts = append(layouts, view.LayoutListData{
-			Name: a.Name,
+			ID:      a.ID,
+			Name:    a.Name,
+			Content: a.Content,
 		})
 	}
 
 	l := view.LayoutsListData{
-		Total:   count,
-		Limit:   limit,
-		Page:    page,
-		Layouts: layouts,
+		Total: count,
+		Limit: limit,
+		Page:  page,
+		Items: layouts,
+	}
+
+	if IsJsonRequest(r) {
+		return view.LayoutsListOk(w, l)
 	}
 
 	return c.render(w, r, view.LayoutsList(l))

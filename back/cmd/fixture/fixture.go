@@ -2,6 +2,7 @@ package fixture
 
 import (
 	"app/admin/form"
+	"app/admin/view"
 	"app/cmd/migration"
 	"app/config"
 	"app/fixtures"
@@ -25,7 +26,7 @@ const (
 
 var FixedNow = "2025-05-02T17:51:53+02:00"
 
-func readLayoutData(layoutFile string) ([]form.Layout, error) {
+func readLayoutData(layoutFile string) ([]form.LayoutEdit, error) {
 	f, err := data.Open(layoutFile)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read embed file %s : %w", layoutFile, err)
@@ -33,14 +34,14 @@ func readLayoutData(layoutFile string) ([]form.Layout, error) {
 	defer f.Close()
 	layoutReader := csv.NewReader(f)
 	layout, err := layoutReader.ReadAll()
-	layoutData := []form.Layout{}
+	layoutData := []form.LayoutEdit{}
 	for idx, l := range layout {
 		if idx == 0 {
 			continue
 		}
-		layoutData = append(layoutData, form.Layout{
-			Name: l[1],
-			// Content: l[2],
+		layoutData = append(layoutData, form.LayoutEdit{
+			Name:    l[1],
+			Content: l[2],
 		})
 	}
 	return layoutData, nil
@@ -67,7 +68,7 @@ func readTemplateData(templateFile string) ([]form.Template, error) {
 	return templateData, nil
 }
 
-func readArticleData(articleFile string) ([]form.Article, error) {
+func readArticleData(articleFile string) ([]view.ArticleEditData, error) {
 	f, err := data.Open(articleFile)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read embed file %s : %w", articleFile, err)
@@ -75,16 +76,16 @@ func readArticleData(articleFile string) ([]form.Article, error) {
 	defer f.Close()
 	articleReader := csv.NewReader(f)
 	article, err := articleReader.ReadAll()
-	articleData := []form.Article{}
+	articleData := []view.ArticleEditData{}
 	for idx, l := range article {
 		if idx == 0 {
 			continue
 		}
-		articleData = append(articleData, form.Article{
+		articleData = append(articleData, view.ArticleEditData{
 			Title: l[1],
 			// Date:   l[2],
-			Author: l[3],
-			// Content: l[4],
+			Author:  l[3],
+			Content: l[4],
 			// Slug:l[5],
 			// Draft: l[6],
 			// LayoutId: l[7],

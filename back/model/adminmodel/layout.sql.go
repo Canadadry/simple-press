@@ -88,23 +88,29 @@ func (q *Queries) DeleteLayout(ctx context.Context, name string) error {
 
 const getAllLayout = `-- name: GetAllLayout :many
 SELECT
-    id, name, content
+    id,
+    name
 FROM
     layout
 ORDER BY
     id DESC
 `
 
-func (q *Queries) GetAllLayout(ctx context.Context) ([]Layout, error) {
+type GetAllLayoutRow struct {
+	ID   int64
+	Name string
+}
+
+func (q *Queries) GetAllLayout(ctx context.Context) ([]GetAllLayoutRow, error) {
 	rows, err := q.db.QueryContext(ctx, getAllLayout)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Layout
+	var items []GetAllLayoutRow
 	for rows.Next() {
-		var i Layout
-		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
+		var i GetAllLayoutRow
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -120,7 +126,9 @@ func (q *Queries) GetAllLayout(ctx context.Context) ([]Layout, error) {
 
 const getLayoutList = `-- name: GetLayoutList :many
 SELECT
-    id, name, content
+    id,
+    name,
+    substr(content,0,50) as ` + "`" + `content` + "`" + `
 FROM
     layout
 ORDER BY
@@ -136,15 +144,21 @@ type GetLayoutListParams struct {
 	Offset int64
 }
 
-func (q *Queries) GetLayoutList(ctx context.Context, arg GetLayoutListParams) ([]Layout, error) {
+type GetLayoutListRow struct {
+	ID      int64
+	Name    string
+	Content string
+}
+
+func (q *Queries) GetLayoutList(ctx context.Context, arg GetLayoutListParams) ([]GetLayoutListRow, error) {
 	rows, err := q.db.QueryContext(ctx, getLayoutList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Layout
+	var items []GetLayoutListRow
 	for rows.Next() {
-		var i Layout
+		var i GetLayoutListRow
 		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
 			return nil, err
 		}

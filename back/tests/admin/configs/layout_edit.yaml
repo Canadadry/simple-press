@@ -3,6 +3,7 @@ unit_tests:
     - { url: "/admin/layouts/#layout_0_name#/edit", status: 200, out: "ok/layout_get" }
 
   POST:
+  - { url: "/admin/layouts/2/edit?id_should_not_be_found" , status: 404}
   - { url: "/admin/layouts/#layout_0_name#/edit", status: 200, in: "ok/layout_edit_update",        out: "ok/layout_edit_update" }
   - { url: "/admin/layouts/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_name",   out: "bad_request/layout_no_name" }
   - { url: "/admin/layouts/#layout_0_name#/edit", status: 400, in: "bad_request/layout_no_content", out: "bad_request/layout_no_content" }
@@ -11,7 +12,7 @@ files:
   responses/ok/layout_get.json: >
     {
       "name": "baseof.html",
-      "content": ""
+      "content": "@string@"
     }
 
   payloads/ok/layout_edit_update.json: >

@@ -1,0 +1,12 @@
+unit_tests:
+  GET:
+    - { url: "/admin/layouts"       , status: 200, out: "layout_list"}
+
+files:
+  responses/layout_list.json: >
+    {
+      "items":"layout_list_item",
+      "total":4,
+      "page":0,
+      "limit":10
+    }

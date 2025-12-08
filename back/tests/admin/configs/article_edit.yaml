@@ -19,7 +19,7 @@ files:
       "title":"index",
       "author":"metoo",
       "slug":"index",
-      "content":"",
+      "content":"@string@.isNotEmpty()",
       "draft":false,
       "layout_id":3,
       "layouts":[
@@ -46,7 +46,7 @@ files:
       "title":"Updated",
       "author":"Alice",
       "slug":"my-article",
-      "content":"",
+      "content":"@string@.isNotEmpty()",
       "draft":false,
       "layout_id":1,
       "layouts":[

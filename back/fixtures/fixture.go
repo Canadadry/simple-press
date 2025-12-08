@@ -2,6 +2,7 @@ package fixtures
 
 import (
 	"app/admin/form"
+	"app/admin/view"
 	"app/fixtures/api"
 	"app/pkg/clock"
 	"app/pkg/environment"
@@ -10,9 +11,9 @@ import (
 )
 
 type FixtureData struct {
-	Layouts   []form.Layout
+	Layouts   []form.LayoutEdit
 	Templates []form.Template
-	Articles  []form.Article
+	Articles  []view.ArticleEditData
 	Blocks    []form.Block
 }
 
@@ -26,6 +27,11 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 			return env, fmt.Errorf("cannot add layout %s : %w", l.Name, err)
 		}
 		env.Store(fmt.Sprintf("layout_%d_name", i), l.Name)
+		err = api.EditLayout(l.Name, l.Content)
+		if err != nil {
+			return env, fmt.Errorf("cannot edit layout %s : %w", l.Name, err)
+		}
+
 	}
 
 	for i, t := range fd.Templates {
@@ -41,6 +47,11 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 			return env, fmt.Errorf("cannot add article %s : %w", a.Title, err)
 		}
 		env.Store(fmt.Sprintf("article_%d_slug", i), slug)
+		err = api.EditArticleContent(slug, a.Content)
+		if err != nil {
+			return env, fmt.Errorf("cannot edit layout %s : %w", slug, err)
+		}
+
 	}
 	for i, b := range fd.Blocks {
 		name, err := api.AddBlock(b.Name)

@@ -97,7 +97,7 @@ SELECT
     title,
     date,
     author,
-    content,
+    substr(content,0,50) as ` + "`" + `content` + "`" + `,
     slug,
     draft
 FROM
