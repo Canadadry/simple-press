@@ -1,15 +1,17 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { PersonIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
   Box,
   DropdownMenu,
   IconButton,
-  Link,
   Separator,
+  Text,
+  Flex,
 } from "@radix-ui/themes";
-import { Text, Flex } from "@radix-ui/themes";
 import type { Article } from "../../../api/article";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface LineProps {
   tabIndex: number | undefined;
@@ -18,6 +20,7 @@ interface LineProps {
 }
 export default function Line(line: LineProps) {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
     <Box key={line.tabIndex}>
@@ -28,32 +31,42 @@ export default function Line(line: LineProps) {
       ) : (
         <></>
       )}
-      <Flex gap="4" align="center">
+      <Flex
+        gap="4"
+        align="center"
+        style={{
+          cursor: "pointer",
+          backgroundColor: isHovered ? "var(--accent-a2)" : "transparent",
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={(e) => {
+          e.preventDefault();
+          navigate(`/articles/${line.article.slug}/edit`, {
+            replace: true,
+          });
+        }}
+      >
         <Flex gap="3" align="center" width="200px">
           <Avatar
             src={line.article.image}
             fallback={line.article.title[0].toUpperCase()}
           />
-          <Link
-            href="#"
-            target="_blank"
-            tabIndex={line.tabIndex}
+          <Text
             size="2"
-            wrap="nowrap"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(`/articles/${line.article.slug}/edit`, {
-                replace: true,
-              });
+            weight={"bold"}
+            style={{
+              color: "var(--accent-11)",
             }}
           >
             {line.article.title}
-          </Link>
+          </Text>
         </Flex>
-
+        <PersonIcon></PersonIcon>
         <Text size="2" color="gray">
           {line.article.author}
         </Text>
+        <Text size="2">{line.article.content}...</Text>
 
         <Flex flexGrow="1" justify="end">
           <DropdownMenu.Root>

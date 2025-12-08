@@ -11,6 +11,7 @@ export interface Article {
   content?: string;
   draft?: boolean;
   layout?: number;
+  layout_id?: number;
   blocks?: Array<{ name: string; value: number }>;
 }
 
@@ -30,11 +31,11 @@ export async function getArticleEdit(slug: string) {
   return apiRequest<Article>(`${ARTICLE_BASE_URL}/${slug}/edit`, "GET");
 }
 
-export async function postArticleEditMetadata(slug: string, metadata: object) {
+export async function postArticleEditMetadata(slug: string, metadata: Article) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/${slug}/edit/metadata`,
     "POST",
-    metadata,
+    { ...metadata, layout: metadata.layout_id },
   );
 }
 
