@@ -66,7 +66,7 @@ export default function Line(line: LineProps) {
         <Text size="2" color="gray">
           {line.article.author}
         </Text>
-        <Text size="2">{line.article.content}...</Text>
+        <Text size="2">{line.article.content.slice(0, 50)}...</Text>
 
         <Flex flexGrow="1" justify="end">
           <DropdownMenu.Root>

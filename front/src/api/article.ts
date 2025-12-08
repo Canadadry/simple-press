@@ -8,8 +8,8 @@ export interface Article {
   author: string;
   image: string;
   slug: string;
-  content?: string;
-  draft?: boolean;
+  content: string;
+  draft: boolean;
   layout?: number;
   layout_id?: number;
   blocks?: Array<{ name: string; value: number }>;
