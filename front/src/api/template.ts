@@ -25,9 +25,13 @@ export async function getTemplateEdit(name: string) {
   return apiRequest<Template>(`${TEMPLATE_BASE_URL}/${name}/edit`, "GET");
 }
 
-export async function postTemplateEditBlockEdit(l: Template) {
-  return apiRequest<Template>(`${TEMPLATE_BASE_URL}/${l.name}/edit`, "POST", {
-    name: l.name,
-    content: l.content,
-  });
+export async function postTemplateEdit(previous_name: string, l: Template) {
+  return apiRequest<Template>(
+    `${TEMPLATE_BASE_URL}/${previous_name}/edit`,
+    "POST",
+    {
+      name: l.name,
+      content: l.content,
+    },
+  );
 }

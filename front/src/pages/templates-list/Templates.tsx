@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
-// import * as Accordion from "@radix-ui/react-accordion";
 import { getTemplateList, type Template } from "../../api/template";
 import Line from "./components/Line";
 
-export default function Layouts() {
+export default function Templates() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +39,7 @@ export default function Layouts() {
               <Line
                 key={idx}
                 tabIndex={idx}
-                layout={val}
+                template={val}
                 portalContainer={null}
               ></Line>
             );

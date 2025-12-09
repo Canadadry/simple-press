@@ -7,13 +7,13 @@ import {
   Text,
   Flex,
 } from "@radix-ui/themes";
-import type { Layout } from "../../../api/layout";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import type { Template } from "../../../api/template";
 
 interface LineProps {
   tabIndex: number | undefined;
-  layout: Layout;
+  template: Template;
   portalContainer: Element | DocumentFragment | null | undefined;
 }
 export default function Line(line: LineProps) {
@@ -40,7 +40,7 @@ export default function Line(line: LineProps) {
         onMouseLeave={() => setIsHovered(false)}
         onClick={(e) => {
           e.preventDefault();
-          navigate(`/layouts/${line.layout.id}/edit`, {
+          navigate(`/templates/${line.template.name}/edit`, {
             replace: true,
           });
         }}
@@ -53,10 +53,10 @@ export default function Line(line: LineProps) {
               color: "var(--accent-11)",
             }}
           >
-            {line.layout.name}
+            {line.template.name}
           </Text>
         </Flex>
-        <Text size="2">{line.layout.content.slice(0, 50)}...</Text>
+        <Text size="2">{line.template.content.slice(0, 50)}...</Text>
 
         <Flex flexGrow="1" justify="end">
           <DropdownMenu.Root>
