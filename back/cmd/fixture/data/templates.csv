@@ -1,16 +1,90 @@
 id,name,content
-1,single.html,"{{define ""body""}}
-
-<h1>Single {{.Title}}</h1>
-
-{{ markdownify .Content }}
-
+1,baseof.html,"<!DOCTYPE html>
+<html>
+    {{template ""head"" .}}
+    <body>
+        <div class=""content-wrapper"" >
+            {{template ""header"" .}}
+            <main id=""content"" role=""main"" class=""container"">
+                {{template ""body"" .}}
+            </main>
+        </div>
+        {{template ""script"" .}}
+    </body>
+</html>
+"
+2,head.html,"{{define ""head""}}
+<head>
+    <meta charset=""utf-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <meta name=""robots"" content=""noindex"" />
+    <title>Titre</title>
+    <base href=""/"">
+    <link rel=""shortcut icon"" href=""/public/img/favicon.png"">
+    <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"" rel=""stylesheet"" integrity=""sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"" crossorigin=""anonymous"">
+</head>
 {{end}}
 "
-2,list.html,"{{define ""body""}}
+3,script.html,"{{define ""script""}}
+<script src=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"" integrity=""sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"" crossorigin=""anonymous""></script>
+{{end}}"
+4,header.html,"{{define ""header""}}
 
-<h1>List {{.Title}}</h1>
+<div class=""dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle"">
+      <button class=""btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"" id=""bd-theme"" type=""button"" aria-expanded=""false"" data-bs-toggle=""dropdown"" aria-label=""Toggle theme (light)"">
+  <svg class=""bi my-1 theme-icon-active"" aria-hidden=""true""><use href=""#sun-fill""></use></svg>
+  <span class=""visually-hidden"" id=""bd-theme-text"">Toggle theme</span>
+</button>
+<ul class=""dropdown-menu dropdown-menu-end shadow"" aria-labelledby=""bd-theme-text"">
+  <li>
+    <button type=""button"" class=""dropdown-item d-flex align-items-center active"" data-bs-theme-value=""light"" aria-pressed=""true"">
+      <svg class=""bi me-2 opacity-50"" aria-hidden=""true""><use href=""#sun-fill""></use></svg>
+      Light
+      <svg class=""bi ms-auto d-none"" aria-hidden=""true""><use href=""#check2""></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type=""button"" class=""dropdown-item d-flex align-items-center"" data-bs-theme-value=""dark"" aria-pressed=""false"">
+      <svg class=""bi me-2 opacity-50"" aria-hidden=""true""><use href=""#moon-stars-fill""></use></svg>
+      Dark
+      <svg class=""bi ms-auto d-none"" aria-hidden=""true""><use href=""#check2""></use></svg>
+    </button>
+  </li>
+  <li>
+    <button type=""button"" class=""dropdown-item d-flex align-items-center"" data-bs-theme-value=""auto"" aria-pressed=""false"">
+      <svg class=""bi me-2 opacity-50"" aria-hidden=""true""><use href=""#circle-half""></use></svg>
+      Auto
+      <svg class=""bi ms-auto d-none"" aria-hidden=""true""><use href=""#check2""></use></svg>
+    </button>
+  </li>
+</ul>
 
-{{ markdownify .Content }}
+    </div>
+
+<nav class=""navbar navbar-expand-md navbar-dark bg-dark mb-4"">
+  <div class=""container-fluid"">
+    <a class=""navbar-brand"" href=""#"">Top navbar</a>
+    <button class=""navbar-toggler"" type=""button"" data-bs-toggle=""collapse"" data-bs-target=""#navbarCollapse"" aria-controls=""navbarCollapse"" aria-expanded=""false"" aria-label=""Toggle navigation"">
+      <span class=""navbar-toggler-icon""></span>
+    </button>
+    <div class=""collapse navbar-collapse"" id=""navbarCollapse"">
+      <ul class=""navbar-nav me-auto mb-2 mb-md-0"">
+        <li class=""nav-item"">
+          <a class=""nav-link active"" aria-current=""page"" href=""#"">Home</a>
+        </li>
+        <li class=""nav-item"">
+          <a class=""nav-link"" href=""#"">Link</a>
+        </li>
+        <li class=""nav-item"">
+          <a class=""nav-link disabled"" aria-disabled=""true"">Disabled</a>
+        </li>
+      </ul>
+      <form class=""d-flex"" role=""search"">
+        <input class=""form-control me-2"" type=""search"" placeholder=""Search"" aria-label=""Search"">
+        <button class=""btn btn-outline-success"" type=""submit"">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
 
 {{end}}"

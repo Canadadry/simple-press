@@ -10,7 +10,7 @@ unit_tests:
 files:
   responses/ok/template_get.json: >
     {
-      "name": "single.html",
+      "name": "baseof.html",
       "content": "@string@.isNotEmpty()"
     }
 

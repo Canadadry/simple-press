@@ -6,7 +6,7 @@ files:
   responses/layout_list.json: >
     {
       "items":"layout_list_item",
-      "total":4,
+      "total":2,
       "page":0,
       "limit":10
     }

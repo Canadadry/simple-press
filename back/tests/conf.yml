@@ -9,6 +9,7 @@ groups:
       - article_add.yaml
       - article_edit.yaml
       - article_list.yaml
+      - article_preview.yaml
       - block_add.yaml
       - block_edit.yaml
       - layout_add.yaml

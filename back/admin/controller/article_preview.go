@@ -33,6 +33,11 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot found layout %d : %w", a.LayoutID, err)
 	}
 	files[layout.Name] = layout.Content
+	keys := []string{}
+	for name := range files {
+		keys = append(keys, name)
+	}
+	fmt.Println("files", keys)
 
 	blocks, err := c.Repository.SelectAllBlock(r.Context())
 	if err != nil {
@@ -45,7 +50,7 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 
 	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), a.ID)
 	if err != nil {
-		return fmt.Errorf("cannot select block dataarticle : %w", err)
+		return fmt.Errorf("cannot select block data article : %w", err)
 	}
 
 	blockDataView := map[string]map[string]any{}
@@ -53,11 +58,15 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		blockDataView[p.BlockName] = p.Data
 	}
 
-	return page.Render(w, page.Data{
+	err = page.Render(w, page.Data{
 		Title:         a.Title,
 		Content:       a.Content,
 		Files:         files,
 		Blocks:        blockSelector,
 		ArticleBlocks: blockDataView,
 	})
+	if err != nil {
+		return fmt.Errorf("cannot render article : %w", err)
+	}
+	return nil
 }

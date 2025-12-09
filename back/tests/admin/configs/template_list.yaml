@@ -6,7 +6,7 @@ files:
   responses/template_list.json: >
     {
       "items":"template_list_item",
-      "total":2,
+      "total":4,
       "page":0,
       "limit":10
     }

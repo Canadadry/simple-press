@@ -11,19 +11,19 @@ unit_tests:
 files:
   responses/ok/layout_get.json: >
     {
-      "name": "baseof.html",
+      "name": "single.html",
       "content": "@string@"
     }
 
   payloads/ok/layout_edit_update.json: >
     {
-      "name": "baseof.html",
+      "name": "single.html",
       "content": "<html>Updated</html>"
     }
 
   responses/ok/layout_edit_update.json: >
     {
-      "name": "baseof.html",
+      "name": "single.html",
       "content": "<html>Updated</html>"
     }
 
@@ -40,7 +40,7 @@ files:
 
   payloads/bad_request/layout_no_content.json: >
     {
-      "name": "baseof.html"
+      "name": "single.html"
     }
 
   responses/bad_request/layout_no_content.json: >
