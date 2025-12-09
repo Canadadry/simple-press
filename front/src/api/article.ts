@@ -23,8 +23,8 @@ export async function getArticleList() {
   return apiRequest<List<Article>>(`${ARTICLE_BASE_URL}`, "GET");
 }
 
-export async function postArticleAdd(articleData: Article) {
-  return apiRequest<Article>(`${ARTICLE_BASE_URL}/add`, "POST", articleData);
+export async function postArticleAdd(data: Article) {
+  return apiRequest<Article>(`${ARTICLE_BASE_URL}/add`, "POST", data);
 }
 
 export async function getArticleEdit(slug: string) {

@@ -17,8 +17,8 @@ export async function getLayoutList() {
   return apiRequest<List<Layout>>(`${LAYOUT_BASE_URL}`, "GET");
 }
 
-export async function postLayoutAdd(articleData: Layout) {
-  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/add`, "POST", articleData);
+export async function postLayoutAdd(data: Layout) {
+  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/add`, "POST", data);
 }
 
 export async function getLayoutEdit(name: string) {
