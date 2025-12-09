@@ -25,8 +25,8 @@ export async function getLayoutEdit(name: string) {
   return apiRequest<Layout>(`${LAYOUT_BASE_URL}/${name}/edit`, "GET");
 }
 
-export async function postLayoutEditBlockEdit(l: Layout) {
-  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/${l.name}/edit`, "POST", {
+export async function postLayoutEdit(name: string, l: Layout) {
+  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/${name}/edit`, "POST", {
     name: l.name,
     content: l.content,
   });

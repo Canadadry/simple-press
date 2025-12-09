@@ -40,7 +40,7 @@ export default function Line(line: LineProps) {
         onMouseLeave={() => setIsHovered(false)}
         onClick={(e) => {
           e.preventDefault();
-          navigate(`/layouts/${line.layout.id}/edit`, {
+          navigate(`/layouts/${line.layout.name}/edit`, {
             replace: true,
           });
         }}
