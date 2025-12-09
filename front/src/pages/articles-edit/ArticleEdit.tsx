@@ -1,4 +1,4 @@
-import { Box, IconButton, Button, TextArea } from "@radix-ui/themes";
+import { Box, IconButton, Button, TextArea, Link } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
 import {
   CrumpledPaperIcon,
@@ -6,6 +6,7 @@ import {
   FontItalicIcon,
   ImageIcon,
   MagicWandIcon,
+  EyeOpenIcon,
   StrikethroughIcon,
   TextAlignCenterIcon,
   TextAlignLeftIcon,
@@ -21,7 +22,7 @@ import {
   postArticleEditContent,
 } from "../../api/article";
 import type { Article } from "../../api/article";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 interface Saving {
@@ -30,6 +31,7 @@ interface Saving {
 }
 
 export default function Articles() {
+  const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const [article, setArticle] = useState<Article | null>(null);
   const [saving, setSaving] = useState<Saving>({
@@ -61,6 +63,16 @@ export default function Articles() {
     <Flex direction="column" gap="4">
       <Text size="7" weight="bold">
         {article.title}
+        <Link
+          href="#"
+          mx={"2"}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(`/articles/${slug}/preview`, { replace: true });
+          }}
+        >
+          <EyeOpenIcon color={"#000"} width={20} height={20}></EyeOpenIcon>
+        </Link>
       </Text>
       <Card>
         <Flex direction="column">

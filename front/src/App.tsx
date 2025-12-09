@@ -5,6 +5,7 @@ import ArticleEdit from "./pages/articles-edit/ArticleEdit";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layouts from "./pages/layouts-list/Layouts";
 import Templates from "./pages/templates-list/Templates";
+import ArticlePreview from "./pages/articles-preview/ArticlePreview";
 
 interface AppProps {
   toggleTheme: () => void;
@@ -21,6 +22,7 @@ export default function App({ toggleTheme }: AppProps) {
           <Route path="/layouts" element={<Layouts />} />
           <Route path="/templates" element={<Templates />} />
           <Route path="/articles/:slug/edit" element={<ArticleEdit />} />
+          <Route path="/articles/:slug/preview" element={<ArticlePreview />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
