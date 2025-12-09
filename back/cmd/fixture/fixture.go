@@ -47,7 +47,7 @@ func readLayoutData(layoutFile string) ([]form.LayoutEdit, error) {
 	return layoutData, nil
 }
 
-func readTemplateData(templateFile string) ([]form.Template, error) {
+func readTemplateData(templateFile string) ([]view.TemplateEditData, error) {
 	f, err := data.Open(templateFile)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read embed file %s : %w", templateFile, err)
@@ -55,14 +55,14 @@ func readTemplateData(templateFile string) ([]form.Template, error) {
 	defer f.Close()
 	templateReader := csv.NewReader(f)
 	template, err := templateReader.ReadAll()
-	templateData := []form.Template{}
+	templateData := []view.TemplateEditData{}
 	for idx, l := range template {
 		if idx == 0 {
 			continue
 		}
-		templateData = append(templateData, form.Template{
-			Name: l[1],
-			// Content: l[2],
+		templateData = append(templateData, view.TemplateEditData{
+			Name:    l[1],
+			Content: l[2],
 		})
 	}
 	return templateData, nil

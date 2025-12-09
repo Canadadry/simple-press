@@ -72,7 +72,8 @@ func (q *Queries) DeleteTemplate(ctx context.Context, name string) error {
 
 const getTemplateList = `-- name: GetTemplateList :many
 SELECT
-    name
+    name,
+    substr(content,0,50) as ` + "`" + `content` + "`" + `
 FROM
     template
 ORDER BY
@@ -88,19 +89,24 @@ type GetTemplateListParams struct {
 	Offset int64
 }
 
-func (q *Queries) GetTemplateList(ctx context.Context, arg GetTemplateListParams) ([]string, error) {
+type GetTemplateListRow struct {
+	Name    string
+	Content string
+}
+
+func (q *Queries) GetTemplateList(ctx context.Context, arg GetTemplateListParams) ([]GetTemplateListRow, error) {
 	rows, err := q.db.QueryContext(ctx, getTemplateList, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	var items []GetTemplateListRow
 	for rows.Next() {
-		var name string
-		if err := rows.Scan(&name); err != nil {
+		var i GetTemplateListRow
+		if err := rows.Scan(&i.Name, &i.Content); err != nil {
 			return nil, err
 		}
-		items = append(items, name)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

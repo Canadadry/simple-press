@@ -11,7 +11,7 @@ files:
   responses/ok/template_get.json: >
     {
       "name": "baseof.html",
-      "content": ""
+      "content": "@string@.isNotEmpty()"
     }
 
   payloads/ok/template_edit_update.json: >

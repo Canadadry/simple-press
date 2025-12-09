@@ -53,9 +53,10 @@ func (r *Repository) GetTemplateList(ctx context.Context, limit, offset int) ([]
 	if err != nil {
 		return nil, stacktrace.From(err)
 	}
-	return sqlutil.Map(list, func(name string) Template {
+	return sqlutil.Map(list, func(t adminmodel.GetTemplateListRow) Template {
 		return Template{
-			Name: name,
+			Name:    t.Name,
+			Content: t.Content,
 		}
 	}), nil
 }

@@ -12,7 +12,7 @@ import (
 
 type FixtureData struct {
 	Layouts   []form.LayoutEdit
-	Templates []form.Template
+	Templates []view.TemplateEditData
 	Articles  []view.ArticleEditData
 	Blocks    []form.Block
 }
@@ -40,6 +40,11 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 			return env, fmt.Errorf("cannot add template %s : %w", t.Name, err)
 		}
 		env.Store(fmt.Sprintf("template_%d_name", i), t.Name)
+		err = api.EditTemplate(t.Name, t.Content)
+		if err != nil {
+			return env, fmt.Errorf("cannot edit template %s : %w", t.Name, err)
+		}
+
 	}
 	for i, a := range fd.Articles {
 		slug, err := api.AddArticle(a.Title, a.Author)

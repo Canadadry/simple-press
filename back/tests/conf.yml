@@ -16,3 +16,4 @@ groups:
       - layout_list.yaml
       - template_add.yaml
       - template_edit.yaml
+      - template_list.yaml

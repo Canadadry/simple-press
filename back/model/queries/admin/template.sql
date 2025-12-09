@@ -49,7 +49,8 @@ FROM
 
 -- name: GetTemplateList :many
 SELECT
-    name
+    name,
+    substr(content,0,50) as `content`
 FROM
     template
 ORDER BY

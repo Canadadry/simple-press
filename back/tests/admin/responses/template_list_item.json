@@ -1,0 +1,5 @@
+{
+  "id": "@number@",
+  "name": "@string@.isNotEmpty()",
+  "content": "@string@.isNotEmpty()"
+}

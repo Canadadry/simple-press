@@ -29,17 +29,21 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 	}
 
 	templates := []view.TemplateListData{}
-	for _, a := range list {
+	for _, t := range list {
 		templates = append(templates, view.TemplateListData{
-			Name: a.Name,
+			Name:    t.Name,
+			Content: t.Content,
 		})
 	}
 
 	l := view.TemplatesListData{
-		Total:     count,
-		Limit:     limit,
-		Page:      page,
-		Templates: templates,
+		Total: count,
+		Limit: limit,
+		Page:  page,
+		Items: templates,
+	}
+	if IsJsonRequest(r) {
+		return view.TemplatesListOk(w, l)
 	}
 
 	return c.render(w, r, view.TemplatesList(l))

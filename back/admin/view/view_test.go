@@ -37,7 +37,7 @@ func TestView(t *testing.T) {
 		}, ArticleEditError{}),
 		"article_edit with error": ArticleEdit(ArticleEditData{}, ArticleEditError{"test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"}),
 		"template_list": TemplatesList(TemplatesListData{
-			Templates: []TemplateListData{TemplateListData{}},
+			Items: []TemplateListData{TemplateListData{}},
 		}),
 		"template_add":             TemplateAdd(TemplateAddData{}, TemplateAddError{}),
 		"template_add with error":  TemplateAdd(TemplateAddData{}, TemplateAddError{"test1"}),

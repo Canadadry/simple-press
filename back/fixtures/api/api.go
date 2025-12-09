@@ -114,6 +114,26 @@ func (c *Client) AddTemplate(name string) (int64, error) {
 	return template.ID, nil
 }
 
+func (c *Client) EditTemplate(name, content string) error {
+	template := view.TemplateEditData{}
+	errs := map[string]any{}
+	rsp := map[int]any{
+		http.StatusOK:         &template,
+		http.StatusBadRequest: &errs,
+	}
+	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/templates/%s/edit", name), view.TemplateEditData{
+		Name:    name,
+		Content: content,
+	}, rsp)
+	if err != nil {
+		return fmt.Errorf("cannot edit template : %w", err)
+	}
+	if st != http.StatusOK {
+		return fmt.Errorf("cannot edit template invalid status code %d\n%v", st, errs)
+	}
+	return nil
+}
+
 func (c *Client) AddBlock(name string) (string, error) {
 	block := view.BlockAddData{}
 	errs := map[string]any{}
