@@ -8,6 +8,7 @@ import Templates from "./pages/templates-list/Templates";
 import ArticlePreview from "./pages/articles-preview/ArticlePreview";
 import TemplateEdit from "./pages/templates-edit/TemplateEdit";
 import LayoutEdit from "./pages/layout-edit/LayoutEdit";
+import Files from "./pages/files-list/FIles";
 
 interface AppProps {
   toggleTheme: () => void;
@@ -23,6 +24,7 @@ export default function App({ toggleTheme }: AppProps) {
           <Route path="/articles" element={<Articles />} />
           <Route path="/layouts" element={<Layouts />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/files" element={<Files />} />
           <Route path="/layouts/:slug/edit" element={<LayoutEdit />} />
           <Route path="/templates/:slug/edit" element={<TemplateEdit />} />
           <Route path="/articles/:slug/edit" element={<ArticleEdit />} />
