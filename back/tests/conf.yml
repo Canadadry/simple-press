@@ -12,6 +12,7 @@ groups:
       - article_preview.yaml
       - block_add.yaml
       - block_edit.yaml
+      - file_add.yaml
       - layout_add.yaml
       - layout_edit.yaml
       - layout_list.yaml

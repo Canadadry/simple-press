@@ -8,6 +8,7 @@ import (
 	"app/pkg/i18n"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type Controller struct {
@@ -43,5 +44,9 @@ func (c *Controller) redirect(w http.ResponseWriter, r *http.Request, url string
 }
 
 func IsJsonRequest(r *http.Request) bool {
-	return r.Header.Get("Content-Type") == "application/json"
+	json := "application/json"
+	ct := "Content-Type"
+	accept := "Accept"
+	return r.Header.Get(ct) == json ||
+		strings.Contains(r.Header.Get(accept), json)
 }

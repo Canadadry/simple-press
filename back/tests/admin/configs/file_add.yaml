@@ -1,0 +1,77 @@
+unit_tests:
+  PATCH:
+    - { url: "/admin/files/add", status: 405 }
+  PUT:
+    - { url: "/admin/files/add", status: 405 }
+  DELETE:
+    - { url: "/admin/files/add", status: 405 }
+
+  POST:
+    - { url: "/admin/files/add", status: 400, in: "file_add_wrong_ct_in", out: "file_add_wrong_ct_in" }
+    - { url: "/admin/files/add", status: 400, in: "file_add_invald_request", out: "file_add_invald_request", ct_in: 'multipart/form-data; boundary=WebAppBoundary', headers: "Accept: application/json"}
+    - { url: "/admin/files/add", status: 400, in: "file_add_wrong_name", out: "file_add_wrong_name", ct_in: 'multipart/form-data; boundary=WebAppBoundary' , headers: "Accept: application/json"}
+    - { url: "/admin/files/add", status: 201, in: "file_add", out: "file_add" , ct_in: 'multipart/form-data; boundary=WebAppBoundary' , headers: "Accept: application/json"}
+
+files:
+  payloads/file_add_wrong_ct_in.json: >
+    {
+      "name": "favicon.svg"
+    }
+
+  responses/file_add_wrong_ct_in.json: >
+    {
+      "content":[],
+      "name":[],
+      "request":[
+        "content type should be a multipart/form-data"
+      ]
+    }
+
+
+  payloads/file_add_invald_request: >
+    {
+      "name": "favicon.svg"
+    }
+
+  responses/file_add_invald_request.json: >
+    {
+      "content":[],
+      "name":[],
+      "request":[
+        "cannot parse multipart/form-data"
+      ]
+    }
+
+
+  payloads/file_add_wrong_name: |
+    --WebAppBoundary
+    Content-Disposition: form-data; name="file-1"
+    Content-Type: image/svg
+
+    <svg width="300" height="130" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="100" x="10" y="10" rx="20" ry="20" fill="blue" />
+    </svg>
+
+    --WebAppBoundary
+
+  responses/file_add_wrong_name.json: >
+    {
+      "content":["file not found"],
+      "name":[],
+      "request":[]
+    }
+
+  payloads/file_add: |
+    --WebAppBoundary
+    Content-Disposition: form-data; name="content"; filename="logo.png"
+    Content-Type: image/svg
+
+    <svg width="300" height="130" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="100" x="10" y="10" rx="20" ry="20" fill="blue" />
+    </svg>
+    --WebAppBoundary
+
+  responses/file_add.json: >
+    {
+      "name": ["this value should not be blank"]
+    }

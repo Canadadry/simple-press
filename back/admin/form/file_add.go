@@ -2,13 +2,19 @@ package form
 
 import (
 	"app/pkg/validator"
-	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 const (
-	FileAddContent = "content"
+	FileAddContent          = "content"
+	RequestWrongContentType = "content type should be a multipart/form-data"
+	RequestInvalidContent   = "cannot parse multipart/form-data"
+	FileNotFound            = "file not found"
+	NoFileName              = "file has no name"
+	CannotReadContent       = "cannot read content"
+	MaxRequestSize          = 10 << 20
 )
 
 type File struct {
@@ -17,41 +23,88 @@ type File struct {
 }
 
 type FileError struct {
+	Request string
+	Name    string
 	Content string
 	Raw     validator.Errors
 }
 
 func (le FileError) HasError() bool {
+	if le.Request != "" {
+		return true
+	}
+	if le.Name != "" {
+		return true
+	}
 	if le.Content != "" {
 		return true
 	}
 	return false
 }
 
+func invalidRequest(msg string) FileError {
+	return FileError{
+		Request: msg,
+		Raw: validator.Errors{
+			Errors: map[string][]string{
+				"name":    []string{},
+				"content": []string{},
+				"request": []string{
+					msg,
+				},
+			},
+		},
+	}
+}
+
+func invalidName(msg string) FileError {
+	return FileError{
+		Name: msg,
+		Raw: validator.Errors{
+			Errors: map[string][]string{
+				"name":    []string{msg},
+				"content": []string{},
+				"request": []string{},
+			},
+		},
+	}
+}
+
+func invalidContent(msg string) FileError {
+	return FileError{
+		Content: msg,
+		Raw: validator.Errors{
+			Errors: map[string][]string{
+				"name":    []string{},
+				"content": []string{msg},
+				"request": []string{},
+			},
+		},
+	}
+}
+
 func ParseFileAdd(r *http.Request) (File, FileError, error) {
-	err := r.ParseMultipartForm(10 << 20) // 10 MB max
+	if !strings.Contains(r.Header.Get("Content-Type"), "multipart/form-data; boundary=") {
+		return File{}, invalidRequest(RequestWrongContentType), nil
+	}
+	err := r.ParseMultipartForm(MaxRequestSize)
 	if err != nil {
-		return File{}, FileError{}, fmt.Errorf("cannot parse multipart form: %w", err)
+		return File{}, invalidRequest(RequestInvalidContent), nil
 	}
 
-	errors := FileError{}
-
-	// Récupération du fichier
 	file, header, err := r.FormFile(FileAddContent)
 	if err != nil {
-		errors.Content = errorCannotBeEmpty
-	} else {
-		defer file.Close()
-		content, err := io.ReadAll(file)
-		if err != nil {
-			return File{}, FileError{}, fmt.Errorf("cannot read file content: %w", err)
-		}
-
-		return File{
-			Name:    header.Filename,
-			Content: content,
-		}, errors, nil
+		return File{}, invalidContent(FileNotFound), nil
+	}
+	defer file.Close()
+	content, err := io.ReadAll(file)
+	if err != nil {
+		return File{}, invalidContent(CannotReadContent), nil
 	}
 
-	return File{}, errors, nil
+	return File{
+		Name:    header.Filename,
+		Content: content,
+	}, FileError{}, nil
+
 }

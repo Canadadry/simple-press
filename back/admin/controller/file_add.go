@@ -19,6 +19,7 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
+	fmt.Println("PostFileAdd", errors, err)
 
 	if errors.HasError() {
 		if IsJsonRequest(r) {
@@ -30,9 +31,13 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 		))
 	}
 
-	err = c.Repository.UploadFile(r.Context(), repository.File{Name: l.Name, Content: l.Content})
+	id, err := c.Repository.UploadFile(r.Context(), repository.File{Name: l.Name, Content: l.Content})
 	if err != nil {
 		return fmt.Errorf("cannot create File : %w", err)
+	}
+
+	if IsJsonRequest(r) {
+		return view.FileAddCreated(w, view.FileAddData{ID: id, Name: l.Name})
 	}
 
 	http.Redirect(w, r, "/admin/files", http.StatusSeeOther)

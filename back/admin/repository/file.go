@@ -22,15 +22,15 @@ func (r *Repository) CountFileByName(ctx context.Context, name string) (int, err
 	return int(c), err
 }
 
-func (r *Repository) UploadFile(ctx context.Context, f File) error {
-	_, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
+func (r *Repository) UploadFile(ctx context.Context, f File) (int64, error) {
+	id, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
 		Name:    slugify(f.Name),
 		Content: f.Content,
 	})
 	if err != nil {
-		return stacktrace.From(err)
+		return 0, stacktrace.From(err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *Repository) DeleteFile(ctx context.Context, name string) error {
