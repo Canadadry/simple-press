@@ -21,6 +21,7 @@ const (
 	JwtRegexp        = "([a-zA-Z0-9_=]+\\.[a-zA-Z0-9_=]+\\.[a-zA-Z0-9_\\-\\+\\/=]*)"
 	Base64Regexp     = "((?:[A-Za-z\\d+/]{4})*(?:[A-Za-z\\d+/]{3}=|[A-Za-z\\d+/]{2}==)?)"
 	PathRegexp       = "([a-z0-9.-_]+(\\/[a-z0-9.-_]+)*)"
+	AnyRegexp        = "(.*)"
 )
 
 type HandlerFunc func(w http.ResponseWriter, r *http.Request) error
@@ -50,6 +51,7 @@ func newRoute(method, pattern string, handler HandlerFunc) Route {
 		":jwt":      JwtRegexp,
 		":b64":      Base64Regexp,
 		":path":     PathRegexp,
+		":any":      AnyRegexp,
 	}
 	for k, v := range tags {
 		pattern = strings.ReplaceAll(pattern, k, v)
@@ -137,8 +139,6 @@ func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHand
 			r.Header.Get("User-Agent"),
 		)
 		errorHandler(http.StatusMethodNotAllowed, err, w, r)
-		return
-
 	}
 }
 

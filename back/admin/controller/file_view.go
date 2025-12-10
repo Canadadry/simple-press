@@ -4,7 +4,9 @@ import (
 	"app/admin/view"
 	"app/pkg/http/httpresponse"
 	"app/pkg/router"
+	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -15,8 +17,11 @@ func (c *Controller) GetFile(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("cannot select file : %w", err)
 	}
 	if !ok {
-		return c.render(w, r, view.PageNotFound)
+		if IsJsonRequest(r) {
+			return httpresponse.NotFound(w)
+		}
+		return c.renderWithStatus(w, r, http.StatusNotFound, view.PageNotFound)
 	}
 
-	return httpresponse.Bytes(w, f.Content)
+	return httpresponse.File(w, io.NopCloser(bytes.NewReader(f.Content)))
 }

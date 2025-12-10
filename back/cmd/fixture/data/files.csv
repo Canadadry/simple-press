@@ -1,4 +1,4 @@
 id,name,content,format
 1,pixel.png,"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5/hPwAIAgL/4d1j8wAAAABJRU5ErkJggg==",std
-2,logo.svg,"data/assets/logo.svg",embed
-3,index.html,"<body>index.html</body>",plain
+2,favicon.png,"data/assets/favicon.png",embed
+3,data.json,"{""test"":12}",plain
