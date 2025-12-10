@@ -154,6 +154,18 @@ func TestResponse(t *testing.T) {
 				expectedBodylength:   len(smallPdfContent),
 			},
 		},
+
+		"TestFile_RealJson_LessThan512": {
+			fn: func(w http.ResponseWriter) {
+				File(w, ioutil.NopCloser(strings.NewReader(smallJsonContent)))
+			},
+			option: testOption{
+				expectedStatusCode:   200,
+				expectedContentType:  "application/json",
+				expectedResponseBody: smallJsonContent,
+				expectedBodylength:   len(smallJsonContent),
+			},
+		},
 	}
 
 	for name, tt := range tests {
@@ -165,6 +177,8 @@ func TestResponse(t *testing.T) {
 		})
 	}
 }
+
+const smallJsonContent = `{"test":12}`
 
 const (
 	smallPdfContent = `%PDF-1.2

@@ -1,6 +1,6 @@
 unit_tests:
   GET:
-    - { url: "/data.json", status: 200, out: "file_get" }
+    - { url: "/data.json", status: 200, out: "file_get"}
     - { url: "/not_existing", status: 404 }
 
 files:

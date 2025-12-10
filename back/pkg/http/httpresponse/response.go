@@ -1,6 +1,7 @@
 package httpresponse
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -129,7 +130,14 @@ func File(w http.ResponseWriter, f io.ReadCloser) error {
 	if err != nil {
 		return err
 	}
-	w.Header().Set("Content-Type", http.DetectContentType(filestart))
+	ct := http.DetectContentType(filestart)
+	if ct == "application/octet-stream" {
+		if bytes.Contains(filestart, []byte{'{'}) ||
+			bytes.Contains(filestart, []byte{'['}) {
+			ct = "application/json"
+		}
+	}
+	w.Header().Set("Content-Type", ct)
 	w.WriteHeader(http.StatusOK)
 	w.Write(filestart[:n])
 	_, err = io.Copy(w, f)
