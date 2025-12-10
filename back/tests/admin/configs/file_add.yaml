@@ -63,7 +63,7 @@ files:
 
   payloads/file_add: |
     --WebAppBoundary
-    Content-Disposition: form-data; name="content"; filename="logo.png"
+    Content-Disposition: form-data; name="content"; filename="rect.svg"
     Content-Type: image/svg
 
     <svg width="300" height="130" xmlns="http://www.w3.org/2000/svg">
@@ -73,5 +73,6 @@ files:
 
   responses/file_add.json: >
     {
-      "name": ["this value should not be blank"]
+      "id":4,
+      "name":"rect.svg"
     }

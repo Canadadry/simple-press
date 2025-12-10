@@ -5,6 +5,7 @@ import (
 	"app/pkg/http/httpcaller"
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -151,4 +152,31 @@ func (c *Client) AddBlock(name string) (string, error) {
 		return "", fmt.Errorf("cannot add block invalid status code %d\n%v", st, errs)
 	}
 	return block.Name, nil
+}
+
+func (c *Client) AddFile(filename string, file io.ReadCloser) (int64, error) {
+	defer file.Close()
+	fileData := view.FileAddData{}
+	errs := map[string]any{}
+	rsp := map[int]any{
+		http.StatusCreated:    &fileData,
+		http.StatusBadRequest: &errs,
+	}
+	r, ct, err := httpcaller.CreateMultiPartForm(map[string][]httpcaller.FormValue{
+		"content": []httpcaller.FormValue{
+			{Filename: filename, File: file},
+		},
+	})
+	if err != nil {
+		return 0, fmt.Errorf("cannot create multipart request  : %w", err)
+	}
+	client := c.client.WithHeader("Content-Type", ct).WithHeader("Accept", "application/json")
+	st, err := client.Post(c.ctx, "/admin/files/add", r, rsp)
+	if err != nil {
+		return 0, fmt.Errorf("cannot add files : %w", err)
+	}
+	if st != http.StatusCreated {
+		return 0, fmt.Errorf("cannot add files invalid status code  %d\n%v", st, errs)
+	}
+	return fileData.ID, nil
 }

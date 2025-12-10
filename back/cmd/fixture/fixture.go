@@ -9,11 +9,14 @@ import (
 	"app/pkg/clock"
 	"app/pkg/http/httpcaller"
 	"embed"
+	"encoding/base64"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -115,6 +118,46 @@ func readBlockData(blockFile string) ([]form.Block, error) {
 	return blockData, nil
 }
 
+func readFileData(fileFile string) ([]fixtures.File, error) {
+	f, err := data.Open(fileFile)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read embed file %s : %w", fileFile, err)
+	}
+	defer f.Close()
+	fileReader := csv.NewReader(f)
+	file, err := fileReader.ReadAll()
+	fileData := []fixtures.File{}
+	for idx, l := range file {
+		if idx == 0 {
+			continue
+		}
+		var r io.ReadCloser
+		switch l[3] {
+		case "plain":
+			r = io.NopCloser(strings.NewReader(l[2]))
+		case "rstd":
+			r = io.NopCloser(base64.NewDecoder(base64.RawStdEncoding, strings.NewReader(l[2])))
+		case "std":
+			r = io.NopCloser(base64.NewDecoder(base64.StdEncoding, strings.NewReader(l[2])))
+		case "rurl":
+			r = io.NopCloser(base64.NewDecoder(base64.RawURLEncoding, strings.NewReader(l[2])))
+		case "url":
+			r = io.NopCloser(base64.NewDecoder(base64.URLEncoding, strings.NewReader(l[2])))
+		case "embed":
+			r, err = data.Open(l[2])
+			if err != nil {
+				return nil, fmt.Errorf("cannot read embed file %s : %w", l[2], err)
+			}
+		}
+		f := fixtures.File{
+			Filename: l[1],
+			Content:  io.NopCloser(r),
+		}
+		fileData = append(fileData, f)
+	}
+	return fileData, nil
+}
+
 func Run(c config.Parameters) error {
 	_ = os.Remove(c.DatabaseUrl)
 	err := migration.Run(c)
@@ -141,6 +184,10 @@ func Run(c config.Parameters) error {
 	if err != nil {
 		return fmt.Errorf("cannot read block data : %w", err)
 	}
+	fileData, err := readFileData("data/files.csv")
+	if err != nil {
+		return fmt.Errorf("cannot read block data : %w", err)
+	}
 	env, err := fixtures.Run(
 		httpcaller.New(fmt.Sprintf("http://localhost:%d", c.Port), http.DefaultClient),
 		&clock.Fixed{At: now},
@@ -149,6 +196,7 @@ func Run(c config.Parameters) error {
 			Templates: templateData,
 			Articles:  articleData,
 			Blocks:    blockData,
+			Files:     fileData,
 		},
 	)
 	if err != nil {

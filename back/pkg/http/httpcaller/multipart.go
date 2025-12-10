@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
-	"regexp"
 )
 
 type FormValue struct {
@@ -25,7 +24,7 @@ func CreateMultiPartForm(f map[string][]FormValue) (io.Reader, string, error) {
 					return nil, "", fmt.Errorf("cant add field %s : %v", key, err)
 				}
 			} else if fvalue.File != nil {
-				part, err := writer.CreateFormFile(cleanFieldname(key), fvalue.Filename)
+				part, err := writer.CreateFormFile(key, fvalue.Filename)
 				if err != nil {
 					return nil, "", fmt.Errorf("cant add file  %s :  %w", key, err)
 				}
@@ -41,11 +40,4 @@ func CreateMultiPartForm(f map[string][]FormValue) (io.Reader, string, error) {
 		return nil, "", fmt.Errorf("cant close request body writer %w", err)
 	}
 	return body, writer.FormDataContentType(), nil
-}
-
-// TODO: Dirty way to manage the upload of several files
-func cleanFieldname(fieldname string) string {
-	r := regexp.MustCompile("\\+\\d+$")
-
-	return r.ReplaceAllString(fieldname, "")
 }

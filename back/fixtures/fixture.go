@@ -8,13 +8,20 @@ import (
 	"app/pkg/environment"
 	"app/pkg/http/httpcaller"
 	"fmt"
+	"io"
 )
+
+type File struct {
+	Filename string
+	Content  io.ReadCloser
+}
 
 type FixtureData struct {
 	Layouts   []form.LayoutEdit
 	Templates []view.TemplateEditData
 	Articles  []view.ArticleEditData
 	Blocks    []form.Block
+	Files     []File
 }
 
 func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.Environment, error) {
@@ -31,7 +38,6 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 		if err != nil {
 			return env, fmt.Errorf("cannot edit layout %s : %w", l.Name, err)
 		}
-
 	}
 
 	for i, t := range fd.Templates {
@@ -44,8 +50,8 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 		if err != nil {
 			return env, fmt.Errorf("cannot edit template %s : %w", t.Name, err)
 		}
-
 	}
+
 	for i, a := range fd.Articles {
 		slug, err := api.AddArticle(a.Title, a.Author)
 		if err != nil {
@@ -56,14 +62,22 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 		if err != nil {
 			return env, fmt.Errorf("cannot edit layout %s : %w", slug, err)
 		}
-
 	}
+
 	for i, b := range fd.Blocks {
 		name, err := api.AddBlock(b.Name)
 		if err != nil {
 			return env, fmt.Errorf("cannot add article %s : %w", b.Name, err)
 		}
 		env.Store(fmt.Sprintf("block_%d_name", i), name)
+	}
+
+	for i, f := range fd.Files {
+		id, err := api.AddFile(f.Filename, f.Content)
+		if err != nil {
+			return env, fmt.Errorf("cannot add article %s : %w", f.Filename, err)
+		}
+		env.Store(fmt.Sprintf("file_%d_id", i), fmt.Sprintf("%d", id))
 	}
 	return env, nil
 }

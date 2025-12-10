@@ -1,0 +1,12 @@
+unit_tests:
+  GET:
+    - { url: "/admin/files"       , status: 200, out: "file_list"}
+
+files:
+  responses/file_list.json: >
+    {
+      "items":"file_list_item",
+      "total":3,
+      "page":0,
+      "limit":10
+    }

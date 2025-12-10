@@ -46,6 +46,7 @@ func ArticlesList(data ArticlesListData) ViewFunc {
 		)
 	}
 }
+
 func ArticlesListOk(w http.ResponseWriter, a ArticlesListData) error {
 	return httpresponse.Ok(w, a)
 }

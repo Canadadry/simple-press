@@ -39,7 +39,11 @@ func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 		Total: count,
 		Limit: limit,
 		Page:  page,
-		Files: files,
+		Items: files,
+	}
+
+	if IsJsonRequest(r) {
+		return view.FilesListOk(w, l)
 	}
 
 	return c.render(w, r, view.FilesList(l))

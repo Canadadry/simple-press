@@ -51,7 +51,7 @@ func TestView(t *testing.T) {
 		"layout_edit":            LayoutEdit(LayoutEditData{}, LayoutEditError{}),
 		"layout_edit with error": LayoutEdit(LayoutEditData{}, LayoutEditError{"test1", "test2"}),
 		"file_list": FilesList(FilesListData{
-			Files: []FileListData{FileListData{}},
+			Items: []FileListData{FileListData{}},
 		}),
 		"file_add":            FileAdd(FileAddError{}),
 		"file_add with error": FileAdd(FileAddError{"test1"}),
