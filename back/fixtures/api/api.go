@@ -154,6 +154,23 @@ func (c *Client) AddBlock(name string) (string, error) {
 	return block.Name, nil
 }
 
+func (c *Client) EditBlock(data view.BlockEditData) error {
+	block := view.BlockEditData{}
+	errs := map[string]any{}
+	rsp := map[int]any{
+		http.StatusOK:         &block,
+		http.StatusBadRequest: &errs,
+	}
+	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/blocks/%s/edit", data.Name), data, rsp)
+	if err != nil {
+		return fmt.Errorf("cannot edit block : %w", err)
+	}
+	if st != http.StatusOK {
+		return fmt.Errorf("cannot edit block invalid status code %d\n%v", st, errs)
+	}
+	return nil
+}
+
 func (c *Client) AddFile(filename string, file io.ReadCloser) (int64, error) {
 	defer file.Close()
 	fileData := view.FileAddData{}

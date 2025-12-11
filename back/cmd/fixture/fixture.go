@@ -11,6 +11,7 @@ import (
 	"embed"
 	"encoding/base64"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -97,7 +98,7 @@ func readArticleData(articleFile string) ([]view.ArticleEditData, error) {
 	return articleData, nil
 }
 
-func readBlockData(blockFile string) ([]form.Block, error) {
+func readBlockData(blockFile string) ([]view.BlockEditData, error) {
 	f, err := data.Open(blockFile)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read embed file %s : %w", blockFile, err)
@@ -105,14 +106,20 @@ func readBlockData(blockFile string) ([]form.Block, error) {
 	defer f.Close()
 	blockReader := csv.NewReader(f)
 	block, err := blockReader.ReadAll()
-	blockData := []form.Block{}
+	blockData := []view.BlockEditData{}
 	for idx, l := range block {
 		if idx == 0 {
 			continue
 		}
-		blockData = append(blockData, form.Block{
-			Name: l[1],
-			// Content: l[2],
+		def := map[string]any{}
+		err := json.Unmarshal([]byte(l[3]), &def)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse definition of %s : %w", l[1], err)
+		}
+		blockData = append(blockData, view.BlockEditData{
+			Name:       l[1],
+			Content:    l[2],
+			Definition: def,
 		})
 	}
 	return blockData, nil

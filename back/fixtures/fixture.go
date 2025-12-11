@@ -20,7 +20,7 @@ type FixtureData struct {
 	Layouts   []form.LayoutEdit
 	Templates []view.TemplateEditData
 	Articles  []view.ArticleEditData
-	Blocks    []form.Block
+	Blocks    []view.BlockEditData
 	Files     []File
 }
 
@@ -67,9 +67,14 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 	for i, b := range fd.Blocks {
 		name, err := api.AddBlock(b.Name)
 		if err != nil {
-			return env, fmt.Errorf("cannot add article %s : %w", b.Name, err)
+			return env, fmt.Errorf("cannot add block %s : %w", b.Name, err)
 		}
 		env.Store(fmt.Sprintf("block_%d_name", i), name)
+		err = api.EditBlock(b)
+		if err != nil {
+			return env, fmt.Errorf("cannot edit block %s : %w", b.Name, err)
+		}
+
 	}
 
 	for i, f := range fd.Files {

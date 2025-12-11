@@ -13,8 +13,8 @@ files:
   responses/block_get.json: >
     {
       "name":"first_block",
-      "content":"",
-      "definition":{}
+      "content":"{{.DataInitial}}",
+      "definition":{"DataInitial":"my data"}
     }
 
   payloads/block_edit.json: >

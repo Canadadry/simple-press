@@ -1,6 +1,6 @@
 - [x] list file
 - [x] list block
-- [] edit block
+- [x] edit block
 - [] add bock to article
 - [] edit bock data of article
 

@@ -10,6 +10,7 @@ import TemplateEdit from "./pages/templates-edit/TemplateEdit";
 import LayoutEdit from "./pages/layout-edit/LayoutEdit";
 import Files from "./pages/files-list/Files";
 import Blocks from "./pages/blocks-list/Blocks";
+import BlockEdit from "./pages/blocks-edit/BlockEdit";
 
 interface AppProps {
   toggleTheme: () => void;
@@ -30,6 +31,7 @@ export default function App({ toggleTheme }: AppProps) {
           <Route path="/layouts/:slug/edit" element={<LayoutEdit />} />
           <Route path="/templates/:slug/edit" element={<TemplateEdit />} />
           <Route path="/articles/:slug/edit" element={<ArticleEdit />} />
+          <Route path="/blocks/:slug/edit" element={<BlockEdit />} />
           <Route path="/articles/:slug/preview" element={<ArticlePreview />} />
         </Routes>
       </AppLayout>
