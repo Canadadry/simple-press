@@ -20,16 +20,10 @@ func (c *Controller) GetTemplateEdit(w http.ResponseWriter, r *http.Request) err
 		return nil
 	}
 
-	if IsJsonRequest(r) {
-		return view.TemplateOk(w, view.TemplateEditData{
-			Name:    l.Name,
-			Content: l.Content,
-		})
-	}
-	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
+	return view.TemplateOk(w, view.TemplateEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.TemplateEditError{}))
+	})
 }
 
 func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) error {
@@ -39,7 +33,7 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 		return fmt.Errorf("cannot select template : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/templates", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	l, errors, err := form.ParseTemplateEdit(r)
@@ -50,26 +44,15 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 	template.Name = l.Name
 	template.Content = l.Content
 
-	if !errors.HasError() {
-
-		err := c.Repository.UpdateTemplate(r.Context(), name, template)
-		if err != nil {
-			return fmt.Errorf("cannot update %s template : %w", name, err)
-		}
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
-	if IsJsonRequest(r) {
-		return view.TemplateOk(w, view.TemplateEditData{
-			Name:    l.Name,
-			Content: l.Content,
-		})
+	err = c.Repository.UpdateTemplate(r.Context(), name, template)
+	if err != nil {
+		return fmt.Errorf("cannot update %s template : %w", name, err)
 	}
-	return c.render(w, r, view.TemplateEdit(view.TemplateEditData{
+	return view.TemplateOk(w, view.TemplateEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.TemplateEditError{
-		Name:    errors.Name,
-		Content: errors.Content,
-	}))
+	})
 }

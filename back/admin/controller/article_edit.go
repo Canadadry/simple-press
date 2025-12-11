@@ -17,7 +17,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), a.ID)
@@ -48,21 +48,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
 	}
 
-	if IsJsonRequest(r) {
-		return view.ArticleOk(w, view.ArticleEditData{
-			Title:      a.Title,
-			Author:     a.Author,
-			Slug:       a.Slug,
-			Content:    a.Content,
-			Draft:      a.Draft,
-			LayoutID:   a.LayoutID,
-			Layouts:    layoutSelector,
-			Blocks:     blockSelector,
-			BlockDatas: blockDataView,
-		})
-	}
-
-	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
+	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      a.Title,
 		Author:     a.Author,
 		Slug:       a.Slug,
@@ -72,7 +58,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError{}))
+	})
 }
 
 func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Request) error {
@@ -82,7 +68,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	a, errors, err := form.ParseArticleEditMetadata(r, c.Repository.CountLayoutByID)
@@ -96,13 +82,12 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	article.Draft = a.Draft.V
 	article.LayoutID = a.LayoutID
 
-	if !errors.HasError() {
-		err = c.Repository.UpdateArticle(r.Context(), slug, article)
-		if err != nil {
-			return fmt.Errorf("cannot update %s article : %w", slug, err)
-		}
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
+	}
+	err = c.Repository.UpdateArticle(r.Context(), slug, article)
+	if err != nil {
+		return fmt.Errorf("cannot update %s article : %w", slug, err)
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -133,21 +118,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	for _, p := range blockDatas {
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
 	}
-	if IsJsonRequest(r) {
-		return view.ArticleOk(w, view.ArticleEditData{
-			Title:      article.Title,
-			Author:     article.Author,
-			Slug:       article.Slug,
-			Content:    article.Content,
-			Draft:      article.Draft,
-			LayoutID:   article.LayoutID,
-			Layouts:    layoutSelector,
-			Blocks:     blockSelector,
-			BlockDatas: blockDataView,
-		})
-	}
-
-	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
+	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
@@ -157,12 +128,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError{
-		Title:    errors.Title,
-		LayoutID: errors.LayoutID,
-		Author:   errors.Author,
-		Slug:     errors.Slug,
-	}))
+	})
 }
 
 func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Request) error {
@@ -172,7 +138,7 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	a, errors, err := form.ParseArticleEditContent(r)
@@ -182,13 +148,13 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 
 	article.Content = a.Content
 
-	if !errors.HasError() {
-		err := c.Repository.UpdateArticle(r.Context(), slug, article)
-		if err != nil {
-			return fmt.Errorf("cannot update %s article : %w", slug, err)
-		}
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
+	}
+
+	err = c.Repository.UpdateArticle(r.Context(), slug, article)
+	if err != nil {
+		return fmt.Errorf("cannot update %s article : %w", slug, err)
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -219,21 +185,7 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 	for _, p := range blockDatas {
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
 	}
-	if IsJsonRequest(r) {
-		return view.ArticleOk(w, view.ArticleEditData{
-			Title:      article.Title,
-			Author:     article.Author,
-			Slug:       article.Slug,
-			Content:    article.Content,
-			Draft:      article.Draft,
-			LayoutID:   article.LayoutID,
-			Layouts:    layoutSelector,
-			Blocks:     blockSelector,
-			BlockDatas: blockDataView,
-		})
-	}
-
-	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
+	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
@@ -243,9 +195,8 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError{
-		Content: errors.Content,
-	}))
+	})
+
 }
 
 func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Request) error {
@@ -255,7 +206,7 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), article.ID)
@@ -289,22 +240,21 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
 	}
 
-	if !errors.HasError() {
-		err := c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
-			ID:       a.EditedBlockID,
-			Data:     a.EditedBlockData,
-			Position: int64(a.EditedBlockPosition),
-		})
-		if err != nil {
-			return fmt.Errorf("cannot add block %v to article : %w", a.EditedBlockID, err)
-		}
-		for i, p := range blockDataView {
-			if p.ID == a.EditedBlockID {
-				blockDataView[i].Data = a.EditedBlockData
-			}
-		}
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
+	}
+	err = c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
+		ID:       a.EditedBlockID,
+		Data:     a.EditedBlockData,
+		Position: int64(a.EditedBlockPosition),
+	})
+	if err != nil {
+		return fmt.Errorf("cannot add block %v to article : %w", a.EditedBlockID, err)
+	}
+	for i, p := range blockDataView {
+		if p.ID == a.EditedBlockID {
+			blockDataView[i].Data = a.EditedBlockData
+		}
 	}
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
@@ -315,21 +265,7 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 	for _, p := range layouts {
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
-	if IsJsonRequest(r) {
-		return view.ArticleOk(w, view.ArticleEditData{
-			Title:      article.Title,
-			Author:     article.Author,
-			Slug:       article.Slug,
-			Content:    article.Content,
-			Draft:      article.Draft,
-			LayoutID:   article.LayoutID,
-			Layouts:    layoutSelector,
-			Blocks:     blockSelector,
-			BlockDatas: blockDataView,
-		})
-	}
-
-	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
+	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
@@ -339,11 +275,7 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError{
-		EditedBlockID:       errors.EditedBlockID,
-		EditedBlockData:     errors.EditedBlockData,
-		EditedBlockPosition: errors.EditedBlockPosition,
-	}))
+	})
 }
 
 func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Request) error {
@@ -353,7 +285,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		http.Redirect(w, r, "/admin/articles", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), article.ID)
@@ -380,26 +312,25 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
 	}
 
-	if !errors.HasError() {
-		def := map[string]any{}
-		for _, b := range blocks {
-			if b.ID == a.AddedBlockID {
-				def = b.Definition
-			}
-		}
-		id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
-			ArticleID: article.ID,
-			Block:     repository.Block{ID: a.AddedBlockID, Definition: def},
-			Position:  0,
-		})
-		if err != nil {
-			return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
-		}
-
-		blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
+	def := map[string]any{}
+	for _, b := range blocks {
+		if b.ID == a.AddedBlockID {
+			def = b.Definition
+		}
+	}
+	id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
+		ArticleID: article.ID,
+		Block:     repository.Block{ID: a.AddedBlockID, Definition: def},
+		Position:  0,
+	})
+	if err != nil {
+		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
+	}
+
+	blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select all layouts : %w", err)
@@ -409,21 +340,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	for _, p := range layouts {
 		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
 	}
-	if IsJsonRequest(r) {
-		return view.ArticleOk(w, view.ArticleEditData{
-			Title:      article.Title,
-			Author:     article.Author,
-			Slug:       article.Slug,
-			Content:    article.Content,
-			Draft:      article.Draft,
-			LayoutID:   article.LayoutID,
-			Layouts:    layoutSelector,
-			Blocks:     blockSelector,
-			BlockDatas: blockDataView,
-		})
-	}
-
-	return c.render(w, r, view.ArticleEdit(view.ArticleEditData{
+	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
@@ -433,7 +350,5 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		Layouts:    layoutSelector,
 		Blocks:     blockSelector,
 		BlockDatas: blockDataView,
-	}, view.ArticleEditError{
-		AddedBlockID: errors.AddedBlockID,
-	}))
+	})
 }

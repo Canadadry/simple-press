@@ -23,11 +23,6 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot list articles : %w", err)
 	}
 
-	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/articles", http.StatusFound)
-		return nil
-	}
-
 	articles := []view.ArticleListData{}
 	for _, a := range list {
 		articles = append(articles, view.ArticleListData{
@@ -47,9 +42,5 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 		Items: articles,
 	}
 
-	if IsJsonRequest(r) {
-		return view.ArticlesListOk(w, l)
-	}
-
-	return c.render(w, r, view.ArticlesList(l))
+	return view.ArticlesListOk(w, l)
 }

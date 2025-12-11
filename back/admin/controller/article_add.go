@@ -9,10 +9,6 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetArticleAdd(w http.ResponseWriter, r *http.Request) error {
-	return c.render(w, r, view.ArticleAdd(view.ArticleAddData{}, view.ArticleAddError{}))
-}
-
 func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) error {
 	a, errors, err := form.ParseArticleAdd(r)
 	if err != nil {
@@ -20,17 +16,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	if errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
-		return c.render(w, r, view.ArticleAdd(view.ArticleAddData{
-			Title:  a.Title,
-			Author: a.Author,
-			Draft:  a.Draft.V,
-		}, view.ArticleAddError{
-			Title:  errors.Title,
-			Author: errors.Author,
-		}))
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
 
 	layouts, err := c.Repository.GetLayoutList(r.Context(), 1, 0)
@@ -50,15 +36,10 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		return fmt.Errorf("cannot create article : %w", err)
 	}
-	if IsJsonRequest(r) {
-		return view.ArticleCreated(w, view.ArticleAddData{
-			Title:  a.Title,
-			Author: a.Author,
-			Draft:  a.Draft.V && a.Draft.Valid,
-			Slug:   slug,
-		})
-	}
-
-	http.Redirect(w, r, "/admin/articles/"+slug+"/edit", http.StatusSeeOther)
-	return nil
+	return view.ArticleCreated(w, view.ArticleAddData{
+		Title:  a.Title,
+		Author: a.Author,
+		Draft:  a.Draft.V && a.Draft.Valid,
+		Slug:   slug,
+	})
 }

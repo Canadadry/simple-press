@@ -23,11 +23,6 @@ func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("cannot list files : %w", err)
 	}
 
-	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/templates", http.StatusFound)
-		return nil
-	}
-
 	files := []view.FileListData{}
 	for _, a := range list {
 		files = append(files, view.FileListData{
@@ -42,9 +37,5 @@ func (c *Controller) GetFileList(w http.ResponseWriter, r *http.Request) error {
 		Items: files,
 	}
 
-	if IsJsonRequest(r) {
-		return view.FilesListOk(w, l)
-	}
-
-	return c.render(w, r, view.FilesList(l))
+	return view.FilesListOk(w, l)
 }

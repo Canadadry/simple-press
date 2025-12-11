@@ -23,11 +23,6 @@ func (c *Controller) GetBlockList(w http.ResponseWriter, r *http.Request) error 
 		return fmt.Errorf("cannot list block : %w", err)
 	}
 
-	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/blocks", http.StatusFound)
-		return nil
-	}
-
 	blocks := []view.BlockListData{}
 	for _, a := range list {
 		blocks = append(blocks, view.BlockListData{
@@ -42,9 +37,5 @@ func (c *Controller) GetBlockList(w http.ResponseWriter, r *http.Request) error 
 		Items: blocks,
 	}
 
-	if IsJsonRequest(r) {
-		return view.BlocksListOk(w, l)
-	}
-
-	return c.render(w, r, view.BlocksList(l))
+	return view.BlocksListOk(w, l)
 }

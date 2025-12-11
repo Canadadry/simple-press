@@ -23,11 +23,6 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("cannot list template : %w", err)
 	}
 
-	if len(list) == 0 && count > 0 {
-		http.Redirect(w, r, "/admin/templates", http.StatusFound)
-		return nil
-	}
-
 	templates := []view.TemplateListData{}
 	for _, t := range list {
 		templates = append(templates, view.TemplateListData{
@@ -42,9 +37,5 @@ func (c *Controller) GetTemplateList(w http.ResponseWriter, r *http.Request) err
 		Page:  page,
 		Items: templates,
 	}
-	if IsJsonRequest(r) {
-		return view.TemplatesListOk(w, l)
-	}
-
-	return c.render(w, r, view.TemplatesList(l))
+	return view.TemplatesListOk(w, l)
 }

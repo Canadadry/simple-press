@@ -10,7 +10,6 @@ groups:
       - article_edit.yaml
       - article_edit_add_block.yaml
       - article_list.yaml
-      - article_preview.yaml
       - block_add.yaml
       - block_edit.yaml
       - block_list.yaml
@@ -23,3 +22,4 @@ groups:
       - template_add.yaml
       - template_edit.yaml
       - template_list.yaml
+      - article_preview.yaml

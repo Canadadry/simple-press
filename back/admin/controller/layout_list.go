@@ -44,9 +44,5 @@ func (c *Controller) GetLayoutList(w http.ResponseWriter, r *http.Request) error
 		Items: layouts,
 	}
 
-	if IsJsonRequest(r) {
-		return view.LayoutsListOk(w, l)
-	}
-
-	return c.render(w, r, view.LayoutsList(l))
+	return view.LayoutsListOk(w, l)
 }

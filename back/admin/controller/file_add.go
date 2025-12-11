@@ -9,10 +9,6 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetFileAdd(w http.ResponseWriter, r *http.Request) error {
-	return c.render(w, r, view.FileAdd(view.FileAddError{}))
-}
-
 func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 
 	l, errors, err := form.ParseFileAdd(r)
@@ -22,13 +18,7 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 	fmt.Println("PostFileAdd", errors, err)
 
 	if errors.HasError() {
-		if IsJsonRequest(r) {
-			return httpresponse.BadRequest(w, errors.Raw)
-		}
-
-		return c.render(w, r, view.FileAdd(
-			view.FileAddError{Content: errors.Content},
-		))
+		return httpresponse.BadRequest(w, errors.Raw)
 	}
 
 	id, err := c.Repository.UploadFile(r.Context(), repository.File{Name: l.Name, Content: l.Content})
@@ -36,10 +26,5 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("cannot create File : %w", err)
 	}
 
-	if IsJsonRequest(r) {
-		return view.FileAddCreated(w, view.FileAddData{ID: id, Name: l.Name})
-	}
-
-	http.Redirect(w, r, "/admin/files", http.StatusSeeOther)
-	return nil
+	return view.FileAddCreated(w, view.FileAddData{ID: id, Name: l.Name})
 }

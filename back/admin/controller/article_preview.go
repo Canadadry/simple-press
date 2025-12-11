@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"app/admin/view"
 	"app/page"
+	"app/pkg/http/httpresponse"
 	"app/pkg/router"
 	"fmt"
 	"net/http"
@@ -15,8 +15,9 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot select article : %w", err)
 	}
 	if !ok {
-		return c.render(w, r, view.PageNotFound)
+		return httpresponse.NotFound(w)
 	}
+
 	baseTemplates, err := c.Repository.SelectAllTemplate(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select base template : %w", err)
@@ -30,14 +31,13 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot select layout %d : %w", a.LayoutID, err)
 	}
 	if !ok {
-		return fmt.Errorf("cannot found layout %d : %w", a.LayoutID, err)
+		return httpresponse.NotFound(w)
 	}
 	files[layout.Name] = layout.Content
 	keys := []string{}
 	for name := range files {
 		keys = append(keys, name)
 	}
-	fmt.Println("files", keys)
 
 	blocks, err := c.Repository.SelectAllBlock(r.Context())
 	if err != nil {

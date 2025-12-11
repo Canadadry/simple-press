@@ -16,25 +16,14 @@ func (c *Controller) GetLayoutEdit(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("cannot select Layout : %w", err)
 	}
 	if !ok {
-		if IsJsonRequest(r) {
-			return httpresponse.NotFound(w)
-		}
-
-		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
-		return nil
+		return httpresponse.NotFound(w)
 	}
 
-	if IsJsonRequest(r) {
-		return view.LayoutOk(w, view.LayoutEditData{
-			Name:    l.Name,
-			Content: l.Content,
-		})
-	}
-
-	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{
+	return view.LayoutOk(w, view.LayoutEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.LayoutEditError{}))
+	})
+
 }
 
 func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) error {
@@ -44,10 +33,7 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot select layout : %w", err)
 	}
 	if !ok {
-		if IsJsonRequest(r) {
-			return httpresponse.NotFound(w)
-		}
-		http.Redirect(w, r, "/admin/layouts", http.StatusSeeOther)
+		return httpresponse.NotFound(w)
 	}
 
 	l, errors, err := form.ParseLayoutEdit(r)
@@ -58,28 +44,17 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 	layout.Name = l.Name
 	layout.Content = l.Content
 
-	if !errors.HasError() {
-
-		err := c.Repository.UpdateLayout(r.Context(), name, layout)
-		if err != nil {
-			return fmt.Errorf("cannot update %s layout : %w", name, err)
-		}
-	} else if IsJsonRequest(r) {
+	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
 
-	if IsJsonRequest(r) {
-		return view.LayoutOk(w, view.LayoutEditData{
-			Name:    l.Name,
-			Content: l.Content,
-		})
+	err = c.Repository.UpdateLayout(r.Context(), name, layout)
+	if err != nil {
+		return fmt.Errorf("cannot update %s layout : %w", name, err)
 	}
 
-	return c.render(w, r, view.LayoutEdit(view.LayoutEditData{
+	return view.LayoutOk(w, view.LayoutEditData{
 		Name:    l.Name,
 		Content: l.Content,
-	}, view.LayoutEditError{
-		Name:    errors.Name,
-		Content: errors.Content,
-	}))
+	})
 }
