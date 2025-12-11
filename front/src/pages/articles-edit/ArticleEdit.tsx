@@ -27,24 +27,256 @@ import {
   getArticleEdit,
   postArticleEditMetadata,
   postArticleEditContent,
+  postArticleEditBlockAdd,
 } from "../../api/article";
 import type { Article } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
 
 type SavingStatus = "untouched" | "touched" | "saving";
-interface Saving {
-  metadada: SavingStatus;
-  content: SavingStatus;
+
+interface MetadataProps {
+  tabIndex: number;
+  article: Article;
+  setArticle: (a: Article) => void;
+}
+
+function Metadata({ tabIndex, article, setArticle }: MetadataProps) {
+  const [saving, setSaving] = useState<SavingStatus>("untouched");
+
+  return (
+    <Flex gap="3" mb="5">
+      <Box flexGrow="3">
+        <TextField.Root
+          tabIndex={tabIndex}
+          size="2"
+          placeholder="Title"
+          value={article.title}
+          disabled={saving === "saving"}
+          onChange={(e) => {
+            setSaving("touched");
+            setArticle({ ...article, title: e.target.value });
+          }}
+        >
+          <TextField.Slot>titre</TextField.Slot>
+        </TextField.Root>
+      </Box>
+      <Box flexGrow="1">
+        <TextField.Root
+          tabIndex={tabIndex}
+          size="2"
+          placeholder="Author"
+          value={article.author}
+          disabled={saving === "saving"}
+          onChange={(e) => {
+            setSaving("touched");
+            setArticle({ ...article, author: e.target.value });
+          }}
+        >
+          <TextField.Slot>auteur</TextField.Slot>
+        </TextField.Root>
+      </Box>
+      <Select.Root
+        value={article.layout_id + ""}
+        onValueChange={(v) => {
+          setArticle({ ...article, layout_id: Number(v) });
+          setSaving("touched");
+        }}
+      >
+        <Select.Trigger />
+        <Select.Content>
+          <Select.Group>
+            <Select.Label>Layout</Select.Label>
+            {article.layouts.map((a) => {
+              if (a.value == article.layout_id) {
+                return (
+                  <Select.Item key={a.value} value={a.value + ""} disabled>
+                    {a.name}
+                  </Select.Item>
+                );
+              }
+              return (
+                <Select.Item key={a.value} value={a.value + ""}>
+                  {a.name}
+                </Select.Item>
+              );
+            })}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+      <Button
+        tabIndex={tabIndex}
+        size="2"
+        disabled={saving != "touched"}
+        onClick={async () => {
+          setSaving("saving");
+          await postArticleEditMetadata(article.slug, article);
+          setSaving("untouched");
+        }}
+      >
+        {saving == "saving" ? <Spinner /> : "Save"}
+      </Button>
+    </Flex>
+  );
+}
+
+interface ContentProps {
+  tabIndex: number;
+  article: Article;
+  setArticle: (a: Article) => void;
+}
+
+function Content({ tabIndex, article, setArticle }: ContentProps) {
+  const [saving, setSaving] = useState<SavingStatus>("untouched");
+
+  return (
+    <Box mb="4">
+      <Label htmlFor="skirt-description">
+        <Text size="2" weight="bold" mb="2" asChild>
+          <Box display="inline-block">Content</Box>
+        </Text>
+      </Label>
+      <Box position="relative">
+        <TextArea
+          tabIndex={tabIndex}
+          spellCheck={false}
+          id="skirt-description"
+          variant="soft"
+          rows={10}
+          style={{ paddingTop: 48 }}
+          value={article.content}
+          disabled={saving === "saving"}
+          onChange={(e) => {
+            setSaving("touched");
+            setArticle({ ...article, content: e.target.value });
+          }}
+        />
+        <Box position="absolute" m="2" top="0" left="0" right="0">
+          <Flex gap="4">
+            <Flex gap="1">
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <FontItalicIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <FontBoldIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <StrikethroughIcon />
+              </IconButton>
+            </Flex>
+
+            <Flex gap="1">
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <TextAlignLeftIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <TextAlignCenterIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <TextAlignRightIcon />
+              </IconButton>
+            </Flex>
+
+            <Flex gap="1">
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <MagicWandIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <ImageIcon />
+              </IconButton>
+
+              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
+                <CrumpledPaperIcon />
+              </IconButton>
+            </Flex>
+            <Flex gap="1">
+              <Button
+                tabIndex={tabIndex}
+                size="2"
+                disabled={saving != "touched"}
+                onClick={async () => {
+                  setSaving("saving");
+                  await postArticleEditContent(
+                    article.slug,
+                    article.content || "",
+                  );
+                  setSaving("untouched");
+                }}
+              >
+                {saving == "saving" ? <Spinner /> : "Save"}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+interface AddBlockProps {
+  tabIndex: number;
+  article: Article;
+  setArticle: (a: Article) => void;
+}
+
+function AddBlock({ tabIndex, article }: AddBlockProps) {
+  const [saving, setSaving] = useState<SavingStatus>("untouched");
+  const [block, setBlock] = useState<string>("");
+
+  return (
+    <Flex gap="3" mb="5">
+      <Select.Root
+        value={block}
+        onValueChange={(v) => {
+          setBlock(v);
+          setSaving("touched");
+        }}
+      >
+        <Select.Trigger />
+        <Select.Content>
+          <Select.Group>
+            <Select.Label>Blocks to add</Select.Label>
+            {article.blocks.map((b) => {
+              if (b.value + "" == block) {
+                return (
+                  <Select.Item key={b.value} value={b.value + ""} disabled>
+                    {b.name}
+                  </Select.Item>
+                );
+              }
+              return (
+                <Select.Item key={b.value} value={b.value + ""}>
+                  {b.name}
+                </Select.Item>
+              );
+            })}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+      <Button
+        tabIndex={tabIndex}
+        size="2"
+        disabled={saving != "touched"}
+        onClick={async () => {
+          setSaving("saving");
+          await postArticleEditBlockAdd(article.slug, Number(block));
+          setSaving("untouched");
+        }}
+      >
+        {saving == "saving" ? <Spinner /> : "Add"}
+      </Button>
+    </Flex>
+  );
 }
 
 export default function Articles() {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const [article, setArticle] = useState<Article | null>(null);
-  const [saving, setSaving] = useState<Saving>({
-    metadada: "untouched",
-    content: "untouched",
-  });
   const tabIndex = 1;
   useEffect(() => {
     async function load() {
@@ -83,167 +315,24 @@ export default function Articles() {
       </Text>
       <Card>
         <Flex direction="column">
-          <Flex gap="3" mb="5">
-            <Box flexGrow="3">
-              <TextField.Root
-                tabIndex={tabIndex}
-                size="2"
-                placeholder="Title"
-                value={article.title}
-                disabled={saving.metadada === "saving"}
-                onChange={(e) => {
-                  setSaving({ ...saving, metadada: "touched" });
-                  setArticle({ ...article, title: e.target.value });
-                }}
-              >
-                <TextField.Slot>titre</TextField.Slot>
-              </TextField.Root>
-            </Box>
-            <Box flexGrow="1">
-              <TextField.Root
-                tabIndex={tabIndex}
-                size="2"
-                placeholder="Author"
-                value={article.author}
-                disabled={saving.metadada === "saving"}
-                onChange={(e) => {
-                  setSaving({ ...saving, metadada: "touched" });
-                  setArticle({ ...article, author: e.target.value });
-                }}
-              >
-                <TextField.Slot>auteur</TextField.Slot>
-              </TextField.Root>
-            </Box>
-            <Select.Root
-              value={article.layout_id + ""}
-              onValueChange={(v) => {
-                setArticle({ ...article, layout_id: Number(v) });
-                setSaving({ ...saving, metadada: "touched" });
-              }}
-            >
-              <Select.Trigger />
-              <Select.Content>
-                <Select.Group>
-                  <Select.Label>Layout</Select.Label>
-                  {article.layouts.map((a) => {
-                    if (a.value == article.layout_id) {
-                      return (
-                        <Select.Item
-                          key={a.value}
-                          value={a.value + ""}
-                          disabled
-                        >
-                          {a.name}
-                        </Select.Item>
-                      );
-                    }
-                    return (
-                      <Select.Item key={a.value} value={a.value + ""}>
-                        {a.name}
-                      </Select.Item>
-                    );
-                  })}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-            <Button
-              tabIndex={tabIndex}
-              size="2"
-              disabled={saving.metadada != "touched"}
-              onClick={async () => {
-                setSaving({ ...saving, metadada: "saving" });
-                await postArticleEditMetadata(article.slug, article);
-                setSaving({ ...saving, metadada: "untouched" });
-              }}
-            >
-              {saving.metadada == "saving" ? <Spinner /> : "Save"}
-            </Button>
-          </Flex>
-          <Box mb="4">
-            <Label htmlFor="skirt-description">
-              <Text size="2" weight="bold" mb="2" asChild>
-                <Box display="inline-block">Content</Box>
-              </Text>
-            </Label>
-            <Box position="relative">
-              <TextArea
-                tabIndex={tabIndex}
-                spellCheck={false}
-                id="skirt-description"
-                variant="soft"
-                rows={10}
-                style={{ paddingTop: 48 }}
-                value={article.content}
-                disabled={saving.content === "saving"}
-                onChange={(e) => {
-                  setSaving({ ...saving, content: "touched" });
-                  setArticle({ ...article, content: e.target.value });
-                }}
-              />
-              <Box position="absolute" m="2" top="0" left="0" right="0">
-                <Flex gap="4">
-                  <Flex gap="1">
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <FontItalicIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <FontBoldIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <StrikethroughIcon />
-                    </IconButton>
-                  </Flex>
-
-                  <Flex gap="1">
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <TextAlignLeftIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <TextAlignCenterIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <TextAlignRightIcon />
-                    </IconButton>
-                  </Flex>
-
-                  <Flex gap="1">
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <MagicWandIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <ImageIcon />
-                    </IconButton>
-
-                    <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                      <CrumpledPaperIcon />
-                    </IconButton>
-                  </Flex>
-                  <Flex gap="1">
-                    <Button
-                      tabIndex={tabIndex}
-                      size="2"
-                      disabled={saving.content != "touched"}
-                      onClick={async () => {
-                        setSaving({ ...saving, content: "saving" });
-                        await postArticleEditContent(
-                          article.slug,
-                          article.content || "",
-                        );
-                        setSaving({ ...saving, content: "untouched" });
-                      }}
-                    >
-                      {saving.content == "saving" ? <Spinner /> : "Save"}
-                    </Button>
-                  </Flex>
-                </Flex>
-              </Box>
-            </Box>
-          </Box>
+          <Metadata
+            tabIndex={tabIndex}
+            article={article}
+            setArticle={setArticle}
+          ></Metadata>
+          <Content
+            tabIndex={tabIndex}
+            article={article}
+            setArticle={setArticle}
+          ></Content>
+          <AddBlock
+            tabIndex={tabIndex}
+            article={article}
+            setArticle={setArticle}
+          ></AddBlock>
+          {article.block_datas.map((b) => {
+            return <p>{JSON.stringify(b)}</p>;
+          })}
         </Flex>
       </Card>
     </Flex>

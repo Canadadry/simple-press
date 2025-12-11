@@ -2,11 +2,13 @@
 - [x] list block
 - [x] edit block
 - [x] edit layout of article
-- [] add bock to article
+- [x] add bock to article
 - [] edit bock data of article
 
+- [] remove front SSR
 - [] add file, article, block,template, layout
 - [] remove file, article, block,template, layout
+- [] fetch article from go template to allow paginated list of articles
 
 - [] add figure to all article (allow upload file from article, or open file selector)
 - [] define front url in .env

@@ -12,7 +12,8 @@ export interface Article {
   draft: boolean;
   layout_id: number;
   layouts: Array<{ name: string; value: number }>;
-  blocks?: Array<{ name: string; value: number }>;
+  blocks: Array<{ name: string; value: number }>;
+  block_datas: Array<unknown>;
 }
 
 export interface ValidationErrors {
@@ -60,11 +61,11 @@ export async function postArticleEditBlockEdit(
   );
 }
 
-export async function postArticleEditBlockAdd(slug: string, blockData: object) {
+export async function postArticleEditBlockAdd(slug: string, block: number) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/${slug}/edit/block_add`,
     "POST",
-    blockData,
+    { new_block: block },
   );
 }
 
