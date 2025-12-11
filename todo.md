@@ -5,7 +5,7 @@
 - [x] add bock to article
 - [] edit bock data of article
 
-- [] remove front SSR
+- [x] remove front SSR
 - [] add file, article, block,template, layout
 - [] remove file, article, block,template, layout
 - [] fetch article from go template to allow paginated list of articles
