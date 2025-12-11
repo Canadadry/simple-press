@@ -1,0 +1,35 @@
+import { apiRequest } from "./api.ts";
+import type { List } from "./api.ts";
+
+const TEMPLATE_BASE_URL = "/admin/blocks";
+
+export interface Block {
+  name: string;
+}
+
+export interface ValidationErrors {
+  [key: string]: string[];
+}
+
+export async function getBlockList() {
+  return apiRequest<List<Block>>(`${TEMPLATE_BASE_URL}`, "GET");
+}
+
+export async function postBlockAdd(data: Block) {
+  return apiRequest<Block>(`${TEMPLATE_BASE_URL}/add`, "POST", data);
+}
+
+export async function getBlockEdit(name: string) {
+  return apiRequest<Block>(`${TEMPLATE_BASE_URL}/${name}/edit`, "GET");
+}
+
+export async function postBlockEdit(previous_name: string, l: Block) {
+  return apiRequest<Block>(
+    `${TEMPLATE_BASE_URL}/${previous_name}/edit`,
+    "POST",
+    {
+      name: l.name,
+      content: l.content,
+    },
+  );
+}

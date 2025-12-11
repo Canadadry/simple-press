@@ -56,7 +56,7 @@ func TestView(t *testing.T) {
 		"file_add":            FileAdd(FileAddError{}),
 		"file_add with error": FileAdd(FileAddError{"test1"}),
 		"block_list": BlocksList(BlocksListData{
-			Blocks: []BlockListData{BlockListData{}},
+			Items: []BlockListData{BlockListData{}},
 		}),
 		"block_add":             BlockAdd(BlockAddData{}, BlockAddError{}),
 		"block_add with error":  BlockAdd(BlockAddData{}, BlockAddError{"test1"}),

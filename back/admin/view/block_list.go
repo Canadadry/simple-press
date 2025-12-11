@@ -1,9 +1,11 @@
 package view
 
 import (
+	"app/pkg/http/httpresponse"
 	"app/pkg/paginator"
 	"io"
 	"math"
+	"net/http"
 )
 
 const (
@@ -11,14 +13,14 @@ const (
 )
 
 type BlocksListData struct {
-	Blocks []BlockListData
-	Total  int
-	Page   int
-	Limit  int
+	Items []BlockListData `json:"items"`
+	Total int             `json:"total"`
+	Page  int             `json:"page"`
+	Limit int             `json:"limit"`
 }
 
 type BlockListData struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func BlocksList(data BlocksListData) ViewFunc {
@@ -35,8 +37,12 @@ func BlocksList(data BlocksListData) ViewFunc {
 			TemplateData("BLOCK_LIST.page_title", viewData{
 				Total:  data.Total,
 				Pages:  p,
-				Blocks: data.Blocks,
+				Blocks: data.Items,
 			}),
 		)
 	}
+}
+
+func BlocksListOk(w http.ResponseWriter, a BlocksListData) error {
+	return httpresponse.Ok(w, a)
 }

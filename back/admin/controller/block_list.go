@@ -36,10 +36,14 @@ func (c *Controller) GetBlockList(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	l := view.BlocksListData{
-		Total:  count,
-		Limit:  limit,
-		Page:   page,
-		Blocks: blocks,
+		Total: count,
+		Limit: limit,
+		Page:  page,
+		Items: blocks,
+	}
+
+	if IsJsonRequest(r) {
+		return view.BlocksListOk(w, l)
 	}
 
 	return c.render(w, r, view.BlocksList(l))

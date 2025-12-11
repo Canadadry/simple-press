@@ -1,0 +1,12 @@
+unit_tests:
+  GET:
+    - { url: "/admin/blocks"       , status: 200, out: "block_list"}
+
+files:
+  responses/block_list.json: >
+    {
+      "items":"block_list_item",
+      "total":1,
+      "page":0,
+      "limit":10
+    }
