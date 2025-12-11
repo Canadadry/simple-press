@@ -1,10 +1,12 @@
 - [x] list file
 - [x] list block
 - [x] edit block
+- [x] edit layout of article
 - [] add bock to article
 - [] edit bock data of article
 
 - [] add file, article, block,template, layout
+- [] remove file, article, block,template, layout
 
 - [] add figure to all article (allow upload file from article, or open file selector)
 - [] define front url in .env
@@ -13,7 +15,7 @@
 - [] write a build static site script around wget
 - [] deploy a first article on private server
 
-- [] delete ressource
+- [] list bug and fix them
 - [] duplicate article, layout, template
 - [] expose build static as route so downloading site from front become possible
 - [] add seo variable (or dynmaque data, like blog but for an article so only one definition)

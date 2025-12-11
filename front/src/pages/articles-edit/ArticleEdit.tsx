@@ -1,4 +1,11 @@
-import { Box, IconButton, Button, TextArea, Link } from "@radix-ui/themes";
+import {
+  Box,
+  IconButton,
+  Button,
+  TextArea,
+  Link,
+  Select,
+} from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
 import {
   CrumpledPaperIcon,
@@ -77,7 +84,7 @@ export default function Articles() {
       <Card>
         <Flex direction="column">
           <Flex gap="3" mb="5">
-            <Box flexGrow="2">
+            <Box flexGrow="3">
               <TextField.Root
                 tabIndex={tabIndex}
                 size="2"
@@ -107,6 +114,38 @@ export default function Articles() {
                 <TextField.Slot>auteur</TextField.Slot>
               </TextField.Root>
             </Box>
+            <Select.Root
+              value={article.layout_id + ""}
+              onValueChange={(v) => {
+                setArticle({ ...article, layout_id: Number(v) });
+                setSaving({ ...saving, metadada: "touched" });
+              }}
+            >
+              <Select.Trigger />
+              <Select.Content>
+                <Select.Group>
+                  <Select.Label>Layout</Select.Label>
+                  {article.layouts.map((a) => {
+                    if (a.value == article.layout_id) {
+                      return (
+                        <Select.Item
+                          key={a.value}
+                          value={a.value + ""}
+                          disabled
+                        >
+                          {a.name}
+                        </Select.Item>
+                      );
+                    }
+                    return (
+                      <Select.Item key={a.value} value={a.value + ""}>
+                        {a.name}
+                      </Select.Item>
+                    );
+                  })}
+                </Select.Group>
+              </Select.Content>
+            </Select.Root>
             <Button
               tabIndex={tabIndex}
               size="2"
@@ -133,7 +172,6 @@ export default function Articles() {
                 id="skirt-description"
                 variant="soft"
                 rows={10}
-                defaultValue={article.content || ""}
                 style={{ paddingTop: 48 }}
                 value={article.content}
                 disabled={saving.content === "saving"}

@@ -10,8 +10,8 @@ export interface Article {
   slug: string;
   content: string;
   draft: boolean;
-  layout?: number;
-  layout_id?: number;
+  layout_id: number;
+  layouts: Array<{ name: string; value: number }>;
   blocks?: Array<{ name: string; value: number }>;
 }
 
