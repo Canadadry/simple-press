@@ -7,7 +7,9 @@ import { Dict } from "../src/pkg/data/parseFormData";
 
 function makeTestUI(): DynamicFormUI {
   return {
-    Form: ({ children }) => <form data-testid="form">{children}</form>,
+    Form: ({ label, children }) => (
+      <form data-testid={`form-${label}`}>{children}</form>
+    ),
     FormObject: ({ label, children }) => (
       <fieldset data-testid={`object-${label}`}>{children}</fieldset>
     ),
@@ -43,7 +45,7 @@ describe("DynamicForm rendering", () => {
     };
 
     const ui = makeTestUI();
-    render(<DynamicForm data={meta} ui={ui} />);
+    render(<DynamicForm name="test" data={meta} ui={ui} />);
 
     const form = screen.getByTestId("form");
     expect(form).toBeInTheDocument();

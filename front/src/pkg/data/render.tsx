@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Dict } from "./parseFormData";
 
 export interface FormProps {
+  label: string;
   children: ReactNode;
 }
 
@@ -31,11 +32,12 @@ export interface DynamicFormUI {
 }
 
 export interface DynamicFormProps {
+  name: string;
   data: Dict;
   ui: DynamicFormUI;
 }
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ data, ui }) => {
+export const DynamicForm: React.FC<DynamicFormProps> = ({ name, data, ui }) => {
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
     return Object.entries(obj).map(([key, value]) => {
       const fullPath = prefix ? `${prefix}.${key}` : key;
@@ -66,5 +68,5 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ data, ui }) => {
     });
   }
 
-  return <ui.Form>{renderNode(data)}</ui.Form>;
+  return <ui.Form label={name}>{renderNode(data)}</ui.Form>;
 };

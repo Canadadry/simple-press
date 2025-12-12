@@ -1,5 +1,5 @@
-import { apiRequest } from "./api.ts";
-import type { List } from "./api.ts";
+import { apiRequest } from "./api";
+import type { List, Dict } from "./api";
 
 const ARTICLE_BASE_URL = "/admin/articles";
 
@@ -13,7 +13,7 @@ export interface Article {
   layout_id: number;
   layouts: Array<{ name: string; value: number }>;
   blocks: Array<{ name: string; value: number }>;
-  block_datas: Array<unknown>;
+  block_datas: Array<{ id: number; name: string; data: Dict }>;
 }
 
 export interface ValidationErrors {

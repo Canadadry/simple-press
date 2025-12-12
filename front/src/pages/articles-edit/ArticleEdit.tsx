@@ -31,6 +31,8 @@ import {
 } from "../../api/article";
 import type { Article } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
+import { DynamicForm } from "../../pkg/data/render";
+import { makeRadixUI } from "../../pkg/data/radix-form";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 
@@ -330,9 +332,31 @@ export default function Articles() {
             article={article}
             setArticle={setArticle}
           ></AddBlock>
-          {article.block_datas.map((b) => {
+          <Flex direction="row" gap="5" wrap="wrap">
+            {article.block_datas.map((block) => (
+              <DynamicForm
+                key={block.id}
+                // prefix={`block.${index}`}
+                name={block.name}
+                data={block.data}
+                ui={makeRadixUI(300)}
+                // onSubmit={(updated) => {
+                //   const newBlockDatas = [...article.block_datas];
+                //   newBlockDatas[index] = Object.fromEntries(
+                //     Object.entries(updated).map(([k, v]) => [
+                //       k.replace(`block.${index}.`, ""),
+                //       v,
+                //     ]),
+                //   );
+                //   setArticle({ ...article, block_datas: newBlockDatas });
+                // }}
+              />
+            ))}
+          </Flex>
+
+          {/*{article.block_datas.map((b) => {
             return <p>{JSON.stringify(b)}</p>;
-          })}
+          })}*/}
         </Flex>
       </Card>
     </Flex>

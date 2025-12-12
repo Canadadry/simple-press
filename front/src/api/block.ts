@@ -1,12 +1,12 @@
-import { apiRequest } from "./api.ts";
-import type { List } from "./api.ts";
+import { apiRequest } from "./api";
+import type { List, Dict } from "./api";
 
 const BASE_URL = "/admin/blocks";
 
 export interface Block {
   name: string;
   content: string;
-  definition: unknown;
+  definition: Dict;
 }
 
 export interface ValidationErrors {
