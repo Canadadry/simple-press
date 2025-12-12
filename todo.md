@@ -3,11 +3,14 @@
 - [x] edit block
 - [x] edit layout of article
 - [x] add bock to article
-- [] edit bock data of article
+- [~] edit bock data of article
+  - [x] render block of data
+  - [] can edit block of data on the backend
+  - [] can edit block of data on the frontend
 
 - [x] remove front SSR
-- [] add file, article, block,template, layout
-- [] remove file, article, block,template, layout
+- [] add file, article,  block,template, layout
+- [] remove file, article,block in article, block,template, layout
 - [] fetch article from go template to allow paginated list of articles
 
 - [] add figure to all article (allow upload file from article, or open file selector)
@@ -24,3 +27,4 @@
 - [] allow resizing image with a query url request
 - [] basic unit test around bug of renaming template or layout
 - [] markdown editor on article content edition
+- [] wap go template engine for otto + personal jsx parser

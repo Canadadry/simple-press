@@ -47,7 +47,7 @@ describe("DynamicForm rendering", () => {
     const ui = makeTestUI();
     render(<DynamicForm name="test" data={meta} ui={ui} />);
 
-    const form = screen.getByTestId("form");
+    const form = screen.getByTestId("form-test");
     expect(form).toBeInTheDocument();
 
     const profileObj = screen.getByTestId("object-profile");
