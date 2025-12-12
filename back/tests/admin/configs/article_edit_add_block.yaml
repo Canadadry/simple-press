@@ -47,6 +47,6 @@ files:
         {"name":"first_block","value":1}
       ],
       "block_datas":[
-        {"id":1,"data":{"DataInitial":"my data"}}
+        {"id":1,"data":{"DataBool":true,"DataNumber":2,"DataString":"my data"}}
       ]
     }

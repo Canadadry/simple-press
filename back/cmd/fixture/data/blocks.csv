@@ -1,2 +1,2 @@
 id,name,content,definition
-1,first_block,"{{.DataInitial}}","{""DataInitial"":""my data""}"
+1,first_block,"s:{{.DataString}} n:{{.DataNumber}} b:{{.DataBool}}","{""DataString"":""my data"",""DataNumber"":2,""DataBool"":true}"
