@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import { Dict } from "./parseFormData";
+import { updateData } from "./updateData";
+import { Dict } from "../../api/api";
 
 export interface FormProps {
   label: string;
@@ -16,12 +17,14 @@ export interface FormInputProps {
   name: string;
   inputType: string;
   value: string;
+  setData: (fullPath: string, value: string) => void;
 }
 
 export interface FormCheckBoxProps {
   label: string;
   name: string;
   checked: boolean;
+  setData: (fullPath: string, value: string) => void;
 }
 
 export interface DynamicFormUI {
@@ -34,10 +37,16 @@ export interface DynamicFormUI {
 export interface DynamicFormProps {
   name: string;
   data: Dict;
+  setData: (data: Dict) => void;
   ui: DynamicFormUI;
 }
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ name, data, ui }) => {
+export const DynamicForm: React.FC<DynamicFormProps> = ({
+  name,
+  data,
+  setData,
+  ui,
+}) => {
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
     return Object.entries(obj).map(([key, value]) => {
       const fullPath = prefix ? `${prefix}.${key}` : key;
@@ -54,15 +63,30 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ name, data, ui }) => {
         );
       }
 
-      const inputType = typeof value === "number" ? "number" : "text";
+      if (typeof value === "boolean") {
+        return (
+          <ui.FormCheckBox
+            key={fullPath}
+            label={key}
+            name={fullPath}
+            checked={value}
+            setData={(path, newValue) => {
+              setData(updateData(data, path, newValue));
+            }}
+          />
+        );
+      }
 
       return (
         <ui.FormInput
           key={fullPath}
           label={key}
           name={fullPath}
-          inputType={inputType}
+          inputType={typeof value === "number" ? "number" : "text"}
           value={String(value)}
+          setData={(path, newValue) => {
+            setData(updateData(data, path, newValue));
+          }}
         />
       );
     });

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { updateData } from "../src/pkg/data/updateData";
-import type { Dict } from "../src/pkg/data/parseFormData";
+import { Dict } from "../src/api/api";
 
 describe("updateData", () => {
   const base: Dict = {

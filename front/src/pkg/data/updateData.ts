@@ -1,4 +1,4 @@
-import { Data, Dict } from "../../api/api";
+import { Dict } from "../../api/api";
 
 export function updateData(data: Dict, fullPath: string, value: string): Dict {
   const parts = fullPath.split(".");
