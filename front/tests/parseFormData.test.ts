@@ -1,20 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { parseFormData } from "../src/pkg/data/parseFormData";
+import { extractData, Dict, FlatDict } from "../src/pkg/data/parseFormData";
 
-describe("parseFormData", () => {
-  const tests: Record<
-    string,
-    {
-      FormValues: Record<string, string[]>;
-      Definition: Record<string, unknown>;
-      Expected: Record<string, unknown>;
-    }
-  > = {
+describe("extractData", () => {
+  type Test = {
+    FormValues: FlatDict;
+    Definition: Dict;
+    Expected: Dict;
+  };
+  const tests: Record<string, Test> = {
     "flat object": {
       FormValues: {
-        firstname: ["John"],
-        email: ["john@example.com"],
-        newsletter: ["true"],
+        firstname: "John",
+        email: "john@example.com",
+        newsletter: "true",
       },
       Definition: {
         firstname: "Alice",
@@ -30,9 +28,9 @@ describe("parseFormData", () => {
 
     "nested object": {
       FormValues: {
-        "profile.name.first": ["Alice"],
-        "profile.name.last": ["Smith"],
-        "profile.age": ["28"],
+        "profile.name.first": "Alice",
+        "profile.name.last": "Smith",
+        "profile.age": "28",
       },
       Definition: {
         profile: {
@@ -50,10 +48,10 @@ describe("parseFormData", () => {
 
     "missing field default to old value": {
       FormValues: {
-        "profile.name.first": ["Alice"],
-        "profile.name.last": ["Smith"],
-        "profile.age": ["28"],
-        "profile.gender": ["Mme"],
+        "profile.name.first": "Alice",
+        "profile.name.last": "Smith",
+        "profile.age": "28",
+        "profile.gender": "Mme",
       },
       Definition: {
         profile: {
@@ -71,8 +69,8 @@ describe("parseFormData", () => {
 
     "extra field ignored": {
       FormValues: {
-        "profile.name.first": ["Alice"],
-        "profile.name.last": ["Smith"],
+        "profile.name.first": "Alice",
+        "profile.name.last": "Smith",
       },
       Definition: {
         profile: {
@@ -91,21 +89,7 @@ describe("parseFormData", () => {
 
   for (const [name, tt] of Object.entries(tests)) {
     it(name, async () => {
-      const formBody = new URLSearchParams();
-      for (const key in tt.FormValues) {
-        for (const v of tt.FormValues[key]) {
-          formBody.append(key, v);
-        }
-      }
-
-      const req = new Request("http://localhost/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formBody.toString(),
-      });
-
-      const result = await parseFormData(req, tt.Definition);
-
+      const result = extractData(tt.FormValues, tt.Definition, "");
       expect(result).toEqual(tt.Expected);
     });
   }
