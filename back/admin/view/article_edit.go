@@ -24,6 +24,7 @@ type ArticleEditData struct {
 
 type BlockData struct {
 	ID   int64          `json:"id"`
+	Name string         `json:"name"`
 	Data map[string]any `json:"data"`
 }
 

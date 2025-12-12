@@ -27,7 +27,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -116,7 +116,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
@@ -183,7 +183,7 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,
@@ -216,7 +216,7 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 
 	a, errors, err := form.ParseArticleEditBlockEdit(r, func(id int64) (map[string]any, bool) {
@@ -295,7 +295,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 
 	a, errors, err := form.ParseArticleEditBlockAdd(r, c.Repository.CountBlockByID)
@@ -329,8 +329,14 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
 	}
+	blockName := ""
+	for _, block := range blockSelector {
+		if block.Value == id {
+			blockName = block.Name
+		}
+	}
 
-	blockDataView = append(blockDataView, view.BlockData{ID: id, Data: def})
+	blockDataView = append(blockDataView, view.BlockData{ID: id, Name: blockName, Data: def})
 	layouts, err := c.Repository.GetAllLayout(r.Context())
 	if err != nil {
 		return fmt.Errorf("cannot select all layouts : %w", err)

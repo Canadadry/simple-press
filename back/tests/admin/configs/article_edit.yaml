@@ -22,7 +22,10 @@ files:
         {"name":"list.html","value":2},
         {"name":"single.html","value":1}
       ],
-      "blocks":[{"name":"first_block","value":1}],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
       "block_datas":[]
     }
 
@@ -47,7 +50,10 @@ files:
         {"name":"list.html","value":2},
         {"name":"single.html","value":1}
       ],
-      "blocks":[{"name":"first_block","value":1}],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
       "block_datas":[]
     }
 
@@ -102,7 +108,10 @@ files:
         {"name":"list.html","value":2},
         {"name":"single.html","value":1}
     ],
-    "blocks":[{"name":"first_block","value":1}],
+    "blocks":[
+      {"name":"first_block","value":1},
+      {"name":"nested_block","value":2}
+    ],
     "block_datas":[]
     }
 

@@ -1,2 +1,3 @@
 id,name,content,definition
 1,first_block,"s:{{.DataString}} n:{{.DataNumber}} b:{{.DataBool}}","{""DataString"":""my data"",""DataNumber"":2,""DataBool"":true}"
+2,nested_block,"f:{{.Name.First}} l:{{.Name.Last}} a:{{.Age}}","{""Name"":{""First"":""peter"",""Last"":""parker""},""Age"":22}"
