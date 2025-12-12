@@ -336,20 +336,15 @@ export default function Articles() {
             {article.block_datas.map((block) => (
               <DynamicForm
                 key={block.id}
-                // prefix={`block.${index}`}
                 name={block.name}
                 data={block.data}
                 ui={makeRadixUI(300)}
-                // onSubmit={(updated) => {
-                //   const newBlockDatas = [...article.block_datas];
-                //   newBlockDatas[index] = Object.fromEntries(
-                //     Object.entries(updated).map(([k, v]) => [
-                //       k.replace(`block.${index}.`, ""),
-                //       v,
-                //     ]),
-                //   );
-                //   setArticle({ ...article, block_datas: newBlockDatas });
-                // }}
+                setData={(d) => {
+                  console.log(block.name, d);
+                }}
+                onSave={async () => {
+                  console.log(block.name, "saved");
+                }}
               />
             ))}
           </Flex>

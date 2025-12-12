@@ -13,7 +13,7 @@ import { TrashIcon } from "@radix-ui/react-icons";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
-    Form: ({ label, children }) => (
+    Form: ({ label, children, onSave }) => (
       <Card>
         <Text as="div" size="2" mb="2" weight="bold" color="indigo">
           {label}
@@ -30,7 +30,7 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
               <TrashIcon />
               Delete
             </Button>
-            <Button tabIndex={1} size="2">
+            <Button tabIndex={1} size="2" onClick={onSave}>
               Save
             </Button>
           </Flex>

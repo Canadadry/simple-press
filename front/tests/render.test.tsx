@@ -7,8 +7,17 @@ import { Dict } from "../src/api/api";
 
 function makeTestUI(): DynamicFormUI {
   return {
-    Form: ({ label, children }) => (
-      <form data-testid={`form-${label}`}>{children}</form>
+    Form: ({ label, children, onSave }) => (
+      <form data-testid={`form-${label}`}>
+        {children}
+        <button
+          type="button"
+          data-testid={`save-${label}`}
+          onClick={() => onSave()}
+        >
+          Save
+        </button>
+      </form>
     ),
     FormObject: ({ label, children }) => (
       <fieldset data-testid={`object-${label}`}>{children}</fieldset>
@@ -49,7 +58,15 @@ describe("DynamicForm rendering", () => {
     const ui = makeTestUI();
     const setData = vi.fn();
 
-    render(<DynamicForm name="test" data={meta} setData={setData} ui={ui} />);
+    render(
+      <DynamicForm
+        name="test"
+        data={meta}
+        setData={setData}
+        ui={ui}
+        onSave={async () => {}}
+      />,
+    );
 
     const form = screen.getByTestId("form-test");
     expect(form).toBeInTheDocument();
@@ -79,7 +96,15 @@ describe("DynamicForm rendering", () => {
     const ui = makeTestUI();
     const setData = vi.fn();
 
-    render(<DynamicForm name="test" data={meta} setData={setData} ui={ui} />);
+    render(
+      <DynamicForm
+        name="test"
+        data={meta}
+        setData={setData}
+        ui={ui}
+        onSave={async () => {}}
+      />,
+    );
 
     const input = screen.getByTestId("input-profile.age");
 
@@ -101,7 +126,15 @@ describe("DynamicForm rendering", () => {
     const ui = makeTestUI();
     const setData = vi.fn();
 
-    render(<DynamicForm name="test" data={meta} setData={setData} ui={ui} />);
+    render(
+      <DynamicForm
+        name="test"
+        data={meta}
+        setData={setData}
+        ui={ui}
+        onSave={async () => {}}
+      />,
+    );
 
     const first = screen.getByTestId("input-profile.name.first");
 
@@ -122,7 +155,15 @@ describe("DynamicForm rendering", () => {
     const ui = makeTestUI();
     const setData = vi.fn();
 
-    render(<DynamicForm name="test" data={meta} setData={setData} ui={ui} />);
+    render(
+      <DynamicForm
+        name="test"
+        data={meta}
+        setData={setData}
+        ui={ui}
+        onSave={async () => {}}
+      />,
+    );
 
     const checkbox = screen.getByTestId("checkbox-flags.active");
 
@@ -132,5 +173,27 @@ describe("DynamicForm rendering", () => {
     expect(setData.mock.calls[0][0]).toEqual({
       flags: { active: true },
     });
+  });
+
+  it("calls save when clicking the Save button", async () => {
+    const meta: Dict = { profile: { age: 42 } };
+    const ui = makeTestUI();
+    const setData = vi.fn();
+    const save = vi.fn();
+
+    render(
+      <DynamicForm
+        name="test"
+        data={meta}
+        setData={setData}
+        ui={ui}
+        onSave={save}
+      />,
+    );
+
+    const saveButton = screen.getByTestId("save-test");
+    fireEvent.click(saveButton);
+
+    expect(save).toHaveBeenCalledTimes(1);
   });
 });

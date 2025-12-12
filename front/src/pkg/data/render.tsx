@@ -5,6 +5,7 @@ import { Dict } from "../../api/api";
 export interface FormProps {
   label: string;
   children: ReactNode;
+  onSave: () => Promise<void>;
 }
 
 export interface FormObjectProps {
@@ -39,6 +40,7 @@ export interface DynamicFormProps {
   data: Dict;
   setData: (data: Dict) => void;
   ui: DynamicFormUI;
+  onSave: () => Promise<void>;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
@@ -46,6 +48,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   data,
   setData,
   ui,
+  onSave,
 }) => {
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
     return Object.entries(obj).map(([key, value]) => {
@@ -92,5 +95,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     });
   }
 
-  return <ui.Form label={name}>{renderNode(data)}</ui.Form>;
+  return (
+    <ui.Form label={name} onSave={onSave}>
+      {renderNode(data)}
+    </ui.Form>
+  );
 };

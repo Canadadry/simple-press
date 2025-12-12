@@ -5,8 +5,9 @@
 - [x] add bock to article
 - [~] edit bock data of article
   - [x] render block of data
+  - [x] can edit block of data on the frontend
   - [] can edit block of data on the backend
-  - [] can edit block of data on the frontend
+  - [] connect them
 
 - [x] remove front SSR
 - [] add file, article,  block,template, layout
@@ -27,4 +28,5 @@
 - [] allow resizing image with a query url request
 - [] basic unit test around bug of renaming template or layout
 - [] markdown editor on article content edition
-- [] wap go template engine for otto + personal jsx parser
+- [] swap go template engine for otto + personal jsx parser
+- [] redesign block data definition => list of fullpath + option (toggle stuff, select other)
