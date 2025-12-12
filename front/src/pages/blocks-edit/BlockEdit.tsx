@@ -7,6 +7,7 @@ import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import { getBlockEdit, postBlockEdit } from "../../api/block";
 import type { Block } from "../../api/block";
 import { useNavigate, useParams } from "react-router-dom";
+import { Dict } from "../../pkg/data/parseFormData";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 
@@ -116,6 +117,7 @@ function Editor({
 export default function BlockEdit() {
   const { slug } = useParams<{ slug: string }>();
   const [block, setBlock] = useState<Block | null>(null);
+  const [temp, setTemp] = useState<string | null>(null);
   const navidate = useNavigate();
   useEffect(() => {
     async function load() {
@@ -173,9 +175,19 @@ export default function BlockEdit() {
           <Editor
             tabIndex={3}
             title="Data"
-            content={JSON.stringify(block.definition, null, 2)}
+            content={temp || JSON.stringify(block.definition, null, 2)}
             setContent={(content: string) => {
-              setBlock({ ...block, definition: JSON.parse(content) });
+              let p: Dict | null = null;
+              try {
+                p = JSON.parse(content);
+              } catch {
+                setTemp(content);
+              } finally {
+                if (p != null) {
+                  setTemp(null);
+                  setBlock({ ...block, definition: p });
+                }
+              }
             }}
             updateContent={async () => {
               await postBlockEdit(slug, block);
