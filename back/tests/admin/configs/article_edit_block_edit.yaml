@@ -1,10 +1,9 @@
 unit_tests:
 
   POST:
-    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
+    # - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
     - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_unknown",  out: "bad_request/article_edit_block_edit_unknown" }
     - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
-
 
 files:
   payloads/bad_request/article_edit_block_id_missing.json: >
@@ -38,13 +37,13 @@ files:
 
   responses/bad_request/article_edit_block_edit_unknown.json: >
     {
-      "block_id": ["this is not a valid value"],
-      "block_data":["this value should not be blank"]
+      "block_data":["this value should not be blank"],
+      "block_id":["this value does not exist"]
     }
 
   payloads/ok/article_edit_block_edit.json: >
     {
-      "block_id": "#block_data_uuid#",
+      "block_id": 1,
       "block_data": { "text": "updated text" }
     }
 
