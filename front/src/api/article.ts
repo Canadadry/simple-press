@@ -3,6 +3,12 @@ import type { List, Dict } from "./api";
 
 const ARTICLE_BASE_URL = "/admin/articles";
 
+export interface BlockData {
+  id: number;
+  name: string;
+  data: Dict;
+}
+
 export interface Article {
   title: string;
   author: string;
@@ -13,7 +19,7 @@ export interface Article {
   layout_id: number;
   layouts: Array<{ name: string; value: number }>;
   blocks: Array<{ name: string; value: number }>;
-  block_datas: Array<{ id: number; name: string; data: Dict }>;
+  block_datas: Array<BlockData>;
 }
 
 export interface ValidationErrors {
@@ -50,14 +56,14 @@ export async function postArticleEditContent(slug: string, content: string) {
   );
 }
 
-export async function postArticleEditBlockEdit(
-  slug: string,
-  blockData: object,
-) {
+export async function postArticleEditBlockEdit(slug: string, data: BlockData) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/${slug}/edit/block_edit`,
     "POST",
-    blockData,
+    {
+      block_id: data.id,
+      block_data: data.data,
+    },
   );
 }
 

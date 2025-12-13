@@ -28,6 +28,7 @@ import {
   postArticleEditMetadata,
   postArticleEditContent,
   postArticleEditBlockAdd,
+  postArticleEditBlockEdit,
 } from "../../api/article";
 import type { Article } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
@@ -292,6 +293,15 @@ export default function Articles() {
     load();
   }, [slug]);
 
+  if (!slug) {
+    navigate("/", { replace: true });
+    return (
+      <Flex align="center" justify="center" height="100vh">
+        <Spinner />
+      </Flex>
+    );
+  }
+
   if (!article) {
     return (
       <Flex align="center" justify="center" height="100vh">
@@ -340,10 +350,10 @@ export default function Articles() {
                 data={block.data}
                 ui={makeRadixUI(300)}
                 setData={(d) => {
-                  console.log(block.name, d);
+                  block.data = d;
                 }}
                 onSave={async () => {
-                  console.log(block.name, "saved");
+                  await postArticleEditBlockEdit(slug, block);
                 }}
               />
             ))}

@@ -4,6 +4,14 @@ unit_tests:
     # - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
     - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_unknown",  out: "bad_request/article_edit_block_edit_unknown" }
     - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
+scenarios:
+  edit_block_is_persisted:
+    - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit" }
+    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,  out: "ok/article_edit_block_edit" }
+  # bollean_in_edit_block_is_persisted:
+  #   - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit_boolean" }
+  #   - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,  out: "ok/article_edit_block_edit_boolean" }
+
 
 files:
   payloads/bad_request/article_edit_block_id_missing.json: >
@@ -44,7 +52,10 @@ files:
   payloads/ok/article_edit_block_edit.json: >
     {
       "block_id": 1,
-      "block_data": { "text": "updated text" }
+      "block_data": {
+        "DataNumber":22,
+        "DataString": "updated text"
+      }
     }
 
   responses/ok/article_edit_block_edit.json: >
@@ -69,8 +80,46 @@ files:
           "name":"first_block",
           "data":{
             "DataBool":true,
+            "DataNumber":22,
+            "DataString":"updated text"
+          }
+        }
+      ]
+    }
+
+
+  payloads/ok/article_edit_block_edit.json: >
+    {
+      "block_id": 1,
+      "block_data": {
+        "DataBool":false
+      }
+    }
+
+  responses/ok/article_edit_block_edit.json: >
+    {
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+        {"name":"list.html","value":2},
+        {"name":"single.html","value":1}
+      ],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":false,
             "DataNumber":2,
-            "DataString":"my data"
+            "DataString":"updated text"
           }
         }
       ]
