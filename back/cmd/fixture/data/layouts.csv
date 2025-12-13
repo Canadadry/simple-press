@@ -5,6 +5,9 @@ id,name,content
 
 {{ markdownify .Content }}
 
+{{range $key, $item := .Blocks}}
+<h2>{{ $key}}</h2>
+<div>{{partial $key $item}}</div>
 {{end}}
 "
 2,list.html,"{{define ""body""}}

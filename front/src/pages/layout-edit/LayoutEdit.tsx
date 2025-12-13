@@ -88,7 +88,7 @@ export default function LayoutEdit() {
               spellCheck={false}
               id="skirt-description"
               variant="soft"
-              rows={10}
+              rows={25}
               defaultValue={layout.content || ""}
               value={layout.content}
               disabled={saving === "saving"}

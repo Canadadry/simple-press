@@ -6,9 +6,9 @@
 - [~] edit bock data of article
   - [x] render block of data
   - [x] can edit block of data on the frontend
-  - [] can edit block of data on the backend
-  - [] connect them
-
+  - [x] can edit block of data on the backend
+  - [x] connect them
+  - [x] create a layout that display block
 - [x] remove front SSR
 - [] add file, article,  block,template, layout
 - [] remove file, article,block in article, block,template, layout

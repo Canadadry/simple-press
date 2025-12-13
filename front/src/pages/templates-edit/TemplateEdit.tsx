@@ -88,7 +88,7 @@ export default function TemplateEdit() {
               spellCheck={false}
               id="skirt-description"
               variant="soft"
-              rows={10}
+              rows={25}
               defaultValue={template.content || ""}
               value={template.content}
               disabled={saving === "saving"}
