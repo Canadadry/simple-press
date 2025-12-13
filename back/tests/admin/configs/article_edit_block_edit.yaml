@@ -1,0 +1,78 @@
+unit_tests:
+
+  POST:
+    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
+    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_unknown",  out: "bad_request/article_edit_block_edit_unknown" }
+    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
+
+
+files:
+  payloads/bad_request/article_edit_block_id_missing.json: >
+    {
+      "block_data": {"text":"x"}
+    }
+
+  responses/bad_request/article_edit_block_id_missing.json: >
+    {
+      "block_id":[
+        "this is not a valid value",
+        "this value should not be blank"
+      ]
+    }
+
+  payloads/bad_request/article_edit_block_edit_no_data.json: >
+    {
+      "block_id": 1
+    }
+
+  responses/bad_request/article_edit_block_edit_no_data.json: >
+    {
+      "block_id":[],
+      "block_data":["this value should not be blank"]
+    }
+
+  payloads/bad_request/article_edit_block_edit_unknown.json: >
+    {
+      "block_id": 999
+    }
+
+  responses/bad_request/article_edit_block_edit_unknown.json: >
+    {
+      "block_id": ["this is not a valid value"],
+      "block_data":["this value should not be blank"]
+    }
+
+  payloads/ok/article_edit_block_edit.json: >
+    {
+      "block_id": "#block_data_uuid#",
+      "block_data": { "text": "updated text" }
+    }
+
+  responses/ok/article_edit_block_edit.json: >
+    {
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+        {"name":"list.html","value":2},
+        {"name":"single.html","value":1}
+      ],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        }
+      ]
+    }

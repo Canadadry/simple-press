@@ -53,6 +53,15 @@ files:
         {"name":"nested_block","value":2}
       ],
       "block_datas":[
-        {"id":1,"name":"first_block","data":{"DataBool":true,"DataNumber":2,"DataString":"my data"}}
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        },
+        {"id":2,"name":"nested_block","data":{"DataBool":true,"DataNumber":2,"DataString":"my data"}}
       ]
     }

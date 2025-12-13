@@ -1,24 +1,21 @@
 package data
 
 import (
-	"net/http"
-	"net/url"
-	"reflect"
-	"strings"
+	"fmt"
 	"testing"
 )
 
 func TestParseFormData(t *testing.T) {
 	tests := map[string]struct {
-		FormValues url.Values
+		FormValues map[string]any
 		Definition map[string]any
 		Expected   map[string]any
 	}{
 		"flat object": {
-			FormValues: url.Values{
-				"firstname":  {"John"},
-				"email":      {"john@example.com"},
-				"newsletter": {"true"},
+			FormValues: map[string]any{
+				"firstname":  "John",
+				"email":      "john@example.com",
+				"newsletter": "true",
 			},
 			Definition: map[string]any{
 				"firstname":  "Alice",
@@ -32,10 +29,14 @@ func TestParseFormData(t *testing.T) {
 			},
 		},
 		"nested object": {
-			FormValues: url.Values{
-				"profile.name.first": {"Alice"},
-				"profile.name.last":  {"Smith"},
-				"profile.age":        {"28"},
+			FormValues: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Alice",
+						"last":  "Smith",
+					},
+					"age": 28,
+				},
 			},
 			Definition: map[string]any{
 				"profile": map[string]any{
@@ -56,12 +57,16 @@ func TestParseFormData(t *testing.T) {
 				},
 			},
 		},
-		"missing field default to old value": {
-			FormValues: url.Values{
-				"profile.name.first": {"Alice"},
-				"profile.name.last":  {"Smith"},
-				"profile.age":        {"28"},
-				"profile.gender":     {"Mme"},
+		"extra field ignored": {
+			FormValues: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Alice",
+						"last":  "Smith",
+					},
+					"age":    28,
+					"gender": "Mme",
+				},
 			},
 			Definition: map[string]any{
 				"profile": map[string]any{
@@ -83,10 +88,14 @@ func TestParseFormData(t *testing.T) {
 			},
 		},
 
-		"extra field ignored": {
-			FormValues: url.Values{
-				"profile.name.first": {"Alice"},
-				"profile.name.last":  {"Smith"},
+		"missing field default to old value": {
+			FormValues: map[string]any{
+				"profile": map[string]any{
+					"name": map[string]any{
+						"first": "Alice",
+						"last":  "Smith",
+					},
+				},
 			},
 			Definition: map[string]any{
 				"profile": map[string]any{
@@ -111,19 +120,12 @@ func TestParseFormData(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			body := tt.FormValues.Encode()
-			req, err := http.NewRequest("POST", "/submit", strings.NewReader(body))
-			if err != nil {
-				t.Fatalf("failed to build request: %v", err)
-			}
-			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-			result, err := ParseFormData(req, tt.Definition)
+			result, err := ParseFormData(tt.FormValues, tt.Definition)
 			if err != nil {
 				t.Fatalf("ParseFormData returned error: %v", err)
 			}
 
-			if !reflect.DeepEqual(result, tt.Expected) {
+			if fmt.Sprintf("%#v", tt.Expected) != fmt.Sprintf("%#v", result) {
 				t.Errorf("Expected:\n%#v\nGot:\n%#v", tt.Expected, result)
 			}
 		})

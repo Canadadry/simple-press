@@ -1,61 +1,60 @@
 package data
 
 import (
-	"net/http"
-	"net/url"
-	"strconv"
+	"fmt"
 )
 
-func ParseFormData(r *http.Request, def map[string]any) (map[string]any, error) {
-	if err := r.ParseForm(); err != nil {
-		return nil, err
-	}
-	return extractData(r.Form, def, "")
-}
-
-func extractData(values url.Values, def map[string]any, prefix string) (map[string]any, error) {
+func ParseFormData(values, def map[string]any) (map[string]any, error) {
 	result := map[string]any{}
 
-	for key, val := range def {
-		fullKey := key
-		if prefix != "" {
-			fullKey = prefix + "." + key
-		}
-		switch typed := val.(type) {
+	for key, subdef := range def {
+		switch subdef_typed := subdef.(type) {
 		case map[string]any:
-			nested, err := extractData(values, typed, fullKey)
-			if err != nil {
-				return nil, err
+			subvalues, ok := values[key].(map[string]any)
+			if ok {
+				var err error
+				result[key], err = ParseFormData(subvalues, subdef_typed)
+				if err != nil {
+					return result, fmt.Errorf("%s: %w", key, err)
+				}
+			} else {
+				result[key] = subdef_typed
 			}
-			result[key] = nested
 
 		case string:
-			if _, ok := values[fullKey]; ok {
-				result[key] = values.Get(fullKey)
+			if v, ok := values[key].(string); ok {
+				result[key] = v
 			} else {
-				result[key] = def[key]
+				result[key] = subdef_typed
 			}
 
 		case bool:
-			if _, ok := values[fullKey]; ok {
-				result[key] = values.Get(fullKey) == "true"
+			if v, ok := values[key].(string); ok {
+				result[key] = v == "true"
 			} else {
-				result[key] = def[key]
+				result[key] = subdef_typed
 			}
-		case int, int32, int64, float32, float64:
-			if _, ok := values[fullKey]; ok {
-				raw := values.Get(fullKey)
-				if raw == "" {
-					result[key] = 0.0
-					continue
-				}
-				num, err := strconv.ParseFloat(raw, 64)
-				if err != nil {
-					return nil, err
-				}
-				result[key] = num
+
+		case int, int32, int64:
+			if v, ok := values[key].(int); ok {
+				result[key] = v
+			} else if v64, ok := values[key].(int64); ok {
+				result[key] = int(v64)
+			} else if v, ok := values[key].(float64); ok {
+				result[key] = int(v)
 			} else {
-				result[key] = def[key]
+				result[key] = subdef_typed
+			}
+
+		case float32, float64:
+			if v, ok := values[key].(float64); ok {
+				result[key] = v
+			} else if v32, ok := values[key].(float32); ok {
+				result[key] = float64(v32)
+			} else if v, ok := values[key].(int); ok {
+				result[key] = float64(v)
+			} else {
+				result[key] = subdef_typed
 			}
 		}
 	}

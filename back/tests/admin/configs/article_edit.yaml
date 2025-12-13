@@ -15,7 +15,7 @@ files:
       "title":"index",
       "author":"metoo",
       "slug":"index",
-      "content":"@string@.isNotEmpty()",
+      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
       "draft":false,
       "layout_id":1,
       "layouts":[
@@ -26,7 +26,17 @@ files:
         {"name":"first_block","value":1},
         {"name":"nested_block","value":2}
       ],
-      "block_datas":[]
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        }
+      ]
     }
 
   payloads/ok/article_edit_metadata_update.json: >
@@ -54,7 +64,17 @@ files:
         {"name":"first_block","value":1},
         {"name":"nested_block","value":2}
       ],
-      "block_datas":[]
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        }
+      ]
     }
 
   payloads/bad_request/article_edit_no_title.json: >
@@ -112,7 +132,17 @@ files:
       {"name":"first_block","value":1},
       {"name":"nested_block","value":2}
     ],
-    "block_datas":[]
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        }
+      ]
     }
 
   payloads/bad_request/article_edit_no_content.json: >
@@ -121,41 +151,4 @@ files:
   responses/bad_request/article_edit_no_content.json: >
     {
       "content": ["this value should not be blank"]
-    }
-
-  payloads/ok/article_edit_block_edit.json: >
-    {
-      "edited_block_id": "#block_data_uuid#",
-      "edited_block_position": 0,
-      "edited_block_data": { "text": "updated text" }
-    }
-
-  responses/ok/article_edit_block_edit.json: >
-    {
-      "title": "My Article",
-      "author": "John",
-      "slug": "my-article",
-      "content": "Lorem ipsum",
-      "draft": false,
-      "layout_id": 1,
-      "layouts": [{ "name":"default", "value":1 }],
-      "blocks": [
-        { "name": "text", "value": 10 }
-      ],
-      "block_datas": [
-        {
-          "id": "#block_data_uuid#",
-          "data": { "text": "updated text" }
-        }
-      ]
-    }
-
-  payloads/bad_request/article_edit_block_id_missing.json: >
-    {
-      "edited_block_data": {"text":"x"}
-    }
-
-  responses/bad_request/article_edit_block_id_missing.json: >
-    {
-      "edited_block_id": ["this value is required"]
     }
