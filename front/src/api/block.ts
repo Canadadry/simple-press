@@ -17,8 +17,8 @@ export async function getBlockList() {
   return apiRequest<List<Block>>(`${BASE_URL}`, "GET");
 }
 
-export async function postBlockAdd(data: Block) {
-  return apiRequest<Block>(`${BASE_URL}/add`, "POST", data);
+export async function postBlockAdd(name: string) {
+  return apiRequest<Block>(`${BASE_URL}/add`, "POST", { name: name });
 }
 
 export async function getBlockEdit(name: string) {

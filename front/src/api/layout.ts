@@ -1,5 +1,5 @@
-import { apiRequest } from "./api.ts";
-import type { List } from "./api.ts";
+import { apiRequest } from "./api";
+import type { List } from "./api";
 
 const LAYOUT_BASE_URL = "/admin/layouts";
 
@@ -17,8 +17,8 @@ export async function getLayoutList() {
   return apiRequest<List<Layout>>(`${LAYOUT_BASE_URL}`, "GET");
 }
 
-export async function postLayoutAdd(data: Layout) {
-  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/add`, "POST", data);
+export async function postLayoutAdd(name: string) {
+  return apiRequest<Layout>(`${LAYOUT_BASE_URL}/add`, "POST", { name: name });
 }
 
 export async function getLayoutEdit(name: string) {

@@ -17,8 +17,10 @@ export async function getTemplateList() {
   return apiRequest<List<Template>>(`${TEMPLATE_BASE_URL}`, "GET");
 }
 
-export async function postTemplateAdd(data: Template) {
-  return apiRequest<Template>(`${TEMPLATE_BASE_URL}/add`, "POST", data);
+export async function postTemplateAdd(name: string) {
+  return apiRequest<Template>(`${TEMPLATE_BASE_URL}/add`, "POST", {
+    name: name,
+  });
 }
 
 export async function getTemplateEdit(name: string) {
