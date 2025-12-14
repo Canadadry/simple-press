@@ -11,8 +11,7 @@ V1
   - [x] connect them
   - [x] create a layout that display block
 - [x] remove front SSR
-- [] add file, article,  block,template, layout
-- [] remove file, article,block in article, block,template, layout
+- [x] add file, article,  block,template, layout
 - [] fetch article from go template to allow paginated list of articles
 
 V1.1 export
@@ -25,6 +24,7 @@ V1.1 export
 - [] expose build static as route so downloading site from front become possible
 
 V1.1.1 polish
+- [] remove file, article,block in article, block,template, layout
 - [] list bug and fix them
 - [] basic unit test around bug of renaming template or layout in front
 

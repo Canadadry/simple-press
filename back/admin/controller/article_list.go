@@ -12,13 +12,14 @@ func (c *Controller) GetArticleList(w http.ResponseWriter, r *http.Request) erro
 	const MinLimit = 10
 	page := paginator.PageFromRequest(r, "page", MinPage)
 	limit := paginator.PageFromRequest(r, "limit", MinLimit)
+	query := ""
 
-	count, err := c.Repository.CountArticle(r.Context())
+	count, err := c.Repository.CountArticleLikeTitle(r.Context(), query)
 	if err != nil {
 		return fmt.Errorf("cannot count articles : %w", err)
 	}
 
-	list, err := c.Repository.GetArticleList(r.Context(), limit, page*limit)
+	list, err := c.Repository.GetArticleList(r.Context(), query, limit, page*limit)
 	if err != nil {
 		return fmt.Errorf("cannot list articles : %w", err)
 	}

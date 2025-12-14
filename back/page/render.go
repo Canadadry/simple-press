@@ -11,12 +11,20 @@ import (
 
 const BaseOf = "baseof.html"
 
+type Page struct {
+	Slug        string
+	Title       string
+	Author      string
+	Description string
+}
+
 type Data struct {
 	Title         string
 	Content       string
 	Files         map[string]string
 	Blocks        map[string]string
 	ArticleBlocks map[string]map[string]any
+	PageFtecher   func(query string, offset, limit int) []Page
 }
 
 func Render(w io.Writer, preview_data Data) error {
@@ -31,9 +39,7 @@ func Render(w io.Writer, preview_data Data) error {
 			}
 			return template.HTML(buf.String())
 		},
-		"get_data": func(name string) map[string]any {
-			return preview_data.ArticleBlocks[name]
-		},
+		"fetch": preview_data.PageFtecher,
 		"partial": func(name string, data map[string]any) (template.HTML, error) {
 			content, ok := preview_data.Blocks[name]
 			if !ok {

@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const defaultQuery = "%"
+
 type Article struct {
 	ID       int64
 	Title    string
@@ -19,8 +21,11 @@ type Article struct {
 	LayoutID int64
 }
 
-func (r *Repository) CountArticle(ctx context.Context) (int, error) {
-	c, err := adminmodel.New(r.Db).CountArticle(ctx)
+func (r *Repository) CountArticleLikeTitle(ctx context.Context, query string) (int, error) {
+	if query == "" {
+		query = defaultQuery
+	}
+	c, err := adminmodel.New(r.Db).CountArticleLikeTitle(ctx, query)
 	return int(c), err
 }
 
@@ -64,8 +69,12 @@ func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
 	return nil
 }
 
-func (r *Repository) GetArticleList(ctx context.Context, limit, offset int) ([]Article, error) {
+func (r *Repository) GetArticleList(ctx context.Context, query string, limit, offset int) ([]Article, error) {
+	if query == "" {
+		query = defaultQuery
+	}
 	list, err := adminmodel.New(r.Db).GetArticleList(ctx, adminmodel.GetArticleListParams{
+		Title:  query,
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	})

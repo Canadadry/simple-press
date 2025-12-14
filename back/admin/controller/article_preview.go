@@ -4,9 +4,28 @@ import (
 	"app/page"
 	"app/pkg/http/httpresponse"
 	"app/pkg/router"
+	"context"
 	"fmt"
 	"net/http"
 )
+
+func (c *Controller) getPages(ctx context.Context, query string, offset, limit int) []page.Page {
+	list, err := c.Repository.GetArticleList(ctx, query, limit, offset)
+	if err != nil {
+		return nil
+	}
+
+	pages := []page.Page{}
+	for _, a := range list {
+		pages = append(pages, page.Page{
+			Title:       a.Title,
+			Author:      a.Author,
+			Description: a.Content,
+			Slug:        a.Slug,
+		})
+	}
+	return pages
+}
 
 func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) error {
 	slug := router.GetField(r, 0)
@@ -64,6 +83,9 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		Files:         files,
 		Blocks:        blockSelector,
 		ArticleBlocks: blockDataView,
+		PageFtecher: func(query string, offset int, limit int) []page.Page {
+			return c.getPages(r.Context(), query, offset, limit)
+		},
 	})
 	if err != nil {
 		return fmt.Errorf("cannot render article : %w", err)

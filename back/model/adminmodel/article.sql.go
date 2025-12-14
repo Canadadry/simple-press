@@ -10,20 +10,6 @@ import (
 	"time"
 )
 
-const countArticle = `-- name: CountArticle :one
-SELECT
-    count(*)
-FROM
-    article
-`
-
-func (q *Queries) CountArticle(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countArticle)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
 const countArticleBySlug = `-- name: CountArticleBySlug :one
 SELECT
     count(*)
@@ -35,6 +21,22 @@ WHERE
 
 func (q *Queries) CountArticleBySlug(ctx context.Context, slug string) (int64, error) {
 	row := q.db.QueryRowContext(ctx, countArticleBySlug, slug)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const countArticleLikeTitle = `-- name: CountArticleLikeTitle :one
+SELECT
+    count(*)
+FROM
+    article
+WHERE
+    title LIKE ?
+`
+
+func (q *Queries) CountArticleLikeTitle(ctx context.Context, title string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countArticleLikeTitle, title)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -97,11 +99,13 @@ SELECT
     title,
     date,
     author,
-    substr(content,0,50) as ` + "`" + `content` + "`" + `,
+    substr(content, 0, 50) AS ` + "`" + `content` + "`" + `,
     slug,
     draft
 FROM
     article
+WHERE
+    title LIKE ?
 ORDER BY
     date DESC
 LIMIT
@@ -111,6 +115,7 @@ OFFSET
 `
 
 type GetArticleListParams struct {
+	Title  string
 	Limit  int64
 	Offset int64
 }
@@ -125,7 +130,7 @@ type GetArticleListRow struct {
 }
 
 func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) ([]GetArticleListRow, error) {
-	rows, err := q.db.QueryContext(ctx, getArticleList, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, getArticleList, arg.Title, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

@@ -1,8 +1,11 @@
--- name: CountArticle :one
+-- name: CountArticleLikeTitle :one
 SELECT
     count(*)
 FROM
-    article;
+    article
+WHERE
+    title LIKE ?;
+
 
 -- name: CountArticleBySlug :one
 SELECT
@@ -59,11 +62,13 @@ SELECT
     title,
     date,
     author,
-    substr(content,0,50) as `content`,
+    substr(content, 0, 50) AS `content`,
     slug,
     draft
 FROM
     article
+WHERE
+    title LIKE ?
 ORDER BY
     date DESC
 LIMIT
