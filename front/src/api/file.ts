@@ -15,8 +15,17 @@ export async function getFileList() {
   return apiRequest<List<File>>(`${ARTICLE_BASE_URL}`, "GET");
 }
 
-export async function postFile(file: Blob) {
+export async function postFile(file: Blob, filename: string) {
+  const renamedFile =
+    file instanceof File
+      ? new File([file], filename, { type: file.type })
+      : new File([file], filename);
+
   const formData = new FormData();
-  formData.append("content", file);
+  formData.append("content", renamedFile);
   return apiRequest<void>(`${ARTICLE_BASE_URL}/add`, "POST", formData);
+}
+
+export async function deleteFile(path: string) {
+  return apiRequest<void>(`${ARTICLE_BASE_URL}/${path}/delete`, "DELETE");
 }

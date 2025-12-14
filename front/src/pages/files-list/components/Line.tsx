@@ -8,7 +8,6 @@ import {
   Text,
   Flex,
 } from "@radix-ui/themes";
-import type { File } from "../../../api/file";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -16,6 +15,7 @@ interface LineProps {
   tabIndex: number | undefined;
   file: File;
   portalContainer: Element | DocumentFragment | null | undefined;
+  deleteFile: (filename: string) => Promise<void>;
 }
 export default function Line(line: LineProps) {
   const navigate = useNavigate();
@@ -75,7 +75,15 @@ export default function Line(line: LineProps) {
               <DropdownMenu.Item>Preview</DropdownMenu.Item>
               <DropdownMenu.Item>Edit</DropdownMenu.Item>
               <DropdownMenu.Separator />
-              <DropdownMenu.Item color="red">Remove</DropdownMenu.Item>
+              <DropdownMenu.Item
+                color="red"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  line.deleteFile(line.file.name);
+                }}
+              >
+                Remove
+              </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </Flex>
