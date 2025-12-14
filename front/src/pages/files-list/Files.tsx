@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 // import * as Accordion from "@radix-ui/react-accordion";
-import { getFileList } from "../../api/file";
-import type { File } from "../../api/file";
+import { getFileList, postFile, type File } from "../../api/file";
 import Line from "./components/Line";
+import SingleFileUploader from "./components/Uploader";
+import { useNavigate } from "react-router-dom";
 
 export default function Files() {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function load() {
@@ -34,6 +36,13 @@ export default function Files() {
       <Text size="7" weight="bold">
         Liste des files
       </Text>
+      <SingleFileUploader
+        handleUpload={async (f: Blob) => {
+          postFile(f);
+          const res = await getFileList();
+          setFiles(res.items);
+        }}
+      ></SingleFileUploader>
       <Card>
         <Flex direction="column">
           {files.map((val, idx) => {

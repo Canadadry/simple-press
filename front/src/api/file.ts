@@ -1,5 +1,5 @@
-import { apiRequest } from "./api.ts";
-import type { List } from "./api.ts";
+import { apiRequest } from "./api";
+import type { List } from "./api";
 
 const ARTICLE_BASE_URL = "/admin/files";
 
@@ -13,4 +13,10 @@ export interface ValidationErrors {
 
 export async function getFileList() {
   return apiRequest<List<File>>(`${ARTICLE_BASE_URL}`, "GET");
+}
+
+export async function postFile(file: Blob) {
+  const formData = new FormData();
+  formData.append("content", file);
+  return apiRequest<void>(`${ARTICLE_BASE_URL}/add`, "POST", formData);
 }
