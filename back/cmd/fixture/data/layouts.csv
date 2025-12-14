@@ -15,6 +15,9 @@ id,name,content
 
 <h1>List {{.Title}}</h1>
 
-{{ markdownify .Content }}
+{{range $key, $item := (fetch """" 0 10)}}
+<h2>{{ $key}}</h2>
+<div>{{$item}}</div>
+{{end}}
 
 {{end}}"

@@ -4,7 +4,7 @@ V1
 - [x] edit block
 - [x] edit layout of article
 - [x] add bock to article
-- [~] edit bock data of article
+- [x] edit bock data of article
   - [x] render block of data
   - [x] can edit block of data on the frontend
   - [x] can edit block of data on the backend
@@ -12,7 +12,7 @@ V1
   - [x] create a layout that display block
 - [x] remove front SSR
 - [x] add file, article,  block,template, layout
-- [] fetch article from go template to allow paginated list of articles
+- [x] fetch article from go template to allow paginated list of articles
 
 V1.1 export
 - [] add figure to all article (allow upload file from article, or open file selector)

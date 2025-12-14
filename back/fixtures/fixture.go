@@ -71,9 +71,11 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 			return env, fmt.Errorf("cannot add article %s : %w", a.Title, err)
 		}
 		env.Store(fmt.Sprintf("article_%d_slug", i), slug)
-		err = api.EditArticleContent(slug, a.Content)
-		if err != nil {
-			return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
+		if len(a.Content) > 0 {
+			err = api.EditArticleContent(slug, a.Content)
+			if err != nil {
+				return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
+			}
 		}
 		err = api.EditArticleBlockAdd(slug, 1)
 		if err != nil {
