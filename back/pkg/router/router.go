@@ -20,7 +20,7 @@ const (
 	SlugRegexp       = "([-_a-zA-Z0-9\\.]+)"
 	JwtRegexp        = "([a-zA-Z0-9_=]+\\.[a-zA-Z0-9_=]+\\.[a-zA-Z0-9_\\-\\+\\/=]*)"
 	Base64Regexp     = "((?:[A-Za-z\\d+/]{4})*(?:[A-Za-z\\d+/]{3}=|[A-Za-z\\d+/]{2}==)?)"
-	PathRegexp       = "([a-z0-9_-][a-z0-9_.-]*)(\\/([a-z0-9_-][a-z0-9_.-]*))*"
+	PathRegexp       = "(([a-z0-9_-][a-z0-9_.-]*)(\\/([a-z0-9_-][a-z0-9_.-]*))*)"
 	AnyRegexp        = "(.*)"
 )
 

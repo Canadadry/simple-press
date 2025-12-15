@@ -1,0 +1,26 @@
+scenario:
+  delete:
+    - { action: "GET"   , url: "/data.json", status: 200}
+    - { action: "DELETE", url: "/admin/files/data.json/delete", status: 204}
+    - { action: "GET"   , url: "/data.json", status: 404}
+
+  delete_path:
+    - { action: "POST"   , url: "/admin/files/add", status: 201,in: "file_with_path_add", ct_in: 'multipart/form-data; boundary=WebAppBoundary' }
+    - { action: "GET"   , url: "/path/rect.svg", status: 200}
+    - { action: "DELETE", url: "/admin/files/path/rect.svg/delete", status: 204}
+    - { action: "GET"   , url: "/path/rect.svg", status: 404}
+
+files:
+  payloads/file_with_path_add: |
+    --WebAppBoundary
+    Content-Disposition: form-data; name="content"; filename="rect.svg"
+    Content-Type: image/svg
+
+    <svg width="300" height="130" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="100" x="10" y="10" rx="20" ry="20" fill="blue" />
+    </svg>
+    --WebAppBoundary
+    Content-Disposition: form-data; name="name"
+
+    path/rect.svg
+    --WebAppBoundary

@@ -165,8 +165,26 @@ func TestRegexps(t *testing.T) {
 			}
 
 			for _, s := range tt.match {
-				if !re.MatchString(s) {
-					t.Errorf("expected %q to match %q", s, tt.reg)
+				sub := re.FindStringSubmatch(s)
+				if sub == nil {
+					t.Fatalf("expected %q to match %q", s, tt.reg)
+				}
+
+				if sub[0] != s {
+					t.Fatalf("full match mismatch: got %q want %q", sub[0], s)
+				}
+
+				if len(sub) < 2 {
+					t.Fatalf("regexp %q has no capture group", tt.reg)
+				}
+
+				if sub[1] != s {
+					t.Fatalf(
+						"capture mismatch: got %q want %q (regexp %q)",
+						sub[1],
+						s,
+						tt.reg,
+					)
 				}
 			}
 

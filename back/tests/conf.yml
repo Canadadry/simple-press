@@ -17,6 +17,7 @@ groups:
       - file_add.yaml
       - file_get.yaml
       - file_list.yaml
+      - file_delete.yaml
       - layout_add.yaml
       - layout_edit.yaml
       - layout_list.yaml

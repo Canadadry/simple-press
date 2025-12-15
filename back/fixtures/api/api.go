@@ -202,6 +202,9 @@ func (c *Client) AddFile(filename string, file io.ReadCloser) (int64, error) {
 		"content": []httpcaller.FormValue{
 			{Filename: filename, File: file},
 		},
+		"name": []httpcaller.FormValue{
+			{String: filename},
+		},
 	})
 	if err != nil {
 		return 0, fmt.Errorf("cannot create multipart request  : %w", err)

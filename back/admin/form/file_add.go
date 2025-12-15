@@ -9,6 +9,7 @@ import (
 
 const (
 	FileAddContent          = "content"
+	FileAddName             = "name"
 	RequestWrongContentType = "content type should be a multipart/form-data"
 	RequestInvalidContent   = "cannot parse multipart/form-data"
 	FileNotFound            = "file not found"
@@ -92,7 +93,7 @@ func ParseFileAdd(r *http.Request) (File, FileError, error) {
 		return File{}, invalidRequest(RequestInvalidContent), nil
 	}
 
-	file, header, err := r.FormFile(FileAddContent)
+	file, _, err := r.FormFile(FileAddContent)
 	if err != nil {
 		return File{}, invalidContent(FileNotFound), nil
 	}
@@ -103,7 +104,7 @@ func ParseFileAdd(r *http.Request) (File, FileError, error) {
 	}
 
 	return File{
-		Name:    header.Filename,
+		Name:    r.FormValue(FileAddName),
 		Content: content,
 	}, FileError{}, nil
 

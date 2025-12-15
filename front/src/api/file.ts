@@ -16,13 +16,9 @@ export async function getFileList() {
 }
 
 export async function postFile(file: Blob, filename: string) {
-  const renamedFile =
-    file instanceof File
-      ? new File([file], filename, { type: file.type })
-      : new File([file], filename);
-
   const formData = new FormData();
-  formData.append("content", renamedFile);
+  formData.append("content", file);
+  formData.append("name", filename);
   return apiRequest<void>(`${ARTICLE_BASE_URL}/add`, "POST", formData);
 }
 
