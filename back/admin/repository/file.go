@@ -2,6 +2,7 @@ package repository
 
 import (
 	"app/model/adminmodel"
+	"app/pkg/middleware"
 	"app/pkg/sqlutil"
 	"app/pkg/stacktrace"
 	"context"
@@ -23,7 +24,7 @@ func (r *Repository) CountFileByName(ctx context.Context, name string) (int, err
 }
 
 func (r *Repository) UploadFile(ctx context.Context, f File) (int64, error) {
-	id, err := adminmodel.New(r.Db).UploadFile(ctx, adminmodel.UploadFileParams{
+	id, err := adminmodel.New(r.Db).UploadFile(middleware.HideSQLQueryParam(ctx), adminmodel.UploadFileParams{
 		Name:    f.Name,
 		Content: f.Content,
 	})

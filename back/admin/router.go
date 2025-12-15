@@ -67,7 +67,6 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Post("/admin/layouts/:path/edit", c.PostLayoutEdit)
 	r.Get("/admin/files", c.GetFileList)
 	r.Post("/admin/files/add", c.PostFileAdd)
-	r.Get("/admin/files/:path", c.GetFile)
 	r.Delete("/admin/files/:path/delete", c.DeleteFile)
 	r.Get("/:any", c.GetFile)
 

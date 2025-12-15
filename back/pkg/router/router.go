@@ -20,9 +20,23 @@ const (
 	SlugRegexp       = "([-_a-zA-Z0-9\\.]+)"
 	JwtRegexp        = "([a-zA-Z0-9_=]+\\.[a-zA-Z0-9_=]+\\.[a-zA-Z0-9_\\-\\+\\/=]*)"
 	Base64Regexp     = "((?:[A-Za-z\\d+/]{4})*(?:[A-Za-z\\d+/]{3}=|[A-Za-z\\d+/]{2}==)?)"
-	PathRegexp       = "([a-z0-9.-_]+(\\/[a-z0-9.-_]+)*)"
+	PathRegexp       = "([a-z0-9_-][a-z0-9_.-]*)(\\/([a-z0-9_-][a-z0-9_.-]*))*"
 	AnyRegexp        = "(.*)"
 )
+
+var tags = map[string]string{
+	":digit":    DigitRegExp,
+	":string":   StringRegExp,
+	":uuid":     UuidV4Regexp,
+	":email":    EmailRegexp,
+	":token":    TokenRegexp,
+	":multitok": MultiTokenRegexp,
+	":slug":     SlugRegexp,
+	":jwt":      JwtRegexp,
+	":b64":      Base64Regexp,
+	":path":     PathRegexp,
+	":any":      AnyRegexp,
+}
 
 type HandlerFunc func(w http.ResponseWriter, r *http.Request) error
 
@@ -40,19 +54,6 @@ type Route struct {
 }
 
 func newRoute(method, pattern string, handler HandlerFunc) Route {
-	tags := map[string]string{
-		":digit":    DigitRegExp,
-		":string":   StringRegExp,
-		":uuid":     UuidV4Regexp,
-		":email":    EmailRegexp,
-		":token":    TokenRegexp,
-		":multitok": MultiTokenRegexp,
-		":slug":     SlugRegexp,
-		":jwt":      JwtRegexp,
-		":b64":      Base64Regexp,
-		":path":     PathRegexp,
-		":any":      AnyRegexp,
-	}
 	for k, v := range tags {
 		pattern = strings.ReplaceAll(pattern, k, v)
 	}
