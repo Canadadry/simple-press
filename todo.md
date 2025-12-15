@@ -13,6 +13,7 @@ V1
 - [x] remove front SSR
 - [x] add file, article,  block,template, layout
 - [x] fetch article from go template to allow paginated list of articles
+- [] edit filename, delete file
 
 V1.1 export
 - [] add figure to all article (allow upload file from article, or open file selector)

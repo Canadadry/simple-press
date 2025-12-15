@@ -38,30 +38,50 @@ files:
 
   responses/ok/article_edit_block_add.json: >
     {
-      "title":"index",
-      "author":"metoo",
-      "slug":"index",
-      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
-      "draft":false,
-      "layout_id":1,
-      "layouts":[
-        {"name":"list.html","value":2},
-        {"name":"single.html","value":1}
-      ],
-      "blocks":[
-        {"name":"first_block","value":1},
-        {"name":"nested_block","value":2}
-      ],
-      "block_datas":[
+      "title": "index",
+      "author": "metoo",
+      "slug": "index",
+      "content": "## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
+      "draft": false,
+      "layout_id": 1,
+      "layouts": [
         {
-          "id":1,
-          "name":"first_block",
-          "data":{
-            "DataBool":true,
-            "DataNumber":2,
-            "DataString":"my data"
+          "name": "list.html",
+          "value": 2
+        },
+        {
+          "name": "single.html",
+          "value": 1
+        }
+      ],
+      "blocks": [
+        {
+          "name": "first_block",
+          "value": 1
+        },
+        {
+          "name": "nested_block",
+          "value": 2
+        }
+      ],
+      "block_datas": [
+        {
+          "id": 1,
+          "name": "first_block",
+          "data": {
+            "DataBool": true,
+            "DataNumber": 2,
+            "DataString": "my data"
           }
         },
-        {"id":2,"name":"nested_block","data":{"DataBool":true,"DataNumber":2,"DataString":"my data"}}
+        {
+          "id": 3,
+          "name": "",
+          "data": {
+            "DataBool": true,
+            "DataNumber": 2,
+            "DataString": "my data"
+          }
+        }
       ]
     }
