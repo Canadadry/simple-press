@@ -20,73 +20,35 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		return httpresponse.NotFound(w)
 	}
 
-	blockDatas, err := c.Repository.SelectBlockDataByArticle(r.Context(), article.ID)
-	if err != nil {
-		return fmt.Errorf("cannot select block dataarticle : %w", err)
-	}
-
-	blockDataView := []view.BlockData{}
-	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
-	}
-
 	a, errors, err := form.ParseArticleEditBlockAdd(r, c.Repository.CountBlockByID)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
-
-	blocks, err := c.Repository.SelectAllBlock(r.Context())
-	if err != nil {
-		return fmt.Errorf("cannot select all layouts : %w", err)
-	}
-	blockSelector := []view.LayoutSelector{}
-	for _, b := range blocks {
-		blockSelector = append(blockSelector, view.LayoutSelector{Name: b.Name, Value: b.ID})
-	}
-
 	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
-	def := map[string]any{}
-	for _, b := range blocks {
-		if b.ID == a.AddedBlockID {
-			def = b.Definition
-		}
+
+	block, ok, err := c.Repository.SelectBlockByID(r.Context(), a.AddedBlockID)
+	if err != nil {
+		return fmt.Errorf("cannot select all layouts : %w", err)
 	}
+
 	id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
 		ArticleID: article.ID,
-		Block:     repository.Block{ID: a.AddedBlockID, Definition: def},
+		Block:     repository.Block{ID: a.AddedBlockID, Definition: block.Definition},
 		Position:  0,
 	})
 	if err != nil {
 		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
 	}
-	blockName := ""
-	for _, block := range blockSelector {
-		if block.Value == id {
-			blockName = block.Name
-		}
-	}
-
-	blockDataView = append(blockDataView, view.BlockData{ID: id, Name: blockName, Data: def})
-	layouts, err := c.Repository.GetAllLayout(r.Context())
-	if err != nil {
-		return fmt.Errorf("cannot select all layouts : %w", err)
-	}
-
-	layoutSelector := []view.LayoutSelector{}
-	for _, p := range layouts {
-		layoutSelector = append(layoutSelector, view.LayoutSelector{Name: p.Name, Value: p.ID})
-	}
-	return view.ArticleOk(w, view.ArticleEditData{
-		Title:      article.Title,
-		Author:     article.Author,
-		Slug:       article.Slug,
-		Content:    article.Content,
-		Draft:      article.Draft,
-		LayoutID:   article.LayoutID,
-		Layouts:    layoutSelector,
-		Blocks:     blockSelector,
-		BlockDatas: blockDataView,
+	fmt.Printf("%#v\n", view.ArticleAddBlockData{
+		ID:   id,
+		Name: block.Name,
+		Data: block.Definition,
+	})
+	return view.BlockDataAddCreated(w, view.ArticleAddBlockData{
+		ID:   id,
+		Name: block.Name,
+		Data: block.Definition,
 	})
 }

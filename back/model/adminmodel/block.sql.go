@@ -202,6 +202,45 @@ func (q *Queries) SelectBlock(ctx context.Context, name string) ([]Block, error)
 	return items, nil
 }
 
+const selectBlockByID = `-- name: SelectBlockByID :many
+SELECT
+    id, name, content, definition
+FROM
+    block
+WHERE
+    id = ?
+LIMIT
+    1
+`
+
+func (q *Queries) SelectBlockByID(ctx context.Context, id int64) ([]Block, error) {
+	rows, err := q.db.QueryContext(ctx, selectBlockByID, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Block
+	for rows.Next() {
+		var i Block
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Content,
+			&i.Definition,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateBlock = `-- name: UpdateBlock :exec
 UPDATE block
 SET

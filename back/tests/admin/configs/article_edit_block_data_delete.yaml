@@ -1,0 +1,5 @@
+scenario:
+  delete:
+    - { action: "PATCH"   , url: "/admin/articles/block/#block_data_0_id#/edit", status: 200}
+    - { action: "DELETE"  , url: "/admin/articles/block/#block_data_0_id#/delete", status: 204}
+    - { action: "PATCH"   , url: "/admin/articles/block/#block_data_0_id#/edit", status: 404}

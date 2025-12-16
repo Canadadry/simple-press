@@ -3,11 +3,11 @@ unit_tests:
   POST:
     - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_empty",    out: "bad_request/article_edit_block_empty" }
     - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_unknown",    out: "bad_request/article_edit_block_unknown" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 200, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
+    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 201, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
 
 scenarios:
   same_rsp_for_block_add_and_article_get:
-    - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 200, in: "ok/article_edit_block_add", out: "ok/article_edit_block_add" }
+    - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 201, in: "ok/article_edit_block_add", out: "ok/article_edit_block_add" }
     - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,                                  out: "ok/article_edit_block_add" }
 
 files:
@@ -38,50 +38,11 @@ files:
 
   responses/ok/article_edit_block_add.json: >
     {
-      "title": "index",
-      "author": "metoo",
-      "slug": "index",
-      "content": "## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
-      "draft": false,
-      "layout_id": 1,
-      "layouts": [
-        {
-          "name": "list.html",
-          "value": 2
-        },
-        {
-          "name": "single.html",
-          "value": 1
-        }
-      ],
-      "blocks": [
-        {
-          "name": "first_block",
-          "value": 1
-        },
-        {
-          "name": "nested_block",
-          "value": 2
-        }
-      ],
-      "block_datas": [
-        {
-          "id": 1,
-          "name": "first_block",
-          "data": {
-            "DataBool": true,
-            "DataNumber": 2,
-            "DataString": "my data"
-          }
-        },
-        {
-          "id": 3,
-          "name": "",
-          "data": {
-            "DataBool": true,
-            "DataNumber": 2,
-            "DataString": "my data"
-          }
-        }
-      ]
+     	"id": 3,
+     	"name": "first_block",
+     	"data": {
+      		"DataBool": true,
+      		"DataNumber": 2,
+      		"DataString": "my data"
+     	}
     }

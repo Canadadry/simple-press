@@ -57,23 +57,23 @@ func (c *Client) EditArticleContent(slug, content string) error {
 	return nil
 }
 
-func (c *Client) EditArticleBlockAdd(slug string, id int) error {
-	article := view.ArticleEditData{}
+func (c *Client) EditArticleBlockAdd(slug string, id int) (int64, error) {
+	data := view.ArticleAddBlockData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
-		http.StatusOK:         &article,
+		http.StatusCreated:    &data,
 		http.StatusBadRequest: &errs,
 	}
 	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%s/edit/block_add", slug), map[string]any{
 		"new_block": id,
 	}, rsp)
 	if err != nil {
-		return fmt.Errorf("cannot edit article block_add : %w", err)
+		return 0, fmt.Errorf("cannot edit article block_add : %w", err)
 	}
-	if st != http.StatusOK {
-		return fmt.Errorf("cannot edit article block_add invalid status code %d\n%v", st, errs)
+	if st != http.StatusCreated {
+		return 0, fmt.Errorf("cannot edit article block_add invalid status code %d\n%v", st, errs)
 	}
-	return nil
+	return data.ID, nil
 }
 
 func (c *Client) AddLayout(name string) (int64, error) {

@@ -104,6 +104,18 @@ func (r *Repository) SelectBlock(ctx context.Context, name string) (Block, bool,
 	return out, true, err
 }
 
+func (r *Repository) SelectBlockByID(ctx context.Context, id int64) (Block, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectBlockByID(ctx, id)
+	if err != nil {
+		return Block{}, false, stacktrace.From(err)
+	}
+	if len(list) == 0 {
+		return Block{}, false, nil
+	}
+	out, err := blockFromModel(list[0])
+	return out, true, err
+}
+
 func (r *Repository) UpdateBlock(ctx context.Context, name string, l Block) error {
 	def, err := json.Marshal(l.Definition)
 	if err != nil {

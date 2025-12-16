@@ -10,6 +10,7 @@ groups:
       - article_edit.yaml
       - article_edit_add_block.yaml
       - article_edit_block_edit.yaml
+      - article_edit_block_data_delete.yaml
       - article_list.yaml
       - block_add.yaml
       - block_edit.yaml

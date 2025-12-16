@@ -77,10 +77,12 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 				return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
 			}
 		}
-		err = api.EditArticleBlockAdd(slug, 1)
+		id, err := api.EditArticleBlockAdd(slug, 1)
 		if err != nil {
 			return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
 		}
+		env.Store(fmt.Sprintf("block_data_%d_id", i), fmt.Sprintf("%d", id))
+
 	}
 	for i, f := range fd.Files {
 		id, err := api.AddFile(f.Filename, f.Content)

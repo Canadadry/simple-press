@@ -48,16 +48,21 @@ func NopHandler(fn http.HandlerFunc) HandlerFunc {
 }
 
 type Route struct {
+	name    string
 	method  string
 	regex   *regexp.Regexp
 	handler HandlerFunc
 }
 
 func newRoute(method, pattern string, handler HandlerFunc) Route {
+	name := method + ":" + pattern
 	for k, v := range tags {
 		pattern = strings.ReplaceAll(pattern, k, v)
 	}
-	return Route{method, regexp.MustCompile("^" + pattern + "$"), handler}
+	if strings.Contains(pattern, ":") {
+		panic("cannot replace all pattern in " + name)
+	}
+	return Route{name, method, regexp.MustCompile("^" + pattern + "$"), handler}
 }
 
 func Get(pattern string, handler HandlerFunc) Route {
@@ -96,9 +101,11 @@ type CorsOption struct {
 func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHandler, cors CorsOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var allow []string
+		matched := []string{}
 		for _, route := range routes {
 			matches := route.regex.FindStringSubmatch(r.URL.Path)
 			if len(matches) > 0 {
+				matched = append(matched, route.name)
 				if r.Method != route.method {
 					allow = append(allow, route.method)
 					continue
@@ -133,6 +140,7 @@ func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHand
 
 		allowed := strings.Join(allow, ", ")
 		w.Header().Set("Allow", allowed)
+		fmt.Println("##### not alloew on ######", matched)
 		err := stacktrace.Errorf(
 			"method not allowed : allow only %s referer %s useragent %s",
 			allowed,

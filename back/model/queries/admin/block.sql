@@ -50,6 +50,16 @@ WHERE
 LIMIT
     1;
 
+-- name: SelectBlockByID :many
+SELECT
+    *
+FROM
+    block
+WHERE
+    id = ?
+LIMIT
+    1;
+
 -- name: SelectAllBlock :many
 SELECT
     *

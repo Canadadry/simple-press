@@ -52,6 +52,7 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Post("/admin/articles/:slug/edit/content", c.PostArticleEditContent)
 	r.Post("/admin/articles/:slug/edit/block_edit", c.PostArticleEditBlockEdit)
 	r.Post("/admin/articles/:slug/edit/block_add", c.PostArticleEditBlockAdd)
+	r.Delete("/admin/articles/block/:digit/delete", c.DeleteBlockData)
 	r.Get("/admin/articles/:slug/preview", c.GetArticlePreview)
 	r.Get("/admin/templates", c.GetTemplateList)
 	r.Post("/admin/templates/add", c.PostTemplateAdd)

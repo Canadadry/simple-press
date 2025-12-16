@@ -15,6 +15,7 @@ V0.1
 - [x] fetch article from go template to allow paginated list of articles
 - [x] edit filename, delete file
 - [x] push several file with folder architecture winthin a zip file
+- [x] delete block data
 - [] import one landing page from sandbox theme with all his blog define
 - [] import one blog index from sandbox theme
 - [] import one blog page from sandbox theme
@@ -32,6 +33,7 @@ V0.3 polish
 - [] remove file, article,block in article, block,template, layout
 - [] list bug and fix them
 - [] basic unit test around bug of renaming template or layout in front
+- [] query in file, file list with pagination
 
 V0.4 SEO
 - [] duplicate article, layout, template
