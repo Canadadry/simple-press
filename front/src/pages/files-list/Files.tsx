@@ -52,8 +52,7 @@ export default function Files() {
                 file={val}
                 deleteFile={async (filename: string) => {
                   await deleteFile(filename);
-                  const res = await getFileList();
-                  setFiles(res.items);
+                  setFiles(files.filter((f) => f.name != filename));
                 }}
                 portalContainer={null}
               ></Line>

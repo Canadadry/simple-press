@@ -11,5 +11,5 @@ const (
 	maxTitleLen        = 255
 	maxAuthorLen       = 255
 	maxSlugLen         = 255
-	maxContentLen      = 65535
+	maxContentLen      = 4194240
 )

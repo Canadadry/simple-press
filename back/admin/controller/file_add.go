@@ -15,7 +15,6 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
-	fmt.Println("PostFileAdd", errors, err)
 
 	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)

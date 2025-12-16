@@ -12,6 +12,13 @@ unit_tests:
     - { url: "/admin/files/add", status: 400, in: "file_add_wrong_name", out: "file_add_wrong_name", ct_in: 'multipart/form-data; boundary=WebAppBoundary' , headers: "Accept: application/json"}
     - { url: "/admin/files/add", status: 201, in: "file_add", out: "file_add" , ct_in: 'multipart/form-data; boundary=WebAppBoundary' , headers: "Accept: application/json"}
 
+scenario:
+  can_upload_multiple_file_from_zip:
+    - { action: "POST" , url: "/admin/files/add", status: 201,in: "file_add_zip", ct_in: 'multipart/form-data; boundary=839bd13c46b5146ff283b8a3158054df86cc52169c997d9f107f15dc2493' }
+    - { action: "GET"  , url: "/admin/src/Archive.zip", status: 404}
+    - { action: "GET"  , url: "/admin/src/file1.html", status: 200}
+    - { action: "GET"  , url: "/admin/assets/css/file2.css", status: 200}
+
 files:
   payloads/file_add_wrong_ct_in.json: >
     {
