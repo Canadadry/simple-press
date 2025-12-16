@@ -35,8 +35,8 @@ export default function Files() {
       </Text>
       <Flex maxWidth={"500"}>
         <SingleFileUploader
-          handleUpload={async (f: Blob, filename: string) => {
-            await postFile(f, filename);
+          handleUpload={async (f: Blob, filename: string, achive: boolean) => {
+            await postFile(f, filename, achive);
             const res = await getFileList();
             setFiles(res.items);
           }}

@@ -138,6 +138,7 @@ func TestRegexps(t *testing.T) {
 				"file.txt",
 				"dir/subdir/file",
 				"dir.with.dots/file_name",
+				"Archive.zip",
 			},
 			dontMatch: []string{
 				"/absolute/path",

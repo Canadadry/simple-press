@@ -15,10 +15,13 @@ export async function getFileList() {
   return apiRequest<List<File>>(`${ARTICLE_BASE_URL}`, "GET");
 }
 
-export async function postFile(file: Blob, filename: string) {
+export async function postFile(file: Blob, filename: string, archive: boolean) {
   const formData = new FormData();
   formData.append("content", file);
   formData.append("name", filename);
+  if (archive) {
+    formData.append("archive", "true");
+  }
   return apiRequest<void>(`${ARTICLE_BASE_URL}/add`, "POST", formData);
 }
 
