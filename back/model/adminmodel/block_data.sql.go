@@ -120,6 +120,45 @@ func (q *Queries) SelectBlockDataByArticle(ctx context.Context, articleID int64)
 	return items, nil
 }
 
+const selectBlockDataByID = `-- name: SelectBlockDataByID :many
+SELECT
+    id, position, data, article_id, block_id
+FROM
+    block_data
+WHERE
+    id = ?
+LIMIT 1
+`
+
+func (q *Queries) SelectBlockDataByID(ctx context.Context, id int64) ([]BlockDatum, error) {
+	rows, err := q.db.QueryContext(ctx, selectBlockDataByID, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []BlockDatum
+	for rows.Next() {
+		var i BlockDatum
+		if err := rows.Scan(
+			&i.ID,
+			&i.Position,
+			&i.Data,
+			&i.ArticleID,
+			&i.BlockID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateBlockData = `-- name: UpdateBlockData :exec
 UPDATE block_data
 SET

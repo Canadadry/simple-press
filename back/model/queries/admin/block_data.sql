@@ -20,6 +20,15 @@ SET
 WHERE
     id = ?;
 
+-- name: SelectBlockDataByID :many
+SELECT
+    *
+FROM
+    block_data
+WHERE
+    id = ?
+LIMIT 1;
+
 -- name: DeleteBlockData :exec
 DELETE FROM block_data
 WHERE

@@ -5,53 +5,41 @@ import (
 	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 const (
-	articleEditBlockEditedID       = "block_id"
 	articleEditBlockEditedData     = "block_data"
 	articleEditBlockEditedPosition = "block_position"
 )
 
 type ParsedArticleEditBlockEdit struct {
-	EditedBlockID   int64
 	EditedBlockData map[string]any
 	// EditedBlockPosition int
 }
 
 type ParsedArticleEditErrorBlockEdit struct {
-	EditedBlockID   string
 	EditedBlockData string
 	// EditedBlockPosition string
 	Raw validator.Errors
 }
 
 func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
-	return e.EditedBlockID != "" ||
-		e.EditedBlockData != "" //||
+	return e.EditedBlockData != "" //||
 	// e.EditedBlockPosition != ""
 }
 
-func (p *ParsedArticleEditBlockEdit) Bind(exist func(int64) bool) func(b validator.Binder) {
-	return func(b validator.Binder) {
-		b.RequiredInt64Var(articleEditBlockEditedID, &p.EditedBlockID,
-			validator.Min(int64(1)),
-			validator.Exist(exist),
-		)
-		b.RequiredMapVar(articleEditBlockEditedData, &p.EditedBlockData)
-	}
+func (p *ParsedArticleEditBlockEdit) Bind(b validator.Binder) {
+	b.RequiredMapVar(articleEditBlockEditedData, &p.EditedBlockData)
 }
 
 func ParseArticleEditBlockEdit(
 	r *http.Request,
 	get_previous_data func() map[string]any,
-	is_id_valid func(int64) bool,
 ) (ParsedArticleEditBlockEdit, ParsedArticleEditErrorBlockEdit, error) {
 
 	parsed := ParsedArticleEditBlockEdit{}
 
-	errs, err := validator.BindWithForm(r, parsed.Bind(is_id_valid))
+	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return parsed,
 			ParsedArticleEditErrorBlockEdit{},
@@ -59,8 +47,7 @@ func ParseArticleEditBlockEdit(
 	}
 
 	resultErr := ParsedArticleEditErrorBlockEdit{
-		EditedBlockID: strings.Join(errs.Errors[articleEditBlockEditedID], ", "),
-		Raw:           errs,
+		Raw: errs,
 	}
 
 	form_data := get_previous_data()

@@ -1,64 +1,46 @@
 unit_tests:
 
-  POST:
+  PATCH:
     # - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_unknown",  out: "bad_request/article_edit_block_edit_unknown" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
+    - { url: "/admin/articles/block/0/edit",                  status: 404 }
+    - { url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
 scenarios:
   edit_block_is_persisted:
-    - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit" }
-    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,  out: "ok/article_edit_block_edit" }
+    - { action: PATCH, url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200,  in: "ok/article_edit_block_edit" }
+    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",          status: 200, out: "ok/article_edited" }
   # bollean_in_edit_block_is_persisted:
   #   - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit_boolean" }
   #   - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,  out: "ok/article_edit_block_edit_boolean" }
 
 
 files:
-  payloads/bad_request/article_edit_block_id_missing.json: >
-    {
-      "block_data": {"text":"x"}
-    }
-
-  responses/bad_request/article_edit_block_id_missing.json: >
-    {
-      "block_id":[
-        "this is not a valid value",
-        "this value should not be blank"
-      ]
-    }
-
   payloads/bad_request/article_edit_block_edit_no_data.json: >
     {
-      "block_id": 1
     }
 
   responses/bad_request/article_edit_block_edit_no_data.json: >
     {
-      "block_id":[],
       "block_data":["this value should not be blank"]
-    }
-
-  payloads/bad_request/article_edit_block_edit_unknown.json: >
-    {
-      "block_id": 999
-    }
-
-  responses/bad_request/article_edit_block_edit_unknown.json: >
-    {
-      "block_data":["this value should not be blank"],
-      "block_id":["this value does not exist"]
     }
 
   payloads/ok/article_edit_block_edit.json: >
     {
-      "block_id": 1,
       "block_data": {
         "DataNumber":22,
         "DataString": "updated text"
       }
     }
-
   responses/ok/article_edit_block_edit.json: >
+    {
+      "id":1,
+      "name":"",
+      "data": {
+        "DataNumber":22,
+        "DataString": "updated text"
+      }
+    }
+
+  responses/ok/article_edited.json: >
     {
       "title":"index",
       "author":"metoo",

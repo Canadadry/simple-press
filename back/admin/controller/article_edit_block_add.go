@@ -41,11 +41,6 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
 	}
-	fmt.Printf("%#v\n", view.ArticleAddBlockData{
-		ID:   id,
-		Name: block.Name,
-		Data: block.Definition,
-	})
 	return view.BlockDataAddCreated(w, view.ArticleAddBlockData{
 		ID:   id,
 		Name: block.Name,

@@ -75,6 +75,24 @@ func (r *Repository) SelectBlockDataByArticle(ctx context.Context, articleID int
 	return sqlutil.MapWithError(list, blockDataFromModel)
 }
 
+func (r *Repository) SelectBlockDataByID(ctx context.Context, ID int64) (BlockData, bool, error) {
+	b, err := adminmodel.New(r.Db).SelectBlockDataByID(ctx, ID)
+	if err != nil {
+		return BlockData{}, false, stacktrace.From(err)
+	}
+	if len(b) == 0 {
+		return BlockData{}, false, nil
+	}
+	out := BlockData{
+		ID:        b[0].ID,
+		Position:  b[0].Position,
+		ArticleID: b[0].ArticleID,
+		BlockID:   b[0].BlockID,
+	}
+	err = json.Unmarshal([]byte(b[0].Data), &out.Data)
+	return out, true, err
+}
+
 func (r *Repository) UpdateBlockData(ctx context.Context, l BlockData) error {
 	data, err := json.Marshal(l.Data)
 	if err != nil {
