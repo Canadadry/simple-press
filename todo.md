@@ -1,4 +1,4 @@
-V1
+V0.1
 - [x] list file
 - [x] list block
 - [x] edit block
@@ -15,8 +15,11 @@ V1
 - [x] fetch article from go template to allow paginated list of articles
 - [x] edit filename, delete file
 - [x] push several file with folder architecture winthin a zip file
+- [] import one landing page from sandbox theme with all his blog define
+- [] import one blog index from sandbox theme
+- [] import one blog page from sandbox theme
 
-V1.1 export
+V0.2 export
 - [] add figure to all article (allow upload file from article, or open file selector)
 - [] define front url in .env
 - [] serve front url from back
@@ -25,20 +28,20 @@ V1.1 export
 - [] deploy a first article on private server
 - [] expose build static as route so downloading site from front become possible
 
-V1.1.1 polish
+V0.3 polish
 - [] remove file, article,block in article, block,template, layout
 - [] list bug and fix them
 - [] basic unit test around bug of renaming template or layout in front
 
-V1.2 SEO
+V0.4 SEO
 - [] duplicate article, layout, template
 - [] add seo variable (or dynmaque data, like blog but for an article so only one definition)
 - [] allow resizing image with a query url request
 
-V2
+V0.5
 - [] markdown editor on article content edition
 - [] swap go template engine for otto + personal jsx parser
 - [] redesign block data definition => list of fullpath + option (toggle stuff, select other)
 
-V3 light
+V0.6 light
 - [] remove npm and use upkg or else and complie with raw esbuild call
