@@ -92,6 +92,10 @@ func ParseFileAdd(r *http.Request) (File, FileError, error) {
 	if err != nil {
 		return File{}, invalidRequest(RequestInvalidContent), nil
 	}
+	filename := r.FormValue(FileAddName)
+	if filename == "" {
+		return File{}, invalidName(NoFileName), nil
+	}
 
 	file, _, err := r.FormFile(FileAddContent)
 	if err != nil {

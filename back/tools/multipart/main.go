@@ -56,7 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := writer.WriteField("filename", info.Name()); err != nil {
+	if err := writer.WriteField("name", info.Name()); err != nil {
 		fmt.Printf("Error writing filename field: %v\n", err)
 		os.Exit(1)
 	}
