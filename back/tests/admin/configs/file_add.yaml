@@ -14,7 +14,7 @@ unit_tests:
 
 scenario:
   can_upload_multiple_file_from_zip:
-    - { action: "POST" , url: "/admin/files/add", status: 201,in: "file_add_zip", ct_in: 'multipart/form-data; boundary=8ee06cbc048de6a3b19e6f04fa79c3e24910e666938e22467d7aa0ed5443' }
+    - { action: "POST" , url: "/admin/files/add", status: 201,in: "file_add_zip", ct_in: 'multipart/form-data; boundary=1fdece492c269799573525fd503a21921c8c3ebd125fdbe2393561d759b2' }
     - { action: "GET"  , url: "/Archive.zip", status: 404}
     - { action: "GET"  , url: "/src/file1.html", status: 200}
     - { action: "GET"  , url: "/assets/css/file2.css", status: 200}

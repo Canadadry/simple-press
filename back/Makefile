@@ -33,7 +33,9 @@ dev: ## watch go file and restart on change
 	ulimit -n 4096 ; reflex -r '\.go$$' -s -- sh -c "go run main.go -action admin"
 
 file_add_zip: ## regenerate zip test file
-	 go run tools/multipart/main.go -i tests/admin/payloads/Archive.zip -o tests/admin/payloads/file_add_zip
+	 zip -d tests/admin/payloads/Archive.zip __MACOSX/\* || echo "done"
+	 zip -d tests/admin/payloads/Archive.zip \*/.DS_Store || echo "done"
+	 go run tools/multipart/main.go -a -i tests/admin/payloads/Archive.zip -o tests/admin/payloads/file_add_zip
 
 test: ## unit test then end2end
 	go test ./...

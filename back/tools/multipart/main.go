@@ -12,6 +12,7 @@ import (
 func main() {
 	input := flag.String("i", "", "Input file")
 	output := flag.String("o", "", "Output file")
+	archive := flag.Bool("a", false, "input file is an archive (zip)")
 	help := flag.Bool("h", false, "Show usage information")
 	flag.Parse()
 
@@ -59,6 +60,13 @@ func main() {
 	if err := writer.WriteField("name", info.Name()); err != nil {
 		fmt.Printf("Error writing filename field: %v\n", err)
 		os.Exit(1)
+	}
+
+	if *archive {
+		if err := writer.WriteField("archive", "true"); err != nil {
+			fmt.Printf("Error writing archive field: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	if err := writer.Close(); err != nil {
