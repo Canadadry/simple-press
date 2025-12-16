@@ -7,13 +7,14 @@ import {
   TextField,
   Checkbox,
   Button,
+  Spinner,
 } from "@radix-ui/themes";
 import type { DynamicFormUI } from "./render";
 import { TrashIcon } from "@radix-ui/react-icons";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
-    Form: ({ label, children, onSave }) => (
+    Form: ({ label, children, saving, onSave }) => (
       <Card>
         <Text as="div" size="2" mb="2" weight="bold" color="indigo">
           {label}
@@ -30,8 +31,13 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
               <TrashIcon />
               Delete
             </Button>
-            <Button tabIndex={1} size="2" onClick={onSave}>
-              Save
+            <Button
+              tabIndex={1}
+              size="2"
+              onClick={onSave}
+              disabled={saving != "touched"}
+            >
+              {saving == "saving" ? <Spinner /> : "Save"}
             </Button>
           </Flex>
         </Box>

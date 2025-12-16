@@ -1,11 +1,14 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { updateData } from "./updateData";
 import { Dict } from "../../api/api";
+
+type SavingStatus = "untouched" | "touched" | "saving";
 
 export interface FormProps {
   label: string;
   children: ReactNode;
   onSave: () => Promise<void>;
+  saving: SavingStatus;
 }
 
 export interface FormObjectProps {
@@ -50,6 +53,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   ui,
   onSave,
 }) => {
+  const [saving, setSaving] = useState<SavingStatus>("untouched");
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
     return Object.entries(obj).map(([key, value]) => {
       const fullPath = prefix ? `${prefix}.${key}` : key;
@@ -74,6 +78,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             name={fullPath}
             checked={value}
             setData={(path, newValue) => {
+              setSaving("touched");
               setData(updateData(data, path, newValue));
             }}
           />
@@ -88,6 +93,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
           inputType={typeof value === "number" ? "number" : "text"}
           value={String(value)}
           setData={(path, newValue) => {
+            setSaving("touched");
             setData(updateData(data, path, newValue));
           }}
         />
@@ -96,7 +102,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   }
 
   return (
-    <ui.Form label={name} onSave={onSave}>
+    <ui.Form
+      label={name}
+      saving={saving}
+      onSave={async () => {
+        setSaving("saving");
+        await onSave();
+        setSaving("untouched");
+      }}
+    >
       {renderNode(data)}
     </ui.Form>
   );

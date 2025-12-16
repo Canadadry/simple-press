@@ -59,13 +59,12 @@ export async function postArticleEditContent(slug: string, content: string) {
   );
 }
 
-export async function postArticleEditBlockEdit(slug: string, data: BlockData) {
+export async function postArticleEditBlockEdit(data: BlockData) {
   return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/${slug}/edit/block_edit`,
-    "POST",
+    `${ARTICLE_BASE_URL}/block/${data.id}/edit`,
+    "PATCH",
     {
-      block_id: data.id,
-      block_data: data.data,
+      data: data.data,
     },
   );
 }

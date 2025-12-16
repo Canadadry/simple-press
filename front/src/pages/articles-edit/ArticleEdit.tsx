@@ -353,7 +353,7 @@ export default function Articles() {
                   block.data = d;
                 }}
                 onSave={async () => {
-                  await postArticleEditBlockEdit(slug, block);
+                  await postArticleEditBlockEdit(block);
                 }}
               />
             ))}

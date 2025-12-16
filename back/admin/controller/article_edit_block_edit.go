@@ -46,6 +46,6 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 	return view.BlockDataEditOk(w, view.BlockData{
 		ID: int64(id),
 		// Name: block.Name,
-		Data: block.Data,
+		Data: a.EditedBlockData,
 	})
 }
