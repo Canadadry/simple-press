@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -24,21 +23,6 @@ type ParsedArticleEditMetadata struct {
 	Draft    null.Nullable[bool]
 	Slug     string
 	LayoutID int64
-}
-
-type ParsedArticleEditMetadataError struct {
-	Title    string
-	Author   string
-	Slug     string
-	LayoutID string
-	Raw      validator.Errors
-}
-
-func (e ParsedArticleEditMetadataError) HasError() bool {
-	return e.Title != "" ||
-		e.Author != "" ||
-		e.Slug != "" ||
-		e.LayoutID != ""
 }
 
 func (p *ParsedArticleEditMetadata) Bind(check_id func(int64) error) func(b validator.Binder) {
@@ -58,7 +42,7 @@ func (p *ParsedArticleEditMetadata) Bind(check_id func(int64) error) func(b vali
 func ParseArticleEditMetadata(
 	r *http.Request,
 	checkID func(context.Context, int64) (int, error),
-) (ParsedArticleEditMetadata, ParsedArticleEditMetadataError, error) {
+) (ParsedArticleEditMetadata, validator.Errors, error) {
 
 	parsed := ParsedArticleEditMetadata{}
 	errs, err := validator.BindWithForm(r, parsed.Bind(func(val int64) error {
@@ -69,16 +53,8 @@ func ParseArticleEditMetadata(
 		return nil
 	}))
 	if err != nil {
-		return ParsedArticleEditMetadata{}, ParsedArticleEditMetadataError{}, fmt.Errorf("cannot parse form : %w", err)
+		return ParsedArticleEditMetadata{}, validator.Errors{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 
-	resultErr := ParsedArticleEditMetadataError{
-		Title:    strings.Join(errs.Errors[articleEditTitle], " ,"),
-		Author:   strings.Join(errs.Errors[articleEditAuthor], " ,"),
-		Slug:     strings.Join(errs.Errors[articleEditSlug], " ,"),
-		LayoutID: strings.Join(errs.Errors[articleEditLayout], " ,"),
-		Raw:      errs,
-	}
-
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }

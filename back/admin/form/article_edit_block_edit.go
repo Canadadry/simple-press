@@ -18,46 +18,28 @@ type ParsedArticleEditBlockEdit struct {
 	EditedBlockPosition null.Nullable[int]
 }
 
-type ParsedArticleEditErrorBlockEdit struct {
-	EditedBlockData     string
-	EditedBlockPosition string
-	Raw                 validator.Errors
-}
-
-func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
-	return e.EditedBlockData != "" //||
-	// e.EditedBlockPosition != ""
-}
-
 func (p *ParsedArticleEditBlockEdit) Bind(b validator.Binder) {
-	b.RequiredMapVar(articleEditBlockEditedData, &p.EditedBlockData)
+	b.MapVar(articleEditBlockEditedData, &p.EditedBlockData)
 	b.IntVar(articleEditBlockEditedPosition, &p.EditedBlockPosition)
 }
 
 func ParseArticleEditBlockEdit(
 	r *http.Request,
 	get_previous_data func() map[string]any,
-) (ParsedArticleEditBlockEdit, ParsedArticleEditErrorBlockEdit, error) {
+) (ParsedArticleEditBlockEdit, validator.Errors, error) {
 
 	parsed := ParsedArticleEditBlockEdit{}
 
 	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
 		return parsed,
-			ParsedArticleEditErrorBlockEdit{},
+			validator.Errors{},
 			fmt.Errorf("cannot parse form : %w", err)
-	}
-
-	resultErr := ParsedArticleEditErrorBlockEdit{
-		Raw: errs,
 	}
 
 	form_data := get_previous_data()
 	form_data, err = data.ParseFormData(parsed.EditedBlockData, form_data)
-	if err != nil {
-		resultErr.EditedBlockData = errorInvalidJson
-		return parsed, resultErr, nil
-	}
+	//TODO check err
 	parsed.EditedBlockData = form_data
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }

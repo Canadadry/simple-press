@@ -15,8 +15,8 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	layouts, err := c.Repository.GetLayoutList(r.Context(), 1, 0)

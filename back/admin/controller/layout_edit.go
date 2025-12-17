@@ -44,8 +44,8 @@ func (c *Controller) PostLayoutEdit(w http.ResponseWriter, r *http.Request) erro
 	layout.Name = l.Name
 	layout.Content = l.Content
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	err = c.Repository.UpdateLayout(r.Context(), name, layout)

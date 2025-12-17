@@ -44,8 +44,8 @@ func (c *Controller) PostTemplateEdit(w http.ResponseWriter, r *http.Request) er
 	template.Name = l.Name
 	template.Content = l.Content
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 	err = c.Repository.UpdateTemplate(r.Context(), name, template)
 	if err != nil {

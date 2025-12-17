@@ -16,8 +16,8 @@ func (c *Controller) PostTemplateAdd(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	id, err := c.Repository.CreateTemplate(r.Context(), repository.CreateTemplateParams(l))

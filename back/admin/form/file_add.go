@@ -25,68 +25,42 @@ type File struct {
 	Archive bool
 }
 
-type FileError struct {
-	Request string
-	Name    string
-	Content string
-	Raw     validator.Errors
-}
-
-func (le FileError) HasError() bool {
-	if le.Request != "" {
-		return true
-	}
-	if le.Name != "" {
-		return true
-	}
-	if le.Content != "" {
-		return true
-	}
-	return false
-}
-
-func invalidRequest(msg string) FileError {
-	return FileError{
-		Request: msg,
-		Raw: validator.Errors{
-			Errors: map[string][]string{
-				"name":    []string{},
-				"content": []string{},
-				"request": []string{
-					msg,
-				},
+func invalidRequest(msg string) validator.Errors {
+	return validator.Errors{
+		HasError: true,
+		Errors: map[string][]string{
+			"name":    []string{},
+			"content": []string{},
+			"request": []string{
+				msg,
 			},
 		},
 	}
 }
 
-func invalidName(msg string) FileError {
-	return FileError{
-		Name: msg,
-		Raw: validator.Errors{
-			Errors: map[string][]string{
-				"name":    []string{msg},
-				"content": []string{},
-				"request": []string{},
-			},
+func invalidName(msg string) validator.Errors {
+	return validator.Errors{
+		HasError: true,
+		Errors: map[string][]string{
+			"name":    []string{msg},
+			"content": []string{},
+			"request": []string{},
 		},
 	}
 }
 
-func invalidContent(msg string) FileError {
-	return FileError{
-		Content: msg,
-		Raw: validator.Errors{
-			Errors: map[string][]string{
-				"name":    []string{},
-				"content": []string{msg},
-				"request": []string{},
-			},
+func invalidContent(msg string) validator.Errors {
+	return validator.Errors{
+		HasError: true,
+		Errors: map[string][]string{
+			"name":    []string{},
+			"content": []string{msg},
+			"request": []string{},
 		},
 	}
 }
 
-func ParseFileAdd(r *http.Request) (File, FileError, error) {
+func ParseFileAdd(r *http.Request) (File, validator.Errors, error) {
 	if !strings.Contains(r.Header.Get("Content-Type"), "multipart/form-data; boundary=") {
 		return File{}, invalidRequest(RequestWrongContentType), nil
 	}
@@ -113,6 +87,6 @@ func ParseFileAdd(r *http.Request) (File, FileError, error) {
 		Name:    r.FormValue(FileAddName),
 		Content: content,
 		Archive: archive == "true",
-	}, FileError{}, nil
+	}, validator.Errors{}, nil
 
 }

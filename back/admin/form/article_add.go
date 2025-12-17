@@ -5,7 +5,6 @@ import (
 	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -26,32 +25,11 @@ func (a *Article) Bind(b validator.Binder) {
 	b.BoolVar(articleAddDraft, &a.Draft, validator.TrueChoice, validator.FalseChoice)
 }
 
-type ArticleError struct {
-	Title  string
-	Author string
-	Raw    validator.Errors
-}
-
-func (ae ArticleError) HasError() bool {
-	if ae.Title != "" {
-		return true
-	}
-	if ae.Author != "" {
-		return true
-	}
-	return false
-}
-
-func ParseArticleAdd(r *http.Request) (Article, ArticleError, error) {
+func ParseArticleAdd(r *http.Request) (Article, validator.Errors, error) {
 	article := Article{}
 	errs, err := validator.BindWithForm(r, article.Bind)
 	if err != nil {
-		return Article{}, ArticleError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Article{}, validator.Errors{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-	ae := ArticleError{
-		Title:  strings.Join(errs.Errors[articleAddTitle], ", "),
-		Author: strings.Join(errs.Errors[articleAddAuthor], ", "),
-		Raw:    errs,
-	}
-	return article, ae, nil
+	return article, errs, nil
 }

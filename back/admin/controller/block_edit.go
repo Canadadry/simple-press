@@ -44,8 +44,8 @@ func (c *Controller) PostBlockEdit(w http.ResponseWriter, r *http.Request) error
 	block.Content = b.Content
 	block.Definition = b.Definition
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	err = c.Repository.UpdateBlock(r.Context(), name, block)

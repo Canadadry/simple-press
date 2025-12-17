@@ -31,8 +31,8 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 	newPos := block.Position
 	if a.EditedBlockPosition.Valid {

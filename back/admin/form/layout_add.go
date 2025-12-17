@@ -4,7 +4,6 @@ import (
 	"app/pkg/router"
 	"app/pkg/validator"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -13,15 +12,6 @@ const (
 
 type Layout struct {
 	Name string
-}
-
-type LayoutError struct {
-	Name string
-	Raw  validator.Errors
-}
-
-func (le LayoutError) HasError() bool {
-	return le.Name != ""
 }
 
 func (l *Layout) Bind(b validator.Binder) {
@@ -33,18 +23,13 @@ func (l *Layout) Bind(b validator.Binder) {
 	)
 }
 
-func ParseLayoutAdd(r *http.Request) (Layout, LayoutError, error) {
+func ParseLayoutAdd(r *http.Request) (Layout, validator.Errors, error) {
 	parsed := Layout{}
 
 	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return Layout{}, LayoutError{}, err
+		return Layout{}, validator.Errors{}, err
 	}
 
-	resultErr := LayoutError{
-		Name: strings.Join(errs.Errors[layoutAddName], ", "),
-		Raw:  errs,
-	}
-
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }

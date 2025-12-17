@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -17,15 +16,6 @@ const (
 type ParsedArticleEditBlockAdd struct {
 	AddedBlockID int64
 	Position     null.Nullable[int]
-}
-
-type ParsedArticleEditErrorBlockAdd struct {
-	AddedBlockID string
-	Raw          validator.Errors
-}
-
-func (e ParsedArticleEditErrorBlockAdd) HasError() bool {
-	return e.AddedBlockID != ""
 }
 
 func (p *ParsedArticleEditBlockAdd) Bind(check_id func(int64) error) func(b validator.Binder) {
@@ -41,7 +31,7 @@ func (p *ParsedArticleEditBlockAdd) Bind(check_id func(int64) error) func(b vali
 func ParseArticleEditBlockAdd(
 	r *http.Request,
 	checkID func(context.Context, int64) (int, error),
-) (ParsedArticleEditBlockAdd, ParsedArticleEditErrorBlockAdd, error) {
+) (ParsedArticleEditBlockAdd, validator.Errors, error) {
 
 	parsed := ParsedArticleEditBlockAdd{}
 
@@ -53,13 +43,8 @@ func ParseArticleEditBlockAdd(
 		return nil
 	}))
 	if err != nil {
-		return ParsedArticleEditBlockAdd{}, ParsedArticleEditErrorBlockAdd{}, fmt.Errorf("cannot parse form : %w", err)
+		return ParsedArticleEditBlockAdd{}, validator.Errors{}, fmt.Errorf("cannot parse form : %w", err)
 	}
 
-	resultErr := ParsedArticleEditErrorBlockAdd{
-		AddedBlockID: strings.Join(errs.Errors[articleEditNewBlock], ", "),
-		Raw:          errs,
-	}
-
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }

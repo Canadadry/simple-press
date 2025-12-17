@@ -16,8 +16,8 @@ func (c *Controller) PostLayoutAdd(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	id, err := c.Repository.CreateLayout(r.Context(), repository.CreateLayoutParams(l))

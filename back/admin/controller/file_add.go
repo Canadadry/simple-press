@@ -19,8 +19,8 @@ func (c *Controller) PostFileAdd(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 	if !f.Archive {
 		id, err := c.Repository.UploadFile(r.Context(), repository.File{Name: f.Name, Content: f.Content})

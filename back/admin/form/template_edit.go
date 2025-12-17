@@ -4,7 +4,6 @@ import (
 	"app/pkg/router"
 	"app/pkg/validator"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -15,16 +14,6 @@ const (
 type TemplateEdit struct {
 	Name    string
 	Content string
-}
-
-type TemplateEditError struct {
-	Name    string
-	Content string
-	Raw     validator.Errors
-}
-
-func (te TemplateEditError) HasError() bool {
-	return te.Name != "" || te.Content != ""
 }
 
 func (t *TemplateEdit) Bind(b validator.Binder) {
@@ -41,19 +30,12 @@ func (t *TemplateEdit) Bind(b validator.Binder) {
 	)
 }
 
-func ParseTemplateEdit(r *http.Request) (TemplateEdit, TemplateEditError, error) {
+func ParseTemplateEdit(r *http.Request) (TemplateEdit, validator.Errors, error) {
 	parsed := TemplateEdit{}
 
 	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return TemplateEdit{}, TemplateEditError{}, err
+		return TemplateEdit{}, validator.Errors{}, err
 	}
-
-	resultErr := TemplateEditError{
-		Name:    strings.Join(errs.Errors[templateEditName], ", "),
-		Content: strings.Join(errs.Errors[templateEditContent], ", "),
-		Raw:     errs,
-	}
-
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }

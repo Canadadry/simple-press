@@ -86,8 +86,8 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	article.Draft = a.Draft.V
 	article.LayoutID = a.LayoutID
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 	err = c.Repository.UpdateArticle(r.Context(), slug, article)
 	if err != nil {
@@ -157,8 +157,8 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 
 	article.Content = a.Content
 
-	if errors.HasError() {
-		return httpresponse.BadRequest(w, errors.Raw)
+	if errors.HasError {
+		return httpresponse.BadRequest(w, errors)
 	}
 
 	err = c.Repository.UpdateArticle(r.Context(), slug, article)

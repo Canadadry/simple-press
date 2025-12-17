@@ -5,7 +5,6 @@ import (
 	"app/pkg/validator"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -14,15 +13,6 @@ const (
 
 type Block struct {
 	Name string
-}
-
-type BlockError struct {
-	Name string
-	Raw  validator.Errors
-}
-
-func (e BlockError) HasError() bool {
-	return e.Name != ""
 }
 
 func (b *Block) Bind(binder validator.Binder) {
@@ -34,18 +24,12 @@ func (b *Block) Bind(binder validator.Binder) {
 	)
 }
 
-func ParseBlockAdd(r *http.Request) (Block, BlockError, error) {
+func ParseBlockAdd(r *http.Request) (Block, validator.Errors, error) {
 	parsed := Block{}
 
 	errs, err := validator.BindWithForm(r, parsed.Bind)
 	if err != nil {
-		return Block{}, BlockError{}, fmt.Errorf("cannot parse form : %w", err)
+		return Block{}, validator.Errors{}, fmt.Errorf("cannot parse form : %w", err)
 	}
-
-	resultErr := BlockError{
-		Name: strings.Join(errs.Errors[blockAddName], ", "),
-		Raw:  errs,
-	}
-
-	return parsed, resultErr, nil
+	return parsed, errs, nil
 }
