@@ -7,6 +7,7 @@ type SavingStatus = "untouched" | "touched" | "saving";
 export interface FormProps {
   label: string;
   children: ReactNode;
+  onDelete: () => Promise<void>;
   onSave: () => Promise<void>;
   saving: SavingStatus;
 }
@@ -44,6 +45,7 @@ export interface DynamicFormProps {
   setData: (data: Dict) => void;
   ui: DynamicFormUI;
   onSave: () => Promise<void>;
+  onDelete: () => Promise<void>;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
@@ -52,6 +54,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   setData,
   ui,
   onSave,
+  onDelete,
 }) => {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
@@ -110,6 +113,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
         await onSave();
         setSaving("untouched");
       }}
+      onDelete={onDelete}
     >
       {renderNode(data)}
     </ui.Form>

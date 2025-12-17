@@ -69,6 +69,13 @@ export async function postArticleEditBlockEdit(data: BlockData) {
   );
 }
 
+export async function deleteArticleEditBlockEdit(data: BlockData) {
+  return apiRequest<void>(
+    `${ARTICLE_BASE_URL}/block/${data.id}/delete`,
+    "DELETE",
+  );
+}
+
 export async function postArticleEditBlockAdd(slug: string, block: number) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/${slug}/edit/block_add`,

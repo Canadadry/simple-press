@@ -29,6 +29,7 @@ import {
   postArticleEditContent,
   postArticleEditBlockAdd,
   postArticleEditBlockEdit,
+  deleteArticleEditBlockEdit,
 } from "../../api/article";
 import type { Article } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
@@ -226,7 +227,7 @@ interface AddBlockProps {
   setArticle: (a: Article) => void;
 }
 
-function AddBlock({ tabIndex, article }: AddBlockProps) {
+function AddBlock({ tabIndex, article, setArticle }: AddBlockProps) {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   const [block, setBlock] = useState<string>("");
 
@@ -268,6 +269,8 @@ function AddBlock({ tabIndex, article }: AddBlockProps) {
           setSaving("saving");
           await postArticleEditBlockAdd(article.slug, Number(block));
           setSaving("untouched");
+          const res = await getArticleEdit(article.slug);
+          setArticle(res);
         }}
       >
         {saving == "saving" ? <Spinner /> : "Add"}
@@ -354,6 +357,16 @@ export default function Articles() {
                 }}
                 onSave={async () => {
                   await postArticleEditBlockEdit(block);
+                }}
+                onDelete={async () => {
+                  await deleteArticleEditBlockEdit(block);
+                  console.log("deleting", block.id, "on", article.block_datas);
+                  setArticle({
+                    ...article,
+                    block_datas: article.block_datas.filter((b) => {
+                      return b.id != block.id;
+                    }),
+                  });
                 }}
               />
             ))}

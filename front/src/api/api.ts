@@ -35,5 +35,9 @@ export async function apiRequest<T>(
     );
   }
 
+  if (method == "DELETE") {
+    return;
+  }
+
   return response.json();
 }
