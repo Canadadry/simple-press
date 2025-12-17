@@ -15,6 +15,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from "@radix-ui/react-icons";
+import * as Accordion from "@radix-ui/react-accordion";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
@@ -62,12 +63,32 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
 
     FormObject: ({ label, children }) => (
       <Card mb="2">
-        <Text as="div" size="2" mb="2" weight="bold">
-          {label}
-        </Text>
-        <Box mb="2" data-testid={`object-${label}`}>
-          {children}
-        </Box>
+        <Accordion.Root type="single" collapsible>
+          <Accordion.Item value={label}>
+            <Accordion.Header style={{ margin: 0, padding: 0 }}>
+              <Accordion.Trigger
+                style={{
+                  all: "unset",
+                  width: "100%",
+                  cursor: "pointer",
+                }}
+              >
+                <Flex justify="between">
+                  <Text size="2" weight="bold">
+                    {label}
+                  </Text>
+                  <ChevronDownIcon />
+                </Flex>
+              </Accordion.Trigger>
+            </Accordion.Header>
+
+            <Accordion.Content>
+              <Box mt="2" data-testid={`object-${label}`}>
+                {children}
+              </Box>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion.Root>
       </Card>
     ),
 

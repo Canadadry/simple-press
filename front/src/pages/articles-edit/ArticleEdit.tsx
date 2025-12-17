@@ -374,7 +374,7 @@ export default function Articles() {
                   key={block.id}
                   name={block.name + "-" + block.position}
                   data={block.data}
-                  ui={makeRadixUI(300)}
+                  ui={makeRadixUI(500)}
                   setData={(d) => {
                     block.data = d;
                   }}
