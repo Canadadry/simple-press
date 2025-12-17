@@ -72,16 +72,18 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("cannot select block data article : %w", err)
 	}
 
-	blockDataView := map[string]map[string]any{}
+	blockDataView := []page.ArticleBlock{}
 	for _, p := range blockDatas {
-		blockDataView[p.BlockName] = p.Data
+		blockDataView = append(blockDataView, page.ArticleBlock{
+			Position: int(p.Position), Data: p.Data, BlockName: p.BlockName,
+		})
 	}
 
 	err = page.Render(w, page.Data{
 		Title:         a.Title,
 		Content:       a.Content,
 		Files:         files,
-		Blocks:        blockSelector,
+		BlocksContent: blockSelector,
 		ArticleBlocks: blockDataView,
 		PageFtecher: func(query string, offset int, limit int) []page.Page {
 			return c.getPages(r.Context(), query, offset, limit)

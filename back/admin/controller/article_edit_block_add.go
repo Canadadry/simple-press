@@ -36,14 +36,15 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 	id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
 		ArticleID: article.ID,
 		Block:     repository.Block{ID: a.AddedBlockID, Definition: block.Definition},
-		Position:  0,
+		Position:  int64(a.Position.V),
 	})
 	if err != nil {
 		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
 	}
 	return view.BlockDataAddCreated(w, view.ArticleAddBlockData{
-		ID:   id,
-		Name: block.Name,
-		Data: block.Definition,
+		ID:       id,
+		Name:     block.Name,
+		Data:     block.Definition,
+		Position: a.Position.V,
 	})
 }

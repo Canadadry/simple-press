@@ -225,9 +225,10 @@ interface AddBlockProps {
   tabIndex: number;
   article: Article;
   setArticle: (a: Article) => void;
+  count: number;
 }
 
-function AddBlock({ tabIndex, article, setArticle }: AddBlockProps) {
+function AddBlock({ tabIndex, article, setArticle, count }: AddBlockProps) {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   const [block, setBlock] = useState<string>("");
 
@@ -267,8 +268,8 @@ function AddBlock({ tabIndex, article, setArticle }: AddBlockProps) {
         disabled={saving != "touched"}
         onClick={async () => {
           setSaving("saving");
-          await postArticleEditBlockAdd(article.slug, Number(block));
-          setSaving("untouched");
+          await postArticleEditBlockAdd(article.slug, Number(block), count);
+          setSaving("touched");
           const res = await getArticleEdit(article.slug);
           setArticle(res);
         }}
@@ -344,32 +345,40 @@ export default function Articles() {
             tabIndex={tabIndex}
             article={article}
             setArticle={setArticle}
+            count={article.block_datas.length}
           ></AddBlock>
           <Flex direction="row" gap="5" wrap="wrap">
-            {article.block_datas.map((block) => (
-              <DynamicForm
-                key={block.id}
-                name={block.name}
-                data={block.data}
-                ui={makeRadixUI(300)}
-                setData={(d) => {
-                  block.data = d;
-                }}
-                onSave={async () => {
-                  await postArticleEditBlockEdit(block);
-                }}
-                onDelete={async () => {
-                  await deleteArticleEditBlockEdit(block);
-                  console.log("deleting", block.id, "on", article.block_datas);
-                  setArticle({
-                    ...article,
-                    block_datas: article.block_datas.filter((b) => {
-                      return b.id != block.id;
-                    }),
-                  });
-                }}
-              />
-            ))}
+            {article.block_datas
+              .sort((a, b) => a.position - b.position)
+              .map((block) => (
+                <DynamicForm
+                  key={block.id}
+                  name={block.name + "-" + block.position}
+                  data={block.data}
+                  ui={makeRadixUI(300)}
+                  setData={(d) => {
+                    block.data = d;
+                  }}
+                  onSave={async () => {
+                    await postArticleEditBlockEdit(block);
+                  }}
+                  onDelete={async () => {
+                    await deleteArticleEditBlockEdit(block);
+                    console.log(
+                      "deleting",
+                      block.id,
+                      "on",
+                      article.block_datas,
+                    );
+                    setArticle({
+                      ...article,
+                      block_datas: article.block_datas.filter((b) => {
+                        return b.id != block.id;
+                      }),
+                    });
+                  }}
+                />
+              ))}
           </Flex>
 
           {/*{article.block_datas.map((b) => {

@@ -57,7 +57,7 @@ func (c *Client) EditArticleContent(slug, content string) error {
 	return nil
 }
 
-func (c *Client) EditArticleBlockAdd(slug string, id int) (int64, error) {
+func (c *Client) EditArticleBlockAdd(slug string, id, position int) (int64, error) {
 	data := view.ArticleAddBlockData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
@@ -66,6 +66,7 @@ func (c *Client) EditArticleBlockAdd(slug string, id int) (int64, error) {
 	}
 	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%s/edit/block_add", slug), map[string]any{
 		"new_block": id,
+		"position":  position,
 	}, rsp)
 	if err != nil {
 		return 0, fmt.Errorf("cannot edit article block_add : %w", err)

@@ -43,15 +43,18 @@ func TestRender(t *testing.T) {
 			input: Data{
 				Files: map[string]string{
 					"baseof.html": `<html><head></head><body>{{template "body" .}}</body></html>`,
-					"main_layout": `{{define "body"}}<h1>{{.Title}}</h1><p>{{.Content}}</p>{{ range $name, $data := .Blocks }}<p>{{partial $name $data}}</p>{{end}}{{end}}`,
+					"main_layout": `{{define "body"}}<h1>{{.Title}}</h1><p>{{.Content}}</p>{{ range $id, $block := .Blocks }}<p>{{partial $block}}</p>{{end}}{{end}}`,
 				},
-				Blocks: map[string]string{
+				BlocksContent: map[string]string{
 					"basic": "{{.Data.Content}}",
 				},
-				ArticleBlocks: map[string]map[string]any{
-					"basic": map[string]any{
-						"Data": map[string]any{
-							"Content": "something",
+				ArticleBlocks: []ArticleBlock{
+					{
+						BlockName: "basic",
+						Data: map[string]any{
+							"Data": map[string]any{
+								"Content": "something",
+							},
 						},
 					},
 				},

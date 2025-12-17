@@ -18,7 +18,8 @@ files:
 
   responses/bad_request/article_edit_block_empty.json: >
     {
-      "new_block":["this value should not be blank"]
+      "new_block":["this value should not be blank"],
+      "position":[]
     }
 
   payloads/bad_request/article_edit_block_unknown.json: >
@@ -28,18 +29,21 @@ files:
 
   responses/bad_request/article_edit_block_unknown.json: >
     {
-      "new_block": ["invalid id"]
+      "new_block": ["invalid id"],
+      "position":[]
     }
 
   payloads/ok/article_edit_block_add.json: >
     {
-      "new_block": 1
+      "new_block": 1,
+      "position":8
     }
 
   responses/ok/article_edit_block_add.json: >
     {
      	"id": 3,
      	"name": "first_block",
+      "position":8,
      	"data": {
       		"DataBool": true,
       		"DataNumber": 2,

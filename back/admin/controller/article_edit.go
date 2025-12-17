@@ -26,7 +26,12 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 
 	blockDataView := []view.BlockData{}
 	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
+		blockDataView = append(blockDataView, view.BlockData{
+			ID:       p.ID,
+			Name:     p.BlockName,
+			Data:     p.Data,
+			Position: int(p.Position),
+		})
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -114,8 +119,13 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	}
 
 	blockDataView := []view.BlockData{}
-	for _, p := range blockDatas {
-		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
+	for _, bd := range blockDatas {
+		blockDataView = append(blockDataView, view.BlockData{
+			ID:       bd.ID,
+			Name:     bd.BlockName,
+			Data:     bd.Data,
+			Position: int(bd.Position),
+		})
 	}
 	return view.ArticleOk(w, view.ArticleEditData{
 		Title:      article.Title,

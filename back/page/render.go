@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"sort"
 
 	"github.com/yuin/goldmark"
 )
@@ -18,12 +19,18 @@ type Page struct {
 	Description string
 }
 
+type ArticleBlock struct {
+	BlockName string
+	Position  int
+	Data      map[string]any
+}
+
 type Data struct {
 	Title         string
 	Content       string
 	Files         map[string]string
-	Blocks        map[string]string
-	ArticleBlocks map[string]map[string]any
+	BlocksContent map[string]string
+	ArticleBlocks []ArticleBlock
 	PageFtecher   func(query string, offset, limit int) []Page
 }
 
@@ -40,19 +47,19 @@ func Render(w io.Writer, preview_data Data) error {
 			return template.HTML(buf.String())
 		},
 		"fetch": preview_data.PageFtecher,
-		"partial": func(name string, data map[string]any) (template.HTML, error) {
-			content, ok := preview_data.Blocks[name]
+		"partial": func(block ArticleBlock) (template.HTML, error) {
+			content, ok := preview_data.BlocksContent[block.BlockName]
 			if !ok {
-				return "", fmt.Errorf("unknown block %s", name)
+				return "", fmt.Errorf("unknown block %s", block.BlockName)
 			}
 			buf := &bytes.Buffer{}
 			tmpl, err := template.New("block").Parse(content)
 			if err != nil {
-				return "", fmt.Errorf("cannot parse block %s: %w", name, err)
+				return "", fmt.Errorf("cannot parse block %s: %w", block.BlockName, err)
 			}
-			err = tmpl.Execute(buf, data)
+			err = tmpl.Execute(buf, block.Data)
 			if err != nil {
-				return "", fmt.Errorf("cannot render block %s: %w", name, err)
+				return "", fmt.Errorf("cannot render block %s: %w", block.BlockName, err)
 			}
 			return template.HTML(buf.String()), nil
 		},
@@ -66,12 +73,15 @@ func Render(w io.Writer, preview_data Data) error {
 	}
 	type PageData struct {
 		Title   string
-		Blocks  map[string]map[string]any
 		Content string
+		Blocks  []ArticleBlock
 	}
+	sort.Slice(preview_data.ArticleBlocks, func(i int, j int) bool {
+		return preview_data.ArticleBlocks[i].Position < preview_data.ArticleBlocks[j].Position
+	})
 	return tmpl.ExecuteTemplate(w, BaseOf, PageData{
+		Title:   preview_data.Title,
 		Content: preview_data.Content,
 		Blocks:  preview_data.ArticleBlocks,
-		Title:   preview_data.Title,
 	})
 }

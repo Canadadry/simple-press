@@ -5,6 +5,7 @@ const ARTICLE_BASE_URL = "/admin/articles";
 
 export interface BlockData {
   id: number;
+  position: number;
   name: string;
   data: Dict;
 }
@@ -76,11 +77,15 @@ export async function deleteArticleEditBlockEdit(data: BlockData) {
   );
 }
 
-export async function postArticleEditBlockAdd(slug: string, block: number) {
+export async function postArticleEditBlockAdd(
+  slug: string,
+  block: number,
+  position: number,
+) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/${slug}/edit/block_add`,
     "POST",
-    { new_block: block },
+    { new_block: block, position: position },
   );
 }
 

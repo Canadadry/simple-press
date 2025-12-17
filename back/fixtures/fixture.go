@@ -77,7 +77,8 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 				return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
 			}
 		}
-		id, err := api.EditArticleBlockAdd(slug, 1)
+		firstBlockID := 1
+		id, err := api.EditArticleBlockAdd(slug, firstBlockID, 2)
 		if err != nil {
 			return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
 		}

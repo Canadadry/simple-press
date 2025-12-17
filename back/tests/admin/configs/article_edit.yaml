@@ -30,6 +30,7 @@ files:
         {
           "id":1,
           "name":"first_block",
+          "position":2,
           "data":{
             "DataBool":true,
             "DataNumber":2,
@@ -68,6 +69,7 @@ files:
         {
           "id":1,
           "name":"first_block",
+          "position":2,
           "data":{
             "DataBool":true,
             "DataNumber":2,
@@ -136,6 +138,7 @@ files:
         {
           "id":1,
           "name":"first_block",
+          "position":0,
           "data":{
             "DataBool":true,
             "DataNumber":2,

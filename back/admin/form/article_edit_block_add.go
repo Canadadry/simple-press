@@ -1,6 +1,7 @@
 package form
 
 import (
+	"app/pkg/null"
 	"app/pkg/validator"
 	"context"
 	"fmt"
@@ -9,11 +10,13 @@ import (
 )
 
 const (
-	articleEditNewBlock = "new_block"
+	articleEditNewBlock      = "new_block"
+	articleEditBlockPosition = "position"
 )
 
 type ParsedArticleEditBlockAdd struct {
 	AddedBlockID int64
+	Position     null.Nullable[int]
 }
 
 type ParsedArticleEditErrorBlockAdd struct {
@@ -31,6 +34,7 @@ func (p *ParsedArticleEditBlockAdd) Bind(check_id func(int64) error) func(b vali
 			validator.Min(int64(1)),
 			check_id,
 		)
+		b.IntVar(articleEditBlockPosition, &p.Position)
 	}
 }
 
