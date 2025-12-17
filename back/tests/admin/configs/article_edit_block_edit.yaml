@@ -4,8 +4,9 @@ unit_tests:
     # - { url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 400, in: "bad_request/article_edit_block_edit_no_data",    out: "bad_request/article_edit_block_edit_no_data" }
     - { url: "/admin/articles/block/0/edit",                  status: 404 }
     - { url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
-scenarios:
+scenario:
   edit_block_is_persisted:
+    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",          status: 200, out: "ok/article_before_edit" }
     - { action: PATCH, url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200,  in: "ok/article_edit_block_edit" }
     - { action: GET , url: "/admin/articles/#article_0_slug#/edit",          status: 200, out: "ok/article_edited" }
   # bollean_in_edit_block_is_persisted:
@@ -25,6 +26,7 @@ files:
 
   payloads/ok/article_edit_block_edit.json: >
     {
+      "block_position":3,
       "block_data": {
         "DataNumber":22,
         "DataString": "updated text"
@@ -34,13 +36,44 @@ files:
     {
       "id":1,
       "name":"",
-      "position":0,
+      "position":3,
       "data": {
         "DataBool":true,
         "DataNumber":22,
         "DataString": "updated text"
       }
     }
+
+  responses/ok/article_before_edit.json: >
+    {
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+        {"name":"list.html","value":2},
+        {"name":"single.html","value":1}
+      ],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
+      "block_datas":[
+        {
+          "id":1,
+          "name":"first_block",
+          "position":2,
+          "data":{
+            "DataBool":true,
+            "DataNumber":2,
+            "DataString":"my data"
+          }
+        }
+      ]
+    }
+
 
   responses/ok/article_edited.json: >
     {
@@ -62,47 +95,10 @@ files:
         {
           "id":1,
           "name":"first_block",
+          "position":3,
           "data":{
             "DataBool":true,
             "DataNumber":22,
-            "DataString":"updated text"
-          }
-        }
-      ]
-    }
-
-
-  payloads/ok/article_edit_block_edit_boolean.json: >
-    {
-      "block_id": 1,
-      "block_data": {
-        "DataBool":false
-      }
-    }
-
-  responses/ok/article_edit_block_edit_boolean.json: >
-    {
-      "title":"index",
-      "author":"metoo",
-      "slug":"index",
-      "content":"## content\n\nMy first blog content\n\n![favicon](favicon.png)\n\n",
-      "draft":false,
-      "layout_id":1,
-      "layouts":[
-        {"name":"list.html","value":2},
-        {"name":"single.html","value":1}
-      ],
-      "blocks":[
-        {"name":"first_block","value":1},
-        {"name":"nested_block","value":2}
-      ],
-      "block_datas":[
-        {
-          "id":1,
-          "name":"first_block",
-          "data":{
-            "DataBool":false,
-            "DataNumber":2,
             "DataString":"updated text"
           }
         }

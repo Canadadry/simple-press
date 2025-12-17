@@ -65,7 +65,8 @@ export async function postArticleEditBlockEdit(data: BlockData) {
     `${ARTICLE_BASE_URL}/block/${data.id}/edit`,
     "PATCH",
     {
-      data: data.data,
+      block_position: data.position,
+      block_data: data.data,
     },
   );
 }

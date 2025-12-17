@@ -2,6 +2,7 @@ package form
 
 import (
 	"app/pkg/data"
+	"app/pkg/null"
 	"app/pkg/validator"
 	"fmt"
 	"net/http"
@@ -13,14 +14,14 @@ const (
 )
 
 type ParsedArticleEditBlockEdit struct {
-	EditedBlockData map[string]any
-	// EditedBlockPosition int
+	EditedBlockData     map[string]any
+	EditedBlockPosition null.Nullable[int]
 }
 
 type ParsedArticleEditErrorBlockEdit struct {
-	EditedBlockData string
-	// EditedBlockPosition string
-	Raw validator.Errors
+	EditedBlockData     string
+	EditedBlockPosition string
+	Raw                 validator.Errors
 }
 
 func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
@@ -30,6 +31,7 @@ func (e ParsedArticleEditErrorBlockEdit) HasError() bool {
 
 func (p *ParsedArticleEditBlockEdit) Bind(b validator.Binder) {
 	b.RequiredMapVar(articleEditBlockEditedData, &p.EditedBlockData)
+	b.IntVar(articleEditBlockEditedPosition, &p.EditedBlockPosition)
 }
 
 func ParseArticleEditBlockEdit(

@@ -34,18 +34,23 @@ func (c *Controller) PostArticleEditBlockEdit(w http.ResponseWriter, r *http.Req
 	if errors.HasError() {
 		return httpresponse.BadRequest(w, errors.Raw)
 	}
+	newPos := block.Position
+	if a.EditedBlockPosition.Valid {
+		newPos = int64(a.EditedBlockPosition.V)
+	}
 	err = c.Repository.UpdateBlockData(r.Context(), repository.BlockData{
 		ID:       int64(id),
 		Data:     a.EditedBlockData,
-		Position: block.Position, //int64(a.EditedBlockPosition),
+		Position: newPos,
 	})
 	if err != nil {
 		return fmt.Errorf("cannot add block %v to article : %w", id, err)
 	}
 
 	return view.BlockDataEditOk(w, view.BlockData{
-		ID: int64(id),
-		// Name: block.Name,
-		Data: a.EditedBlockData,
+		ID:       int64(id),
+		Name:     block.BlockName,
+		Data:     a.EditedBlockData,
+		Position: int(newPos),
 	})
 }
