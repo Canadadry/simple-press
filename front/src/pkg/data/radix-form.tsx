@@ -10,15 +10,25 @@ import {
   Spinner,
 } from "@radix-ui/themes";
 import type { DynamicFormUI } from "./render";
-import { TrashIcon } from "@radix-ui/react-icons";
+import {
+  TrashIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@radix-ui/react-icons";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
-    Form: ({ label, children, saving, onSave, onDelete }) => (
+    Form: ({ label, children, saving, onSave, onDelete, onUp, onDown }) => (
       <Card>
-        <Text as="div" size="2" mb="2" weight="bold" color="indigo">
-          {label}
-        </Text>
+        <Flex gap="2" justify="between">
+          <Text as="div" size="2" mb="2" weight="bold" color="indigo">
+            {label}
+          </Text>
+          <Flex gap="2">
+            <ChevronUpIcon onClick={onUp}></ChevronUpIcon>
+            <ChevronDownIcon onClick={onDown}></ChevronDownIcon>
+          </Flex>
+        </Flex>
         <Box
           data-testid="form"
           style={{

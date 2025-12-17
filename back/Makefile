@@ -43,3 +43,9 @@ test: ## unit test then end2end
 
 fixture: ## build fixture
 	go run main.go -action=fixture
+
+backup: ## backup current as example
+	cp blog.sqlite example/starter.db
+
+restore: ## restore example as current
+	cp example/starter.db blog.sqlite

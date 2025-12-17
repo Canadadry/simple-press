@@ -10,6 +10,8 @@ export interface FormProps {
   onDelete: () => Promise<void>;
   onSave: () => Promise<void>;
   saving: SavingStatus;
+  onUp: () => Promise<void>;
+  onDown: () => Promise<void>;
 }
 
 export interface FormObjectProps {
@@ -46,6 +48,8 @@ export interface DynamicFormProps {
   ui: DynamicFormUI;
   onSave: () => Promise<void>;
   onDelete: () => Promise<void>;
+  onUp: () => Promise<void>;
+  onDown: () => Promise<void>;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
@@ -55,6 +59,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   ui,
   onSave,
   onDelete,
+  onUp,
+  onDown,
 }) => {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
@@ -114,6 +120,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
         setSaving("untouched");
       }}
       onDelete={onDelete}
+      onUp={onUp}
+      onDown={onDown}
     >
       {renderNode(data)}
     </ui.Form>

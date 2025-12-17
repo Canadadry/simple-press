@@ -60,6 +60,15 @@ export async function postArticleEditContent(slug: string, content: string) {
   );
 }
 
+export async function postArticleEditBlockEdiPosition(data: BlockData) {
+  return apiRequest<Article>(
+    `${ARTICLE_BASE_URL}/block/${data.id}/edit`,
+    "PATCH",
+    {
+      block_position: data.position,
+    },
+  );
+}
 export async function postArticleEditBlockEdit(data: BlockData) {
   return apiRequest<Article>(
     `${ARTICLE_BASE_URL}/block/${data.id}/edit`,

@@ -21,7 +21,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import {
   getArticleEdit,
@@ -29,9 +29,10 @@ import {
   postArticleEditContent,
   postArticleEditBlockAdd,
   postArticleEditBlockEdit,
+  postArticleEditBlockEdiPosition,
   deleteArticleEditBlockEdit,
 } from "../../api/article";
-import type { Article } from "../../api/article";
+import type { Article, BlockData } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
 import { DynamicForm } from "../../pkg/data/render";
 import { makeRadixUI } from "../../pkg/data/radix-form";
@@ -297,6 +298,24 @@ export default function Articles() {
     load();
   }, [slug]);
 
+  const moveBlock = useCallback(async (block: BlockData, delta: number) => {
+    const newPosition = block.position + delta;
+    setArticle((prev: Article | null) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        block_datas: prev.block_datas.map((b) =>
+          b.id === block.id ? { ...b, position: newPosition } : b,
+        ),
+      };
+    });
+
+    await postArticleEditBlockEdiPosition({
+      ...block,
+      position: newPosition,
+    });
+  }, []);
+
   if (!slug) {
     navigate("/", { replace: true });
     return (
@@ -358,6 +377,12 @@ export default function Articles() {
                   ui={makeRadixUI(300)}
                   setData={(d) => {
                     block.data = d;
+                  }}
+                  onUp={async () => {
+                    await moveBlock(block, -1);
+                  }}
+                  onDown={async () => {
+                    await moveBlock(block, 1);
                   }}
                   onSave={async () => {
                     await postArticleEditBlockEdit(block);
