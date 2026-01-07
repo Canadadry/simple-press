@@ -14,16 +14,35 @@ import {
   TrashIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  Pencil1Icon,
+  TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
 import * as Accordion from "@radix-ui/react-accordion";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
-    Form: ({ label, children, saving, onSave, onDelete, onUp, onDown }) => (
+    Form: ({
+      label,
+      children,
+      mode,
+      setMode,
+      saving,
+      onSave,
+      onDelete,
+      onUp,
+      onDown,
+    }) => (
       <Card>
         <Flex gap="2" justify="between">
           <Text as="div" size="2" mb="2" weight="bold" color="indigo">
             {label}
+            {mode === "form" ? (
+              <Pencil1Icon onClick={() => setMode("json")}></Pencil1Icon>
+            ) : (
+              <TextAlignLeftIcon
+                onClick={() => setMode("form")}
+              ></TextAlignLeftIcon>
+            )}
           </Text>
           <Flex gap="2">
             <ChevronUpIcon onClick={onUp}></ChevronUpIcon>

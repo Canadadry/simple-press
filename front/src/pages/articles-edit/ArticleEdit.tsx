@@ -376,7 +376,15 @@ export default function Articles() {
                   data={block.data}
                   ui={makeRadixUI(500)}
                   setData={(d) => {
-                    block.data = d;
+                    setArticle((prev) => {
+                      if (!prev) return prev;
+                      return {
+                        ...prev,
+                        block_datas: prev.block_datas.map((b) =>
+                          b.id === block.id ? { ...b, data: d } : b,
+                        ),
+                      };
+                    });
                   }}
                   onUp={async () => {
                     await moveBlock(block, -1);

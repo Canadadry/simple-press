@@ -1,12 +1,15 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { updateData } from "./updateData";
 import { Dict } from "../../api/api";
+import { TextArea } from "@radix-ui/themes";
 
 type SavingStatus = "untouched" | "touched" | "saving";
-
+type Mode = "json" | "form";
 export interface FormProps {
   label: string;
   children: ReactNode;
+  mode: Mode;
+  setMode: (m: Mode) => void;
   onDelete: () => Promise<void>;
   onSave: () => Promise<void>;
   saving: SavingStatus;
@@ -63,6 +66,25 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   onDown,
 }) => {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
+  const [mode, setMode] = useState<Mode>("form");
+  const [temp, setTemp] = useState<string | null>(null);
+  useEffect(() => {
+    if (mode === "json") {
+      setTemp(JSON.stringify(data, null, 2));
+      return;
+    }
+    if (temp !== null) {
+      try {
+        const parsed = JSON.parse(temp);
+        setData(parsed);
+        console.log("setting data", parsed);
+        setSaving("touched");
+      } catch {
+        // JSON invalide, on ignore
+      }
+    }
+  }, [mode]);
+
   function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
     return Object.entries(obj).map(([key, value]) => {
       const fullPath = prefix ? `${prefix}.${key}` : key;
@@ -112,6 +134,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
 
   return (
     <ui.Form
+      mode={mode}
+      setMode={setMode}
       label={name}
       saving={saving}
       onSave={async () => {
@@ -123,7 +147,31 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       onUp={onUp}
       onDown={onDown}
     >
-      {renderNode(data)}
+      {mode === "form" ? (
+        renderNode(data)
+      ) : (
+        <TextArea
+          spellCheck={false}
+          variant="soft"
+          rows={10}
+          value={temp || ""}
+          disabled={saving === "saving"}
+          onChange={(e) => {
+            setTemp(e.target.value);
+            let p: Dict | null = null;
+            try {
+              p = JSON.parse(e.target.value);
+            } catch {
+              setSaving("untouched");
+            } finally {
+              if (p != null) {
+                // setData(p);
+                setSaving("touched");
+              }
+            }
+          }}
+        />
+      )}
     </ui.Form>
   );
 };
