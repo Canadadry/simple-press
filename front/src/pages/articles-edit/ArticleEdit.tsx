@@ -413,10 +413,6 @@ export default function Articles() {
                 />
               ))}
           </Flex>
-
-          {/*{article.block_datas.map((b) => {
-            return <p>{JSON.stringify(b)}</p>;
-          })}*/}
         </Flex>
       </Card>
     </Flex>
