@@ -16,9 +16,6 @@ V0.1
 - [x] edit filename, delete file
 - [x] push several file with folder architecture winthin a zip file
 - [x] delete block data
-- [] import one landing page from sandbox theme with all his blog define
-- [] import one blog index from sandbox theme
-- [] import one blog page from sandbox theme
 
 V0.2 export
 - [] add figure to all article (allow upload file from article, or open file selector)
