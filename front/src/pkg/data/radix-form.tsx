@@ -117,7 +117,7 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
         data-testid={`input-${name}`}
         defaultValue={value}
         type={inputType as "text" | "number"}
-        onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setData(name, e.target.value)
         }
       >

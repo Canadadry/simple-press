@@ -1,10 +1,11 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState, useCallback } from "react";
 import { updateData } from "./updateData";
 import { Dict } from "../../api/api";
 import { TextArea } from "@radix-ui/themes";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 type Mode = "json" | "form";
+
 export interface FormProps {
   label: string;
   children: ReactNode;
@@ -49,7 +50,7 @@ export interface DynamicFormProps {
   data: Dict;
   setData: (data: Dict) => void;
   ui: DynamicFormUI;
-  onSave: () => Promise<void>;
+  onSave: (data: Dict) => Promise<void>;
   onDelete: () => Promise<void>;
   onUp: () => Promise<void>;
   onDown: () => Promise<void>;
@@ -68,8 +69,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   const [mode, setMode] = useState<Mode>("form");
   const [temp, setTemp] = useState<string | null>(null);
+  const [cache, setCache] = useState<{ key: string; value: string }[]>([]);
   useEffect(() => {
     if (mode === "json") {
+      console.log("setting json", cache);
+      cache.forEach((c: { key: string; value: string }) => {
+        data = updateData(data, c.key, c.value);
+      });
+      console.log("setting json", data);
+      setCache([]);
       setTemp(JSON.stringify(data, null, 2));
       return;
     }
@@ -85,52 +93,63 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     }
   }, [mode]);
 
-  function renderNode(obj: Dict, prefix: string = ""): React.ReactNode {
-    return Object.entries(obj).map(([key, value]) => {
-      const fullPath = prefix ? `${prefix}.${key}` : key;
+  const renderNode = useCallback(
+    (obj: Dict, prefix: string = ""): React.ReactNode => {
+      return Object.entries(obj).map(([key, value]) => {
+        const fullPath = prefix ? `${prefix}.${key}` : key;
 
-      if (Array.isArray(value)) {
-        throw new Error(`Arrays not supported at path ${fullPath}`);
-      }
+        if (Array.isArray(value)) {
+          throw new Error(`Arrays not supported at path ${fullPath}`);
+        }
 
-      if (typeof value === "object" && value !== null) {
+        if (typeof value === "object" && value !== null) {
+          return (
+            <ui.FormObject key={fullPath} label={key}>
+              {renderNode(value as Dict, fullPath)}
+            </ui.FormObject>
+          );
+        }
+
+        if (typeof value === "boolean") {
+          return (
+            <ui.FormCheckBox
+              key={fullPath}
+              label={key}
+              name={fullPath}
+              checked={value}
+              setData={(path, newValue) => {
+                setSaving("touched");
+                console.log("FormCheckBox", path, newValue);
+                console.log("cache", cache);
+                setCache(cache.concat({ key: path, value: newValue }));
+                // setField(path, newValue);
+                // setData(updateData(data, path, newValue));
+              }}
+            />
+          );
+        }
+
         return (
-          <ui.FormObject key={fullPath} label={key}>
-            {renderNode(value as Dict, fullPath)}
-          </ui.FormObject>
-        );
-      }
-
-      if (typeof value === "boolean") {
-        return (
-          <ui.FormCheckBox
+          <ui.FormInput
             key={fullPath}
             label={key}
             name={fullPath}
-            checked={value}
+            inputType={typeof value === "number" ? "number" : "text"}
+            value={String(value)}
             setData={(path, newValue) => {
               setSaving("touched");
-              setData(updateData(data, path, newValue));
+              console.log("FormInput", path, newValue);
+              console.log("cache", cache);
+              setCache(cache.concat({ key: path, value: newValue }));
+              // setField(path, newValue);
+              // setData(updateData(data, path, newValue));
             }}
           />
         );
-      }
-
-      return (
-        <ui.FormInput
-          key={fullPath}
-          label={key}
-          name={fullPath}
-          inputType={typeof value === "number" ? "number" : "text"}
-          value={String(value)}
-          setData={(path, newValue) => {
-            setSaving("touched");
-            setData(updateData(data, path, newValue));
-          }}
-        />
-      );
-    });
-  }
+      });
+    },
+    [setSaving, cache, setCache, ui],
+  );
 
   return (
     <ui.Form
@@ -140,7 +159,11 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       saving={saving}
       onSave={async () => {
         setSaving("saving");
-        await onSave();
+        cache.forEach((c: { key: string; value: string }) => {
+          data = updateData(data, c.key, c.value);
+        });
+        setCache([]);
+        await onSave(data);
         setSaving("untouched");
       }}
       onDelete={onDelete}

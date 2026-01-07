@@ -32,6 +32,7 @@ import {
   postArticleEditBlockEdiPosition,
   deleteArticleEditBlockEdit,
 } from "../../api/article";
+import { Dict } from "../../api/api";
 import type { Article, BlockData } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
 import { DynamicForm } from "../../pkg/data/render";
@@ -392,7 +393,8 @@ export default function Articles() {
                   onDown={async () => {
                     await moveBlock(block, 1);
                   }}
-                  onSave={async () => {
+                  onSave={async (data: Dict) => {
+                    block.data = data;
                     await postArticleEditBlockEdit(block);
                   }}
                   onDelete={async () => {
