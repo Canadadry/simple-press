@@ -17,7 +17,6 @@ import {
   Pencil1Icon,
   TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
-import * as Accordion from "@radix-ui/react-accordion";
 
 export function makeRadixUI(maxWidth: number): DynamicFormUI {
   return {
@@ -80,36 +79,14 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
       </Card>
     ),
 
-    FormObject: ({ label, children }) => (
-      <Card mb="2">
-        <Accordion.Root type="single" collapsible>
-          <Accordion.Item value={label}>
-            <Accordion.Header style={{ margin: 0, padding: 0 }}>
-              <Accordion.Trigger
-                style={{
-                  all: "unset",
-                  width: "100%",
-                  cursor: "pointer",
-                }}
-              >
-                <Flex justify="between">
-                  <Text size="2" weight="bold">
-                    {label}
-                  </Text>
-                  <ChevronDownIcon />
-                </Flex>
-              </Accordion.Trigger>
-            </Accordion.Header>
-
-            <Accordion.Content>
-              <Box mt="2" data-testid={`object-${label}`}>
-                {children}
-              </Box>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion.Root>
-      </Card>
-    ),
+    FormObject: ({ label, children }) => {
+      return (
+        <Card mb="2">
+          {label}
+          <Box mt="2">{children}</Box>
+        </Card>
+      );
+    },
 
     FormInput: ({ label, name, inputType, value, setData }) => (
       <TextField.Root
