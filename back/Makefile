@@ -32,6 +32,9 @@ reflex: ## install reflex
 dev: ## watch go file and restart on change
 	ulimit -n 4096 ; reflex -r '\.go$$' -s -- sh -c "go run main.go -action admin"
 
+serve: ## watch go file and restart on change
+	ulimit -n 4096 ; reflex -r '\.go$$' -s -- sh -c "go run main.go -action public -port 8888"
+
 file_add_zip: ## regenerate zip test file
 	 zip -d tests/admin/payloads/Archive.zip __MACOSX/\* || echo "done"
 	 zip -d tests/admin/payloads/Archive.zip \*/.DS_Store || echo "done"
