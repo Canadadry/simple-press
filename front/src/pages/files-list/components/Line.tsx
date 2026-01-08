@@ -10,8 +10,9 @@ import {
 } from "@radix-ui/themes";
 
 interface LineProps {
+  path: string;
   tabIndex: number | undefined;
-  file: File;
+  file: string;
   portalContainer: Element | DocumentFragment | null | undefined;
   deleteFile: (filename: string) => Promise<void>;
 }
@@ -27,10 +28,7 @@ export default function Line(line: LineProps) {
       )}
       <Flex gap="4" align="center">
         <Flex gap="3" align="center">
-          <Avatar
-            src={line.file.name}
-            fallback={line.file.name[0].toUpperCase()}
-          />
+          <Avatar src={line.file} fallback={line.file[0].toUpperCase()} />
           <Text
             size="2"
             weight={"bold"}
@@ -38,7 +36,7 @@ export default function Line(line: LineProps) {
               color: "var(--accent-11)",
             }}
           >
-            {line.file.name}
+            {line.file}
           </Text>
           <Pencil1Icon></Pencil1Icon>
         </Flex>
@@ -60,7 +58,7 @@ export default function Line(line: LineProps) {
                 color="red"
                 onClick={(e) => {
                   e.stopPropagation();
-                  line.deleteFile(line.file.name);
+                  line.deleteFile(line.path + "/" + line.file);
                 }}
               >
                 Remove
