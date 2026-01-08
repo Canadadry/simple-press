@@ -1,0 +1,28 @@
+unit_tests:
+  PATCH:
+    - { url: "/admin/files/tree", status: 405 }
+  PUT:
+    - { url: "/admin/files/tree", status: 405 }
+  DELETE:
+    - { url: "/admin/files/tree", status: 405 }
+
+  GET:
+    - { url: "/admin/files/tree", status: 200, out: "file_tree_root" }
+    - { url: "/admin/files/tree/assets", status: 200, out: "file_tree_assets" }
+    - { url: "/admin/files/tree/unknown", status: 404 }
+    - { url: "/admin/files/tree/assets/../../secret", status: 404 }
+
+files:
+  responses/file_tree_root.json: >
+    {
+      "path":"",
+      "files":["pixel.png","data.json"],
+      "folders":["assets"]
+    }
+
+  responses/file_tree_assets.json: >
+    {
+      "path": "assets",
+      "folders": [],
+      "files": ["favicon.png"]
+    }

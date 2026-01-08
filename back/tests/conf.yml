@@ -26,3 +26,4 @@ groups:
       - template_edit.yaml
       - template_list.yaml
       - article_preview.yaml
+      - file_tree.yaml
