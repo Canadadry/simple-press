@@ -72,11 +72,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   const [cache, setCache] = useState<{ key: string; value: string }[]>([]);
   useEffect(() => {
     if (mode === "json") {
-      console.log("setting json", cache);
       cache.forEach((c: { key: string; value: string }) => {
         data = updateData(data, c.key, c.value);
       });
-      console.log("setting json", data);
       setCache([]);
       setTemp(JSON.stringify(data, null, 2));
       return;
@@ -85,7 +83,6 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       try {
         const parsed = JSON.parse(temp);
         setData(parsed);
-        console.log("setting data", parsed);
         setSaving("touched");
       } catch {
         // JSON invalide, on ignore
@@ -119,11 +116,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
               checked={value}
               setData={(path, newValue) => {
                 setSaving("touched");
-                console.log("FormCheckBox", path, newValue);
-                console.log("cache", cache);
                 setCache(cache.concat({ key: path, value: newValue }));
-                // setField(path, newValue);
-                // setData(updateData(data, path, newValue));
               }}
             />
           );
@@ -138,11 +131,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             value={String(value)}
             setData={(path, newValue) => {
               setSaving("touched");
-              console.log("FormInput", path, newValue);
-              console.log("cache", cache);
               setCache(cache.concat({ key: path, value: newValue }));
-              // setField(path, newValue);
-              // setData(updateData(data, path, newValue));
             }}
           />
         );

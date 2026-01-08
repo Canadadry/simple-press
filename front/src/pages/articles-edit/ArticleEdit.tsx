@@ -5,6 +5,7 @@ import {
   TextArea,
   Link,
   Select,
+  Grid,
 } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
 import {
@@ -367,7 +368,7 @@ export default function Articles() {
             setArticle={setArticle}
             count={article.block_datas.length}
           ></AddBlock>
-          <Flex direction="row" gap="5" wrap="wrap">
+          <Grid columns="3" gap="3" width="auto">
             {article.block_datas
               .sort((a, b) => a.position - b.position)
               .map((block) => (
@@ -414,7 +415,7 @@ export default function Articles() {
                   }}
                 />
               ))}
-          </Flex>
+          </Grid>
         </Flex>
       </Card>
     </Flex>

@@ -1,4 +1,4 @@
-import { Flex, Box, Text, Button } from "@radix-ui/themes";
+import { Flex, Box, Text, Button, ScrollArea } from "@radix-ui/themes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { NavItem } from "./components/NavItem";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
@@ -66,7 +66,9 @@ export function AppLayout({ children, toggleTheme }: AppLayoutProps) {
 
       {/* Main content */}
       <Box flexGrow="1" p="6">
-        {children}
+        <ScrollArea type="scroll" scrollbars="vertical">
+          {children}
+        </ScrollArea>
       </Box>
     </Flex>
   );
