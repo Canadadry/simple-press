@@ -3,9 +3,7 @@ import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import {
   deleteFile,
   type FileTree,
-  getFileList,
   postFile,
-  type File,
   getFileTree,
 } from "../../api/file";
 import Line from "./components/Line";

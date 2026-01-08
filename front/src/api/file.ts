@@ -28,10 +28,21 @@ export async function getFileTree(path: string) {
   return apiRequest<FileTree>(`${ARTICLE_BASE_URL}/tree${path}`, "GET");
 }
 
+function cleanPath(path: string): string {
+  if (!path) {
+    return "";
+  }
+
+  return path
+    .replace(/\/{2,}/g, "/") // remplace // par /
+    .replace(/^\/+/, "") // supprime / au début
+    .replace(/\/+$/, ""); // supprime / à la fin
+}
+
 export async function postFile(file: Blob, filename: string, archive: boolean) {
   const formData = new FormData();
   formData.append("content", file);
-  formData.append("name", filename);
+  formData.append("name", cleanPath(filename));
   if (archive) {
     formData.append("archive", "true");
   }
