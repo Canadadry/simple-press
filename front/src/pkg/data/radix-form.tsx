@@ -8,6 +8,7 @@ import {
   Checkbox,
   Button,
   Spinner,
+  TextArea,
 } from "@radix-ui/themes";
 import type { DynamicFormUI } from "./render";
 import {
@@ -111,19 +112,48 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
       </Card>
     ),
 
-    FormInput: ({ label, name, inputType, value, setData }) => (
-      <TextField.Root
-        mb="4"
-        data-testid={`input-${name}`}
-        defaultValue={value}
-        type={inputType as "text" | "number"}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setData(name, e.target.value)
+    FormInput: ({ label, name, inputType, value, setData }) => {
+      const part = label.split("__");
+      if (part[1] && part[1].startsWith("ta")) {
+        let row = 1;
+        try {
+          row = parseInt(part[1].slice(2));
+        } catch {
+          // nothing
         }
-      >
-        <TextField.Slot>{label}</TextField.Slot>
-      </TextField.Root>
-    ),
+        return (
+          <Box position="relative">
+            <TextArea
+              mb="4"
+              style={{ paddingTop: "2rem" }}
+              spellCheck={false}
+              variant="surface"
+              rows={row}
+              value={value}
+              onChange={(e) => {
+                setData(name, e.target.value);
+              }}
+            />
+            <Box position="absolute" m="2" top="0" left="0" right="0">
+              <strong>{part[0]}</strong>
+            </Box>
+          </Box>
+        );
+      }
+      return (
+        <TextField.Root
+          mb="4"
+          data-testid={`input-${name}`}
+          defaultValue={value}
+          type={inputType as "text" | "number"}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setData(name, e.target.value)
+          }
+        >
+          <TextField.Slot>{part[0]}</TextField.Slot>
+        </TextField.Root>
+      );
+    },
 
     FormCheckBox: ({ label, name, checked, setData }) => {
       const [localChecked, setLocalChecked] = useState(checked);
