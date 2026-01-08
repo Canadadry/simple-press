@@ -17,30 +17,33 @@ V0.1
 - [x] push several file with folder architecture winthin a zip file
 - [x] delete block data
 
-V0.2 export
+V0.2 MVP
+- [] add global data for navbar, footer and stuff
+- [] add function to allow fetching page name, url, image, content ???
 - [] add figure to all article (allow upload file from article, or open file selector)
+
+V0.3 export
 - [] define front url in .env
 - [] serve front url from back
-- [] add function to allow fetching page name, url, image, content ???
 - [] write a build static site script around wget
+- [] expose build static as route so downloading html site from front become possible
 - [] deploy a first article on private server
-- [] expose build static as route so downloading site from front become possible
 
-V0.3 polish
+V0.4 polish
 - [] remove file, article,block in article, block,template, layout
 - [] list bug and fix them
 - [] basic unit test around bug of renaming template or layout in front
 - [] query in file, file list with pagination
 
-V0.4 SEO
+V0.5 SEO
 - [] duplicate article, layout, template
 - [] add seo variable (or dynmaque data, like blog but for an article so only one definition)
 - [] allow resizing image with a query url request
 
-V0.5
+V0.6
 - [] markdown editor on article content edition
 - [] swap go template engine for otto + personal jsx parser
 - [] redesign block data definition => list of fullpath + option (toggle stuff, select other)
 
-V0.6 light
+V0.7 light
 - [] remove npm and use upkg or else and complie with raw esbuild call
