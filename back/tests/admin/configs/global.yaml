@@ -1,0 +1,92 @@
+unit_tests:
+  GET:
+    - { url: "/admin/global/definition", status: 200 ,out: "global_definition"}
+    - { url: "/admin/global/data",       status: 200 ,out: "global_data"}
+
+  PATCH:
+    - { url: "/admin/global/definition", status: 200, in: "global_definition_edit",                out: "global_definition_edit" }
+    - { url: "/admin/global/definition", status: 400, in: "global_definition_edit_no_definition",  out: "global_definition_edit_no_definition" }
+    - { url: "/admin/global/definition", status: 400, in: "global_definition_edit_bad_definition", out: "global_definition_edit_bad_definition" }
+    - { url: "/admin/global/data"      , status: 400, in: "global_data_edit_no_data",              out: "global_data_edit_no_data" }
+
+scenario:
+  patch_definition:
+    - { action: "PATCH", url: "/admin/global/definition" , status: 200, in: "global_definition_edit", out: "global_definition_edit" }
+    - { action: "GET"  , url: "/admin/global/definition" , status: 200,                               out: "global_definition_edit" }
+  patch_data:
+    - { action: "PATCH", url: "/admin/global/definition", status: 200, in: "global_definition_edit", out: "global_definition_edit" }
+    - { action: "PATCH", url: "/admin/global/data"      , status: 200, in: "global_data_edit",       out: "global_data_edit" }
+    - { action: "GET"  , url: "/admin/global/data"      , status: 200,                               out: "global_data_edit" }
+
+files:
+  responses/global_definition.json: >
+    {
+      "definition": {}
+    }
+
+  responses/global_data.json: >
+    {
+      "data": {}
+    }
+
+  payloads/global_definition_edit.json: >
+    {
+      "definition": {
+        "SiteTitle": "My website",
+        "ItemsPerPage": 10,
+        "EnableComments": true
+      }
+    }
+
+  responses/global_definition_edit.json: >
+    {
+      "definition": {
+        "SiteTitle": "My website",
+        "ItemsPerPage": 10,
+        "EnableComments": true
+      }
+    }
+
+  payloads/global_definition_edit_no_definition.json: >
+    {
+    }
+
+  responses/global_definition_edit_no_definition.json: >
+    {
+      "definition": ["this value should not be blank"]
+    }
+
+  payloads/global_definition_edit_bad_definition.json: >
+    {
+      "definition": "invalid map"
+    }
+
+  responses/global_definition_edit_bad_definition.json: >
+    {
+      "definition":  ["this value should not be blank"]
+    }
+
+  payloads/global_data_edit.json: >
+    {
+      "data": {
+        "ItemsPerPage": 25
+      }
+    }
+
+  responses/global_data_edit.json: >
+    {
+      "data": {
+        "SiteTitle": "My website",
+        "ItemsPerPage": 25,
+        "EnableComments": true
+      }
+    }
+
+  payloads/global_data_edit_no_data.json: >
+    {
+    }
+
+  responses/global_data_edit_no_data.json: >
+    {
+      "data": ["this value should not be blank"]
+    }

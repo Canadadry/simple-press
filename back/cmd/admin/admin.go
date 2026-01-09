@@ -33,9 +33,10 @@ func Run(c config.Parameters) error {
 	}
 
 	rt, err := admin.GetRouter(admin.Services{
-		Db:    sqlutil.NewLogger(db),
-		Clock: clock.Real{},
-		Out:   out,
+		Db:       sqlutil.NewLogger(db),
+		Clock:    clock.Real{},
+		Out:      out,
+		FrontUrl: c.FrontUrl,
 	})
 
 	if err != nil {

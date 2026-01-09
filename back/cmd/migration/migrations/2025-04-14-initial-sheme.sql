@@ -44,3 +44,12 @@ CREATE TABLE block_data (
     FOREIGN KEY (article_id) REFERENCES article (id),
     FOREIGN KEY (block_id) REFERENCES block (id)
 );
+
+CREATE TABLE global (
+    name TEXT NOT NULL PRIMARY KEY,
+    content TEXT NOT NULL
+);
+
+INSERT INTO global (name, content) VALUES
+    ('definition', '{}'),
+    ('data', '{}');

@@ -27,3 +27,4 @@ groups:
       - template_list.yaml
       - article_preview.yaml
       - file_tree.yaml
+      - global.yaml

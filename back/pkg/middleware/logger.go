@@ -66,6 +66,7 @@ func Logger(w io.Writer, clock clock.Clock, exclude func(string) bool) func(next
 				Level        string
 				Method       string
 				URL          string
+				Pattern      string
 				Status       int
 				Bytes        int
 				Elapsed      string
@@ -77,6 +78,7 @@ func Logger(w io.Writer, clock clock.Clock, exclude func(string) bool) func(next
 				Level:   "trace",
 				Method:  r.Method,
 				URL:     r.URL.String(),
+				Pattern: router.GetPattern(r),
 				Status:  ww.statusCode,
 				Bytes:   ww.byteWritten,
 				Elapsed: fmt.Sprintf("%v", endedAt.Sub(startedAt)),

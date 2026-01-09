@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"app/admin/assets"
 	"app/admin/controller"
 	"app/admin/repository"
 	"app/pkg/clock"
@@ -15,15 +14,16 @@ import (
 )
 
 type Services struct {
-	Db    sqlutil.DBTX
-	Clock clock.Clock
-	Out   io.Writer
+	Db       sqlutil.DBTX
+	Clock    clock.Clock
+	Out      io.Writer
+	FrontUrl string
 }
 
 func GetRouter(services Services) (http.HandlerFunc, error) {
 	r := router.Group{
 		Cors: router.CorsOption{
-			Origin:  "http://localhost:5173",
+			Origin:  services.FrontUrl,
 			Methods: []string{http.MethodGet, http.MethodPatch, http.MethodPost, http.MethodDelete},
 			Headers: []string{"Content-Type"},
 		},
@@ -34,7 +34,6 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Use(middleware.AutoCloseRequestBody)
 	r.Use(middleware.NoCache)
 	r.Use(middleware.Recoverer())
-	r.Mount("/public/", http.FileServer(http.FS(assets.GetPublicFiles())))
 	r.Error(HandleError(true))
 
 	c, err := controller.New(repository.Repository{
@@ -71,6 +70,10 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	r.Delete("/admin/files/:path/delete", c.DeleteFile)
 	r.Get("/admin/files/tree", c.TreeFile)
 	r.Get("/admin/files/tree/:path", c.TreeFile)
+	r.Get("/admin/global/definition", c.GetGlobalDefinition)
+	r.Patch("/admin/global/definition", c.PatchGlobalDefinition)
+	r.Get("/admin/global/data", c.GetGlobalData)
+	r.Patch("/admin/global/data", c.PatchGlobalData)
 	r.Get("/:any", c.GetFile)
 
 	return r.ServeHTTP, nil

@@ -105,6 +105,7 @@ func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHand
 		for _, route := range routes {
 			matches := route.regex.FindStringSubmatch(r.URL.Path)
 			if len(matches) > 0 {
+				// fmt.Println("router has", route.name, "got", r.Method, r.URL.Path)
 				matched = append(matched, route.name)
 				if r.Method != route.method {
 					allow = append(allow, route.method)
@@ -112,7 +113,7 @@ func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHand
 				}
 				w.Header().Add("Access-Control-Allow-Origin", cors.Origin)
 				w.Header().Add("Access-Control-Allow-Credentials", "true")
-				ctx := context.WithValue(r.Context(), ctxKey{}, matches[1:])
+				ctx := context.WithValue(r.Context(), ctxKey{}, ctxValue{matches, route.name})
 				err := route.handler(w, r.WithContext(ctx))
 				if err != nil {
 					errorHandler(
@@ -152,41 +153,24 @@ func ServeRoutesAndHandleErrorWith(routes []Route, errorHandler RoutingErrorHand
 }
 
 type ctxKey struct{}
+type ctxValue struct {
+	Value   []string
+	Pattern string
+}
 
 func GetField(r *http.Request, index int) string {
-	fields, _ := r.Context().Value(ctxKey{}).([]string)
-	if len(fields) <= index {
+	value, _ := r.Context().Value(ctxKey{}).(ctxValue)
+	if len(value.Value) <= index+1 {
 		return ""
 	}
-	return fields[index]
+	return value.Value[index+1]
 }
 
 func GetFieldAsInt(r *http.Request, index int) (int, error) {
 	return strconv.Atoi(GetField(r, index))
 }
 
-func GetPatternFromURL(url string, replace map[string]string) string {
-
-	if len(replace) > 0 {
-		for rep, reg := range replace {
-			r := regexp.MustCompile(reg)
-			url = r.ReplaceAllString(url, rep)
-		}
-	}
-
-	tags := map[string]string{
-		":digit": DigitRegExp,
-		":uuid":  UuidV4Regexp,
-	}
-	seg := strings.Split(url, "/")
-	for ks, s := range seg {
-		for tag, reg := range tags {
-			r := regexp.MustCompile("^" + reg + "$")
-			if r.MatchString(s) {
-				seg[ks] = tag
-			}
-		}
-	}
-
-	return strings.Join(seg, "/")
+func GetPattern(r *http.Request) string {
+	value, _ := r.Context().Value(ctxKey{}).(ctxValue)
+	return value.Pattern
 }

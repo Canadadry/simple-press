@@ -40,6 +40,11 @@ type File struct {
 	Content []byte
 }
 
+type Global struct {
+	Name    string
+	Content string
+}
+
 type Layout struct {
 	ID      int64
 	Name    string

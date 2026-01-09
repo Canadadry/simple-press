@@ -14,6 +14,7 @@ type Parameters struct {
 	Action      string `flag:"action" default:"public" desc:"mode"`
 	Port        int    `flag:"port" default:"8080" desc:"port to lsiten to"`
 	DatabaseUrl string `flag:"db-url" default:"blog.sqlite" desc:"sqlite database filename"`
+	FrontUrl    string `flag:"front-url" default:"http://localhost:5173" desc:"front url"`
 	Out         string `flag:"out" default:"" desc:"output filename, stdout if blank"`
 }
 
