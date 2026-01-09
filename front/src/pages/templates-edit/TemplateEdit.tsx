@@ -7,12 +7,20 @@ import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import { getTemplateEdit, postTemplateEdit } from "../../api/template";
 import type { Template } from "../../api/template";
 import { useParams } from "react-router-dom";
+import { Dict } from "../../api/api";
+import {
+  getGlobalData,
+  getGlobalDefinition,
+  patchGlobalDefinition,
+} from "../../api/global";
+import { JsonEditor } from "../../components/JsonEditor";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 
 export default function TemplateEdit() {
   const { slug } = useParams<{ slug: string }>();
   const [templateName, setTemplateName] = useState<string>("");
+  const [templateData, setTemplateData] = useState<Dict>({});
   const [template, setTemplate] = useState<Template | null>(null);
   const [saving, setSaving] = useState<SavingStatus>("untouched");
   const tabIndex = 1;
@@ -24,11 +32,14 @@ export default function TemplateEdit() {
       if (!slug) {
         setTemplate(null);
         setTemplateName("");
+        setTemplateData({});
         return;
       }
       const res = await getTemplateEdit(slug);
+      const data = await getGlobalDefinition(res.name);
       setTemplate(res);
       setTemplateName(res.name);
+      setTemplateData(data);
     }
     load();
   }, [slug, saving]);
@@ -89,7 +100,6 @@ export default function TemplateEdit() {
               id="skirt-description"
               variant="soft"
               rows={25}
-              defaultValue={template.content || ""}
               value={template.content}
               disabled={saving === "saving"}
               onChange={(e) => {
@@ -98,6 +108,15 @@ export default function TemplateEdit() {
               }}
             />
           </Box>
+          <JsonEditor
+            title="Data"
+            tabIndex={tabIndex}
+            content={templateData}
+            setContent={setTemplateData}
+            updateContent={async () => {
+              await patchGlobalDefinition(templateName, templateData);
+            }}
+          />
         </Flex>
       </Card>
     </Flex>

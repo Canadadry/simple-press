@@ -1,13 +1,14 @@
-import { Box, Button, TextArea } from "@radix-ui/themes";
+import { Box, Button } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
-import { Label } from "@radix-ui/react-label";
 
 import { useEffect, useState } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import { getBlockEdit, postBlockEdit } from "../../api/block";
 import type { Block } from "../../api/block";
 import { useNavigate, useParams } from "react-router-dom";
-import { Dict } from "../../pkg/data/parseFormData";
+import { Editor } from "../../components/Editor";
+import { JsonEditor } from "../../components/JsonEditor";
+import { Dict } from "../../api/api";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 
@@ -55,69 +56,9 @@ function Name({ tabIndex, slug, block, setBlock }: NameProps) {
   );
 }
 
-interface EditorProps {
-  tabIndex: number;
-  title: string;
-  content: string;
-  setContent: (content: string) => void;
-  updateContent: () => Promise<void>;
-}
-
-function Editor({
-  tabIndex,
-  title,
-  content,
-  setContent,
-  updateContent,
-}: EditorProps) {
-  const [saving, setSaving] = useState<SavingStatus>("untouched");
-  return (
-    <Box mb="4">
-      <Label htmlFor="skirt-description">
-        <Text size="2" weight="bold" mb="2" asChild>
-          <Box display="inline-block">{title}</Box>
-        </Text>
-      </Label>
-      <Box position="relative">
-        <TextArea
-          tabIndex={tabIndex}
-          spellCheck={false}
-          id="skirt-description"
-          variant="soft"
-          rows={10}
-          value={content}
-          style={{ paddingTop: 48 }}
-          disabled={saving === "saving"}
-          onChange={(e) => {
-            setSaving("touched");
-            setContent(e.target.value);
-          }}
-        />
-        <Box position="absolute" m="2" top="0" left="0" right="0">
-          <Flex gap={"1"}>
-            <Button
-              tabIndex={tabIndex}
-              size="2"
-              disabled={saving != "touched"}
-              onClick={async () => {
-                setSaving("saving");
-                await updateContent();
-                setSaving("untouched");
-              }}
-            >
-              {saving == "saving" ? <Spinner /> : "Save"}
-            </Button>
-          </Flex>
-        </Box>
-      </Box>
-    </Box>
-  );
-}
-
 export default function BlockEdit() {
   const { slug } = useParams<{ slug: string }>();
   const [block, setBlock] = useState<Block | null>(null);
-  const [temp, setTemp] = useState<string | null>(null);
   const navidate = useNavigate();
   useEffect(() => {
     async function load() {
@@ -172,27 +113,17 @@ export default function BlockEdit() {
               await postBlockEdit(slug, block);
             }}
           ></Editor>
-          <Editor
+          <JsonEditor
             tabIndex={3}
             title="Data"
-            content={temp || JSON.stringify(block.definition, null, 2)}
-            setContent={(content: string) => {
-              let p: Dict | null = null;
-              try {
-                p = JSON.parse(content);
-              } catch {
-                setTemp(content);
-              } finally {
-                if (p != null) {
-                  setTemp(null);
-                  setBlock({ ...block, definition: p });
-                }
-              }
+            content={block.definition}
+            setContent={(content: Dict) => {
+              setBlock({ ...block, definition: content });
             }}
             updateContent={async () => {
               await postBlockEdit(slug, block);
             }}
-          ></Editor>
+          ></JsonEditor>
         </Flex>
       </Card>
     </Flex>
