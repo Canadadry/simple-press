@@ -9,7 +9,11 @@ import (
 )
 
 func (c *Controller) GetGlobalDefinition(w http.ResponseWriter, r *http.Request) error {
-	return view.GlobalDefinitionOk(w, map[string]any{})
+	def, err := c.Repository.GetGlobalDefinition(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot update global def : %w", err)
+	}
+	return view.GlobalDefinitionOk(w, def)
 }
 
 func (c *Controller) PatchGlobalDefinition(w http.ResponseWriter, r *http.Request) error {
@@ -20,15 +24,28 @@ func (c *Controller) PatchGlobalDefinition(w http.ResponseWriter, r *http.Reques
 	if errs.HasError {
 		return httpresponse.BadRequest(w, errs)
 	}
-
+	err = c.Repository.UpdateGlobalDefinition(r.Context(), def.Definition)
+	if err != nil {
+		return fmt.Errorf("cannot update global def : %w", err)
+	}
 	return view.GlobalDefinitionOk(w, def.Definition)
 }
 
 func (c *Controller) GetGlobalData(w http.ResponseWriter, r *http.Request) error {
-	return view.GlobalDataOk(w, map[string]any{})
+	data, err := c.Repository.GetGlobalData(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot update global def : %w", err)
+	}
+
+	return view.GlobalDataOk(w, data)
 }
+
 func (c *Controller) PatchGlobalData(w http.ResponseWriter, r *http.Request) error {
-	data, errs, err := form.ParseGlobalDataEdit(r)
+	def, err := c.Repository.GetGlobalDefinition(r.Context())
+	if err != nil {
+		return fmt.Errorf("cannot update global def : %w", err)
+	}
+	data, errs, err := form.ParseGlobalDataEdit(r, def)
 	if err != nil {
 		return fmt.Errorf("cannot parse form request : %w", err)
 	}
@@ -36,5 +53,9 @@ func (c *Controller) PatchGlobalData(w http.ResponseWriter, r *http.Request) err
 		return httpresponse.BadRequest(w, errs)
 	}
 
-	return view.GlobalDefinitionOk(w, data.Data)
+	err = c.Repository.UpdateGlobalDefinition(r.Context(), data.Data)
+	if err != nil {
+		return fmt.Errorf("cannot update global def : %w", err)
+	}
+	return view.GlobalDataOk(w, data.Data)
 }
