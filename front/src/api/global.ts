@@ -19,12 +19,6 @@ export async function getGlobalDefinition(section: string): Promise<Dict> {
   return all.definition[section] as Dict;
 }
 
-export async function getGlobalData(section: string): Promise<Dict> {
-  section = section.replace(/\./g, "_");
-  const all = await apiRequest<GData>("/admin/global/data", "GET");
-  return all.data[section] as Dict;
-}
-
 export async function patchGlobalDefinition(section: string, definition: Dict) {
   section = section.replace(/\./g, "_");
   const previous = await apiRequest<GDefinition>(
@@ -38,13 +32,13 @@ export async function patchGlobalDefinition(section: string, definition: Dict) {
     },
   });
 }
-export async function patchGlobalData(section: string, data: Dict) {
-  section = section.replace(/\./g, "_");
-  const previous = await apiRequest<GData>("/admin/global/data", "GET");
+
+export async function getGlobalData(): Promise<Dict> {
+  const all = await apiRequest<GData>("/admin/global/data", "GET");
+  return all.data as Dict;
+}
+export async function patchGlobalData(data: Dict) {
   return apiRequest<GData>("/admin/global/data", "PATCH", {
-    data: {
-      ...previous.data,
-      [section]: data,
-    },
+    data: data,
   });
 }

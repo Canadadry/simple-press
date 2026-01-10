@@ -46,8 +46,16 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
             )}
           </Text>
           <Flex gap="2">
-            <ChevronUpIcon onClick={onUp}></ChevronUpIcon>
-            <ChevronDownIcon onClick={onDown}></ChevronDownIcon>
+            {onUp == null ? (
+              <></>
+            ) : (
+              <ChevronUpIcon onClick={onUp}></ChevronUpIcon>
+            )}
+            {onDown == null ? (
+              <></>
+            ) : (
+              <ChevronDownIcon onClick={onDown}></ChevronDownIcon>
+            )}
           </Flex>
         </Flex>
         <Box
@@ -58,16 +66,20 @@ export function makeRadixUI(maxWidth: number): DynamicFormUI {
         >
           {children}
           <Flex gap="2" justify="between">
-            <Button
-              tabIndex={1}
-              size="2"
-              variant="outline"
-              color="crimson"
-              onClick={onDelete}
-            >
-              <TrashIcon />
-              Delete
-            </Button>
+            {onDelete == null ? (
+              <></>
+            ) : (
+              <Button
+                tabIndex={1}
+                size="2"
+                variant="outline"
+                color="crimson"
+                onClick={onDelete}
+              >
+                <TrashIcon />
+                Delete
+              </Button>
+            )}
             <Button
               tabIndex={1}
               size="2"

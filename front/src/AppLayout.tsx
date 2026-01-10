@@ -19,6 +19,7 @@ export function AppLayout({ children, toggleTheme }: AppLayoutProps) {
     { label: "Templates", path: "/templates" },
     { label: "Blocks", path: "/blocks" },
     { label: "Fichiers", path: "/files" },
+    { label: "Data", path: "/global/data" },
   ];
 
   return (

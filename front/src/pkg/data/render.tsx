@@ -11,11 +11,11 @@ export interface FormProps {
   children: ReactNode;
   mode: Mode;
   setMode: (m: Mode) => void;
-  onDelete: () => Promise<void>;
   onSave: () => Promise<void>;
   saving: SavingStatus;
-  onUp: () => Promise<void>;
-  onDown: () => Promise<void>;
+  onDelete?: () => Promise<void>;
+  onUp?: () => Promise<void>;
+  onDown?: () => Promise<void>;
 }
 
 export interface FormObjectProps {
@@ -51,9 +51,9 @@ export interface DynamicFormProps {
   setData: (data: Dict) => void;
   ui: DynamicFormUI;
   onSave: (data: Dict) => Promise<void>;
-  onDelete: () => Promise<void>;
-  onUp: () => Promise<void>;
-  onDown: () => Promise<void>;
+  onDelete?: () => Promise<void>;
+  onUp?: () => Promise<void>;
+  onDown?: () => Promise<void>;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({

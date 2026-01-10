@@ -11,6 +11,7 @@ import LayoutEdit from "./pages/layout-edit/LayoutEdit";
 import Files from "./pages/files-list/Files";
 import Blocks from "./pages/blocks-list/Blocks";
 import BlockEdit from "./pages/blocks-edit/BlockEdit";
+import GlobalData from "./pages/global-data/global-data";
 
 interface AppProps {
   toggleTheme: () => void;
@@ -33,6 +34,7 @@ export default function App({ toggleTheme }: AppProps) {
           <Route path="/articles/:slug/edit" element={<ArticleEdit />} />
           <Route path="/blocks/:slug/edit" element={<BlockEdit />} />
           <Route path="/articles/:slug/preview" element={<ArticlePreview />} />
+          <Route path="/global/data" element={<GlobalData />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
