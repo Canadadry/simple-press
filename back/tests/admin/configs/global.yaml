@@ -17,6 +17,14 @@ scenario:
   patch_definition:
     - { action: "PATCH", url: "/admin/global/definition" , status: 200, in: "global_definition_edit", out: "global_definition_edit" }
     - { action: "GET"  , url: "/admin/global/definition" , status: 200,                               out: "global_definition_edit" }
+  page_preview_use_global:
+    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" }
+    - { action: "POST" , url: "/admin/templates/baseof.html/edit", status: 200, in: "add_data_to_baseof"}
+    #- { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 409}
+    - { action: "PATCH", url: "/admin/global/definition" , status: 200, in: "set_global_definition_baseof",  }
+    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_def.html"}
+    - { action: "PATCH", url: "/admin/global/data" , status: 200, in: "set_global_data_baseof",  }
+    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_data.html"}
 
 files:
   responses/global_definition.json: >
@@ -90,3 +98,27 @@ files:
     {
       "data": ["this value should not be blank"]
     }
+
+  payloads/add_data_to_baseof.json: >
+    {
+      "name":"baseof.html",
+      "content": "<h1>{{.Global.TitleFromGlobal}}</h1>"
+    }
+
+  payloads/set_global_definition_baseof.json: >
+    {
+      "definition": {
+        "TitleFromGlobal": "My website"
+      }
+    }
+
+  responses/preview_article_def.html: "<h1>My website</h1>"
+
+  payloads/set_global_data_baseof.json: >
+    {
+      "data": {
+        "TitleFromGlobal": "My super website"
+      }
+    }
+
+  responses/preview_article_data.html: "<h1>My super website</h1>"

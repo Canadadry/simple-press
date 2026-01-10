@@ -2,8 +2,10 @@ package controller
 
 import (
 	"app/page"
+	"app/pkg/data"
 	"app/pkg/http/httpresponse"
 	"app/pkg/router"
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
@@ -79,7 +81,21 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		})
 	}
 
-	err = page.Render(w, page.Data{
+	gdef, err := c.Repository.GetGlobalDefinition(r.Context())
+	if err != nil {
+		return err
+	}
+	gdata, err := c.Repository.GetGlobalData(r.Context())
+	if err != nil {
+		return err
+	}
+	gdata, err = data.ParseFormData(gdata, gdef)
+	if err != nil {
+		return err
+	}
+
+	b := bytes.Buffer{}
+	err = page.Render(&b, page.Data{
 		Title:         a.Title,
 		Content:       a.Content,
 		Files:         files,
@@ -88,9 +104,11 @@ func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) e
 		PageFtecher: func(query string, offset int, limit int) []page.Page {
 			return c.getPages(r.Context(), query, offset, limit)
 		},
+		GlobalData: gdata,
 	})
 	if err != nil {
-		return fmt.Errorf("cannot render article : %w", err)
+		return httpresponse.Conflicted(w, err.Error())
 	}
-	return nil
+	_, err = w.Write(b.Bytes())
+	return err
 }

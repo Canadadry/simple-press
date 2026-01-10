@@ -34,6 +34,7 @@ type Data struct {
 	BlocksContent map[string]string
 	ArticleBlocks []ArticleBlock
 	PageFtecher   func(query string, offset, limit int) []Page
+	GlobalData    map[string]any
 }
 
 func markdownify(inline bool) func(source string) template.HTML {
@@ -101,6 +102,7 @@ func Render(w io.Writer, preview_data Data) error {
 		Title   string
 		Content string
 		Blocks  []ArticleBlock
+		Global  map[string]any
 	}
 	sort.Slice(preview_data.ArticleBlocks, func(i int, j int) bool {
 		return preview_data.ArticleBlocks[i].Position < preview_data.ArticleBlocks[j].Position
@@ -109,5 +111,6 @@ func Render(w io.Writer, preview_data Data) error {
 		Title:   preview_data.Title,
 		Content: preview_data.Content,
 		Blocks:  preview_data.ArticleBlocks,
+		Global:  preview_data.GlobalData,
 	})
 }
