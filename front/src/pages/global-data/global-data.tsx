@@ -3,7 +3,7 @@ import { DynamicForm } from "../../pkg/data/render";
 import { useEffect, useState } from "react";
 import { Dict } from "../../api/api";
 import { makeRadixUI } from "../../pkg/data/radix-form";
-import { getGlobalData } from "../../api/global";
+import { getGlobalData, patchGlobalData } from "../../api/global";
 
 export default function GlobalData() {
   const [data, setData] = useState<Dict>({});
@@ -27,7 +27,9 @@ export default function GlobalData() {
         setData={(d) => {
           setData(d);
         }}
-        onSave={async () => {}}
+        onSave={async (data: Dict) => {
+          await patchGlobalData(data);
+        }}
       />
     </Flex>
   );
