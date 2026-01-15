@@ -116,6 +116,27 @@ func TestParseFormData(t *testing.T) {
 				},
 			},
 		},
+
+		"false value": {
+			FormValues: map[string]any{
+				"boolean1": false,
+				"boolean2": "false",
+				"boolean3": "0",
+				"boolean4": 0,
+			},
+			Definition: map[string]any{
+				"boolean1": true,
+				"boolean2": true,
+				"boolean3": true,
+				"boolean4": true,
+			},
+			Expected: map[string]any{
+				"boolean1": false,
+				"boolean2": false,
+				"boolean3": false,
+				"boolean4": false,
+			},
+		},
 	}
 
 	for name, tt := range tests {

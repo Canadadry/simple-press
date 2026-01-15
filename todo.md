@@ -18,7 +18,7 @@ V0.1
 - [x] delete block data
 
 V0.2 MVP
-- [] add global data for navbar, footer and stuff
+- [x] add global data for navbar, footer and stuff
 - [] add function to allow fetching page name, url, image, content ???
 - [] add figure to all article (allow upload file from article, or open file selector)
 

@@ -28,6 +28,7 @@ files:
     {
       "block_position":3,
       "block_data": {
+        "DataBool":false,
         "DataNumber":22,
         "DataString": "updated text"
       }
@@ -38,7 +39,7 @@ files:
       "name":"",
       "position":3,
       "data": {
-        "DataBool":true,
+        "DataBool":false,
         "DataNumber":22,
         "DataString": "updated text"
       }
@@ -97,7 +98,7 @@ files:
           "name":"first_block",
           "position":3,
           "data":{
-            "DataBool":true,
+            "DataBool":false,
             "DataNumber":22,
             "DataString":"updated text"
           }

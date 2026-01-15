@@ -29,8 +29,9 @@ func ParseFormData(values, def map[string]any) (map[string]any, error) {
 			}
 
 		case bool:
-			if v, ok := values[key].(string); ok {
-				result[key] = v == "true"
+			if v, ok := values[key]; ok {
+				v_str := fmt.Sprintf("%v", v)
+				result[key] = v_str == "true" || v_str == "1" || v_str == "yes"
 			} else {
 				result[key] = subdef_typed
 			}
