@@ -7,6 +7,7 @@ package adminmodel
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -204,14 +205,19 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 
 const selectArticlesInFolderArticle = `-- name: SelectArticlesInFolderArticle :many
 SELECT
-    substr(name, length(?1) + 1) AS filename
+    substr(slug, length(?1) + 1) AS filename
 FROM article
-WHERE name LIKE ?1 || '%'
-AND instr(substr(name, length(?1) + 1), '/') = 0
+WHERE slug LIKE ?2 || '%'
+AND instr(substr(slug, length(?2) + 1), '/') = 0
 `
 
-func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, path)
+type SelectArticlesInFolderArticleParams struct {
+	Slug interface{}
+	Path sql.NullString
+}
+
+func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, arg SelectArticlesInFolderArticleParams) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, arg.Slug, arg.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -236,13 +242,13 @@ func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interf
 const selectFoldersInFolderArticle = `-- name: SelectFoldersInFolderArticle :many
 SELECT DISTINCT
     substr(
-    substr(name, length(?1) + 1),
+    substr(slug, length(?1) + 1),
     1,
-    instr(substr(name, length(?1) + 1), '/') - 1
+    instr(substr(slug, length(?1) + 1), '/') - 1
     ) AS folder
 FROM article
-WHERE name LIKE ?1 || '%'
-    AND instr(substr(name, length(?1) + 1), '/') > 0
+WHERE slug LIKE ?1 || '%'
+    AND instr(substr(slug, length(?1) + 1), '/') > 0
 `
 
 func (q *Queries) SelectFoldersInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {

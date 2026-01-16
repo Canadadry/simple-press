@@ -5,6 +5,7 @@ import (
 	"app/pkg/sqlutil"
 	"app/pkg/stacktrace"
 	"context"
+	"strings"
 	"time"
 )
 
@@ -37,6 +38,7 @@ func (r *Repository) CountArticleBySlug(ctx context.Context, slug string) (int, 
 type CreateArticleParams struct {
 	Title    string
 	Author   string
+	Folder   string
 	Draft    bool
 	LayoutID int64
 }
@@ -46,7 +48,14 @@ func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (
 	if a.Draft {
 		draft = 1
 	}
-	slug := slugify(a.Title)
+	slug := ""
+	for _, s := range strings.Split(a.Folder, "/") {
+		if s == "" || s == "." {
+			continue
+		}
+		slug = slug + slugify(s) + "/"
+	}
+	slug = slug + slugify(a.Title)
 	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:    a.Title,
 		Date:     r.Clock.Now(),

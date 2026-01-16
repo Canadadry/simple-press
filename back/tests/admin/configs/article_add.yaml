@@ -12,6 +12,7 @@ unit_tests:
     - { url: "/admin/articles/add"       , status: 201, in: "ok/article_add_draft", out: "ok/article_add_draft"}
     - { url: "/admin/articles/add"       , status: 400, in: "bad_request/article_add_no_title",  out: "bad_request/article_add_no_title"}
     - { url: "/admin/articles/add"       , status: 400, in: "bad_request/article_add_no_author", out: "bad_request/article_add_no_author"}
+    - { url: "/admin/articles/add"       , status: 201, in: "ok/article_add_prefix", out: "ok/article_add_prefix"}
 
 # scenario:
 #   get_sync_after:
@@ -53,6 +54,7 @@ files:
   responses/bad_request/article_add_no_title.json: >
     {
       "author":[],
+      "folder":[],
       "draft":[],
       "title":["this value should not be blank"]
     }
@@ -64,5 +66,19 @@ files:
     {
       "title":[],
       "draft":[],
+      "folder":[],
       "author":["this value should not be blank"]
+    }
+  payloads/ok/article_add_prefix.json: >
+    {
+      "title": "first with prefix",
+      "author":"metoo",
+      "folder":"/fr_FR/BloG"
+    }
+  responses/ok/article_add_prefix.json: >
+    {
+      "title": "first with prefix",
+      "slug": "fr-fr/blog/first-with-prefix",
+      "author":"metoo",
+      "draft":false
     }

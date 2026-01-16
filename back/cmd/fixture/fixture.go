@@ -90,7 +90,7 @@ func readArticleData(articleFile string) ([]view.ArticleEditData, error) {
 			// Date:   l[2],
 			Author:  l[3],
 			Content: l[4],
-			// Slug:l[5],
+			Slug:    l[5],
 			// Draft: l[6],
 			// LayoutId: l[7],
 		})

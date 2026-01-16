@@ -9,6 +9,7 @@ import (
 	"app/pkg/http/httpcaller"
 	"fmt"
 	"io"
+	"path/filepath"
 )
 
 type File struct {
@@ -66,7 +67,7 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 	}
 
 	for i, a := range fd.Articles {
-		slug, err := api.AddArticle(a.Title, a.Author)
+		slug, err := api.AddArticle(a.Title, a.Author, filepath.Dir(a.Slug))
 		if err != nil {
 			return env, fmt.Errorf("cannot add article %s : %w", a.Title, err)
 		}

@@ -18,16 +18,18 @@ func New(client httpcaller.Caller) *Client {
 	return &Client{client: client, ctx: context.Background()}
 }
 
-func (c *Client) AddArticle(title, author string) (string, error) {
+func (c *Client) AddArticle(title, author, folder string) (string, error) {
 	article := view.ArticleAddData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
 		http.StatusCreated:    &article,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, "/admin/articles/add", view.ArticleAddData{
-		Title:  title,
-		Author: author,
+	st, err := c.client.Post(c.ctx, "/admin/articles/add", map[string]string{
+		"title":  title,
+		"author": author,
+		"draft":  "false",
+		"folder": folder,
 	}, rsp)
 	if err != nil {
 		return "", fmt.Errorf("cannot add article : %w", err)

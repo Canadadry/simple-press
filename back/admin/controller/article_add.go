@@ -31,6 +31,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		Title:    a.Title,
 		Author:   a.Author,
 		Draft:    a.Draft.V,
+		Folder:   a.Folder.V,
 		LayoutID: layouts[0].ID,
 	})
 	if err != nil {
