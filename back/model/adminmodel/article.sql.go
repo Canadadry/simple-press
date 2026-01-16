@@ -204,25 +204,49 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 
 const selectArticlesInFolderArticle = `-- name: SelectArticlesInFolderArticle :many
 SELECT
-    substr(slug, length(?1) + 1) AS filename
+    title,
+    substr(slug, length(?1) + 1) AS filename,
+    date,
+    author,
+    substr(content, 0, 50) AS ` + "`" + `content` + "`" + `,
+    slug,
+    draft
 FROM article
 WHERE slug LIKE ?1 || '%'
 AND instr(substr(slug, length(?1) + 1), '/') = 0
 `
 
-func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {
+type SelectArticlesInFolderArticleRow struct {
+	Title    string
+	Filename string
+	Date     time.Time
+	Author   string
+	Content  string
+	Slug     string
+	Draft    int64
+}
+
+func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interface{}) ([]SelectArticlesInFolderArticleRow, error) {
 	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, path)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	var items []SelectArticlesInFolderArticleRow
 	for rows.Next() {
-		var filename string
-		if err := rows.Scan(&filename); err != nil {
+		var i SelectArticlesInFolderArticleRow
+		if err := rows.Scan(
+			&i.Title,
+			&i.Filename,
+			&i.Date,
+			&i.Author,
+			&i.Content,
+			&i.Slug,
+			&i.Draft,
+		); err != nil {
 			return nil, err
 		}
-		items = append(items, filename)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

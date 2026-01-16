@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"app/admin/repository"
 	"app/admin/view"
 	"app/pkg/http/httpresponse"
 	"app/pkg/router"
+	"app/pkg/sqlutil"
 	"fmt"
 	"net/http"
 	"strings"
@@ -26,8 +28,17 @@ func (c *Controller) TreeArticle(w http.ResponseWriter, r *http.Request) error {
 		return httpresponse.NotFound(w)
 	}
 	return view.ArticlesTreeOk(w, view.ArticleTreeData{
-		Path:     path,
-		Articles: articles,
-		Folders:  folders,
+		Path: path,
+		Articles: sqlutil.Map(articles, func(from repository.Article) view.ArticleListData {
+			return view.ArticleListData{
+				Title:   from.Title,
+				Date:    from.Date,
+				Author:  from.Author,
+				Content: from.Content,
+				Slug:    from.Slug,
+				Draft:   from.Draft,
+			}
+		}),
+		Folders: folders,
 	})
 }

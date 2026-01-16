@@ -146,7 +146,7 @@ func (r *Repository) UpdateArticle(ctx context.Context, slug string, a Article) 
 	return nil
 }
 
-func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]string, []string, error) {
+func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]Article, []string, error) {
 	folders, err := adminmodel.New(r.Db).SelectFoldersInFolderArticle(ctx, name)
 	if err != nil {
 		return nil, nil, stacktrace.From(err)
@@ -159,7 +159,16 @@ func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]stri
 		return nil, nil, stacktrace.From(err)
 	}
 	if articles == nil {
-		articles = []string{}
+		articles = []adminmodel.SelectArticlesInFolderArticleRow{}
 	}
-	return articles, folders, nil
+	out := sqlutil.Map(articles, func(from adminmodel.SelectArticlesInFolderArticleRow) Article {
+		return Article{
+			Title:   from.Title,
+			Date:    from.Date,
+			Author:  from.Author,
+			Slug:    from.Slug,
+			Content: from.Content,
+		}
+	})
+	return out, folders, nil
 }

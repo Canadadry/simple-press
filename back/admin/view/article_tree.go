@@ -6,9 +6,9 @@ import (
 )
 
 type ArticleTreeData struct {
-	Path     string   `json:"path"`
-	Articles []string `json:"articles"`
-	Folders  []string `json:"folders"`
+	Path     string            `json:"path"`
+	Articles []ArticleListData `json:"articles"`
+	Folders  []string          `json:"folders"`
 }
 
 func ArticlesTreeOk(w http.ResponseWriter, atd ArticleTreeData) error {

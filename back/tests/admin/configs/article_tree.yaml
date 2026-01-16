@@ -15,14 +15,14 @@ unit_tests:
 files:
   responses/articles_tree_root.json: >
     {
-      "path":"",
-      "articles":["index","list"],
-      "folders":["blog"]
+    "path":"",
+    "articles": "article_list_item",
+    "folders":["blog"]
     }
 
   responses/articles_tree_blog.json: >
     {
       "path": "blog",
       "folders": [],
-      "articles": ["article-1","article-2"]
+      "articles": "article_list_item"
     }
