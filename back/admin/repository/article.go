@@ -154,7 +154,7 @@ func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]stri
 	if folders == nil {
 		folders = []string{}
 	}
-	articles, err := adminmodel.New(r.Db).SelectFoldersInFolderArticle(ctx, name)
+	articles, err := adminmodel.New(r.Db).SelectArticlesInFolderArticle(ctx, name)
 	if err != nil {
 		return nil, nil, stacktrace.From(err)
 	}

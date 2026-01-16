@@ -90,7 +90,7 @@ WHERE slug LIKE :path || '%'
 
 -- name: SelectArticlesInFolderArticle :many
 SELECT
-    substr(slug, length(:slug) + 1) AS filename
+    substr(slug, length(:path) + 1) AS filename
 FROM article
 WHERE slug LIKE :path || '%'
 AND instr(substr(slug, length(:path) + 1), '/') = 0;

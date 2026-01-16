@@ -16,7 +16,7 @@ files:
   responses/articles_tree_root.json: >
     {
       "path":"",
-      "articles":["list","index"],
+      "articles":["index","list"],
       "folders":["blog"]
     }
 

@@ -7,7 +7,6 @@ package adminmodel
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -207,17 +206,12 @@ const selectArticlesInFolderArticle = `-- name: SelectArticlesInFolderArticle :m
 SELECT
     substr(slug, length(?1) + 1) AS filename
 FROM article
-WHERE slug LIKE ?2 || '%'
-AND instr(substr(slug, length(?2) + 1), '/') = 0
+WHERE slug LIKE ?1 || '%'
+AND instr(substr(slug, length(?1) + 1), '/') = 0
 `
 
-type SelectArticlesInFolderArticleParams struct {
-	Slug interface{}
-	Path sql.NullString
-}
-
-func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, arg SelectArticlesInFolderArticleParams) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, arg.Slug, arg.Path)
+func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, path)
 	if err != nil {
 		return nil, err
 	}
