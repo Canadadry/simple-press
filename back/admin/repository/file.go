@@ -69,14 +69,14 @@ func (r *Repository) DownloadFile(ctx context.Context, name string) (File, bool,
 }
 
 func (r *Repository) SelectFileTree(ctx context.Context, name string) ([]string, []string, error) {
-	folders, err := adminmodel.New(r.Db).SelectFoldersInFolder(ctx, name)
+	folders, err := adminmodel.New(r.Db).SelectFoldersInFolderFile(ctx, name)
 	if err != nil {
 		return nil, nil, stacktrace.From(err)
 	}
 	if folders == nil {
 		folders = []string{}
 	}
-	files, err := adminmodel.New(r.Db).SelectFilesInFolder(ctx, name)
+	files, err := adminmodel.New(r.Db).SelectFilesInFolderFile(ctx, name)
 	if err != nil {
 		return nil, nil, stacktrace.From(err)
 	}

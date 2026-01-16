@@ -45,6 +45,8 @@ func GetRouter(services Services) (http.HandlerFunc, error) {
 	}
 
 	r.Get("/admin/articles", c.GetArticleList)
+	r.Get("/admin/articles/tree", c.TreeArticle)
+	r.Get("/admin/articles/tree/:path", c.TreeArticle)
 	r.Post("/admin/articles/add", c.PostArticleAdd)
 	r.Get("/admin/articles/:slug/edit", c.GetArticleEdit)
 	r.Post("/admin/articles/:slug/edit/metadata", c.PostArticleEditMetadata)

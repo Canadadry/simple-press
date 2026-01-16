@@ -10,3 +10,13 @@ files:
       "page":0,
       "limit":10
     }
+
+  responses/article_list_item.json: >
+    {
+      "title": "@string@.isNotEmpty()",
+      "date": "@string@",
+      "author": "@string@.isNotEmpty()",
+      "content": "@string@.isNotEmpty()",
+      "slug": "@string@.isNotEmpty()",
+      "draft": false
+    }

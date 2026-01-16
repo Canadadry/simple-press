@@ -202,6 +202,72 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 	return items, nil
 }
 
+const selectArticlesInFolderArticle = `-- name: SelectArticlesInFolderArticle :many
+SELECT
+    substr(name, length(?1) + 1) AS filename
+FROM article
+WHERE name LIKE ?1 || '%'
+AND instr(substr(name, length(?1) + 1), '/') = 0
+`
+
+func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectArticlesInFolderArticle, path)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var filename string
+		if err := rows.Scan(&filename); err != nil {
+			return nil, err
+		}
+		items = append(items, filename)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const selectFoldersInFolderArticle = `-- name: SelectFoldersInFolderArticle :many
+SELECT DISTINCT
+    substr(
+    substr(name, length(?1) + 1),
+    1,
+    instr(substr(name, length(?1) + 1), '/') - 1
+    ) AS folder
+FROM article
+WHERE name LIKE ?1 || '%'
+    AND instr(substr(name, length(?1) + 1), '/') > 0
+`
+
+func (q *Queries) SelectFoldersInFolderArticle(ctx context.Context, path interface{}) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectFoldersInFolderArticle, path)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var folder string
+		if err := rows.Scan(&folder); err != nil {
+			return nil, err
+		}
+		items = append(items, folder)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateArticle = `-- name: UpdateArticle :exec
 UPDATE article
 SET

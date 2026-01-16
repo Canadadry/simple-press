@@ -1,0 +1,28 @@
+unit_tests:
+  PATCH:
+    - { url: "/admin/articles/tree", status: 405 }
+  PUT:
+    - { url: "/admin/articles/tree", status: 405 }
+  DELETE:
+    - { url: "/admin/articles/tree", status: 405 }
+
+  GET:
+    - { url: "/admin/articles/tree", status: 200, out: "articles_tree_root" }
+    - { url: "/admin/articles/tree/blog", status: 200, out: "articles_tree_blog" }
+    - { url: "/admin/articles/tree/unknown", status: 404 }
+    - { url: "/admin/articles/tree/blog/..", status: 404 }
+
+files:
+  responses/articles_tree_root.json: >
+    {
+      "path":"",
+      "articles":["list","index"],
+      "folders":["blog"]
+    }
+
+  responses/articles_tree_blog.json: >
+    {
+      "path": "blog",
+      "folders": [],
+      "articles": ["article-1","article-2"]
+    }

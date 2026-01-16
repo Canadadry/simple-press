@@ -1,8 +1,0 @@
-{
-  "title": "@string@.isNotEmpty()",
-  "date": "@string@",
-  "author": "@string@.isNotEmpty()",
-  "content": "@string@.isNotEmpty()",
-  "slug": "@string@.isNotEmpty()",
-  "draft": false
-}

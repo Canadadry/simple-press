@@ -136,3 +136,21 @@ func (r *Repository) UpdateArticle(ctx context.Context, slug string, a Article) 
 	}
 	return nil
 }
+
+func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]string, []string, error) {
+	folders, err := adminmodel.New(r.Db).SelectFoldersInFolderArticle(ctx, name)
+	if err != nil {
+		return nil, nil, stacktrace.From(err)
+	}
+	if folders == nil {
+		folders = []string{}
+	}
+	articles, err := adminmodel.New(r.Db).SelectFoldersInFolderArticle(ctx, name)
+	if err != nil {
+		return nil, nil, stacktrace.From(err)
+	}
+	if articles == nil {
+		articles = []string{}
+	}
+	return articles, folders, nil
+}

@@ -125,7 +125,7 @@ func (q *Queries) GetFileList(ctx context.Context, arg GetFileListParams) ([]str
 	return items, nil
 }
 
-const selectFilesInFolder = `-- name: SelectFilesInFolder :many
+const selectFilesInFolderFile = `-- name: SelectFilesInFolderFile :many
 SELECT
     substr(name, length(?1) + 1) AS filename
 FROM file
@@ -133,8 +133,8 @@ WHERE name LIKE ?1 || '%'
 AND instr(substr(name, length(?1) + 1), '/') = 0
 `
 
-func (q *Queries) SelectFilesInFolder(ctx context.Context, path interface{}) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, selectFilesInFolder, path)
+func (q *Queries) SelectFilesInFolderFile(ctx context.Context, path interface{}) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectFilesInFolderFile, path)
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func (q *Queries) SelectFilesInFolder(ctx context.Context, path interface{}) ([]
 	return items, nil
 }
 
-const selectFoldersInFolder = `-- name: SelectFoldersInFolder :many
+const selectFoldersInFolderFile = `-- name: SelectFoldersInFolderFile :many
 SELECT DISTINCT
   substr(
     substr(name, length(?1) + 1),
@@ -168,8 +168,8 @@ WHERE name LIKE ?1 || '%'
   AND instr(substr(name, length(?1) + 1), '/') > 0
 `
 
-func (q *Queries) SelectFoldersInFolder(ctx context.Context, path interface{}) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, selectFoldersInFolder, path)
+func (q *Queries) SelectFoldersInFolderFile(ctx context.Context, path interface{}) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, selectFoldersInFolderFile, path)
 	if err != nil {
 		return nil, err
 	}

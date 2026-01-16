@@ -45,7 +45,7 @@ LIMIT
 OFFSET
     ?;
 
--- name: SelectFoldersInFolder :many
+-- name: SelectFoldersInFolderFile :many
 SELECT DISTINCT
   substr(
     substr(name, length(:path) + 1),
@@ -56,7 +56,7 @@ FROM file
 WHERE name LIKE :path || '%'
   AND instr(substr(name, length(:path) + 1), '/') > 0;
 
--- name: SelectFilesInFolder :many
+-- name: SelectFilesInFolderFile :many
 SELECT
     substr(name, length(:path) + 1) AS filename
 FROM file
