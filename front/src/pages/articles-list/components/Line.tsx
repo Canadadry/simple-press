@@ -14,17 +14,17 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface LineProps {
-  tabIndex: number | undefined;
+  index: number;
   article: Article;
-  portalContainer: Element | DocumentFragment | null | undefined;
+  portalContainer?: Element | DocumentFragment | null;
 }
 export default function Line(line: LineProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
-    <Box key={line.tabIndex}>
-      {line.tabIndex && line.tabIndex > 0 ? (
+    <Box key={line.index}>
+      {line.index && line.index > 0 ? (
         <Box>
           <Separator size="4" my="3" />
         </Box>
@@ -71,7 +71,11 @@ export default function Line(line: LineProps) {
         <Flex flexGrow="1" justify="end">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <IconButton color="gray" tabIndex={line.tabIndex} variant="ghost">
+              <IconButton
+                color="gray"
+                tabIndex={line.index + 3}
+                variant="ghost"
+              >
                 <DotsHorizontalIcon />
               </IconButton>
             </DropdownMenu.Trigger>

@@ -8,7 +8,6 @@ import {
   Button,
   TextField,
 } from "@radix-ui/themes";
-// import * as Accordion from "@radix-ui/react-accordion";
 import {
   getArticleList,
   postArticleAdd,
@@ -20,19 +19,25 @@ import { useNavigate } from "react-router-dom";
 type SavingStatus = "untouched" | "touched" | "saving";
 
 interface CreateProps {
-  tabIndex: number;
+  count?: number;
 }
 
-function Create({ tabIndex }: CreateProps) {
-  const [saving, setSaving] = useState<SavingStatus>("untouched");
-  const [title, setTitle] = useState<string>("");
-  const [author, setAuthor] = useState<string>("");
+function Create({ count }: CreateProps) {
+  const defaultTitle = "Article sans titre";
+  const [saving, setSaving] = useState<SavingStatus>("touched");
+  const [title, setTitle] = useState<string>(defaultTitle);
+  const [author, setAuthor] = useState<string>("Moi");
   const navigate = useNavigate();
+  useEffect(() => {
+    if (title == defaultTitle && count && count > 0) {
+      setTitle(title + " " + count);
+    }
+  }, [count]);
   return (
     <Flex gap="3" mb="5">
       <Box flexGrow="3">
         <TextField.Root
-          tabIndex={tabIndex}
+          tabIndex={0}
           size="2"
           placeholder="Title"
           value={title}
@@ -47,7 +52,7 @@ function Create({ tabIndex }: CreateProps) {
       </Box>
       <Box flexGrow="1">
         <TextField.Root
-          tabIndex={tabIndex}
+          tabIndex={1}
           size="2"
           placeholder="Author"
           value={author}
@@ -61,13 +66,13 @@ function Create({ tabIndex }: CreateProps) {
         </TextField.Root>
       </Box>
       <Button
-        tabIndex={tabIndex}
+        tabIndex={2}
         size="2"
         disabled={saving != "touched"}
         onClick={async () => {
           setSaving("saving");
-          await postArticleAdd({ title: title, author: author });
-          navigate(`/articles/${title}/edit`, { replace: true });
+          const result = await postArticleAdd({ title: title, author: author });
+          navigate(`/articles/${result.slug}/edit`, { replace: true });
           setSaving("untouched");
         }}
       >
@@ -99,7 +104,7 @@ export default function Articles() {
         <Text size="7" weight="bold">
           Liste des articles
         </Text>
-        <Create tabIndex={0}></Create>
+        <Create count={0}></Create>
         <Flex align="center" justify="center" height="100vh">
           <Spinner />
         </Flex>
@@ -112,14 +117,14 @@ export default function Articles() {
       <Text size="7" weight="bold">
         Liste des articles
       </Text>
-      <Create tabIndex={0}></Create>
+      <Create count={articles.length}></Create>
       <Card>
         <Flex direction="column">
           {articles.map((val, idx) => {
             return (
               <Line
                 key={idx}
-                tabIndex={idx}
+                index={idx}
                 article={val}
                 portalContainer={null}
               ></Line>
