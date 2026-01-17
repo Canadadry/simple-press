@@ -1,7 +1,7 @@
 import { apiRequest } from "./api";
 import type { List, Dict } from "./api";
 
-const ARTICLE_BASE_URL = "/admin/articles";
+const BASE_URL = "/admin/articles";
 
 export interface BlockData {
   id: number;
@@ -11,6 +11,7 @@ export interface BlockData {
 }
 
 export interface Article {
+  id: number;
   title: string;
   author: string;
   image: string;
@@ -23,82 +24,78 @@ export interface Article {
   block_datas: Array<BlockData>;
 }
 
+export interface ArticleTree {
+  path: string;
+  articles: Article[];
+  folders: string[];
+}
+
 export interface ValidationErrors {
   [key: string]: string[];
 }
 
 export async function getArticleList() {
-  return apiRequest<List<Article>>(`${ARTICLE_BASE_URL}`, "GET");
+  return apiRequest<List<Article>>(`${BASE_URL}`, "GET");
+}
+
+export async function getArticleTree(path: string) {
+  if (path !== "" && path[0] != "/") {
+    path = "/" + path;
+  }
+  return apiRequest<ArticleTree>(`${BASE_URL}/tree${path}`, "GET");
 }
 
 export async function postArticleAdd(article: {
   title: string;
   author: string;
 }) {
-  return apiRequest<Article>(`${ARTICLE_BASE_URL}/add`, "POST", article);
+  return apiRequest<Article>(`${BASE_URL}/add`, "POST", article);
 }
 
-export async function getArticleEdit(slug: string) {
-  return apiRequest<Article>(`${ARTICLE_BASE_URL}/${slug}/edit`, "GET");
+export async function getArticle(id: number) {
+  return apiRequest<Article>(`${BASE_URL}/${id}/edit`, "GET");
 }
 
-export async function postArticleEditMetadata(slug: string, metadata: Article) {
-  return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/${slug}/edit/metadata`,
-    "POST",
-    { ...metadata, layout: metadata.layout_id },
-  );
+export async function postArticleEditMetadata(id: number, metadata: Article) {
+  return apiRequest<Article>(`${BASE_URL}/${id}/edit/metadata`, "POST", {
+    ...metadata,
+    layout: metadata.layout_id,
+  });
 }
 
-export async function postArticleEditContent(slug: string, content: string) {
-  return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/${slug}/edit/content`,
-    "POST",
-    {
-      content,
-    },
-  );
+export async function postArticleEditContent(id: number, content: string) {
+  return apiRequest<Article>(`${BASE_URL}/${id}/edit/content`, "POST", {
+    content,
+  });
 }
 
 export async function postArticleEditBlockEdiPosition(data: BlockData) {
-  return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/block/${data.id}/edit`,
-    "PATCH",
-    {
-      block_position: data.position,
-    },
-  );
+  return apiRequest<Article>(`${BASE_URL}/block/${data.id}/edit`, "PATCH", {
+    block_position: data.position,
+  });
 }
 export async function postArticleEditBlockEdit(data: BlockData) {
-  return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/block/${data.id}/edit`,
-    "PATCH",
-    {
-      block_position: data.position,
-      block_data: data.data,
-    },
-  );
+  return apiRequest<Article>(`${BASE_URL}/block/${data.id}/edit`, "PATCH", {
+    block_position: data.position,
+    block_data: data.data,
+  });
 }
 
 export async function deleteArticleEditBlockEdit(data: BlockData) {
-  return apiRequest<void>(
-    `${ARTICLE_BASE_URL}/block/${data.id}/delete`,
-    "DELETE",
-  );
+  return apiRequest<void>(`${BASE_URL}/block/${data.id}/delete`, "DELETE");
 }
 
 export async function postArticleEditBlockAdd(
-  slug: string,
+  id: number,
   block: number,
   position: number,
 ) {
-  return apiRequest<Article>(
-    `${ARTICLE_BASE_URL}/${slug}/edit/block_add`,
-    "POST",
-    { new_block: block, position: position },
-  );
+  return apiRequest<Article>(`${BASE_URL}/${id}/edit/block_add`, "POST", {
+    new_block: block,
+    position: position,
+  });
 }
 
-export async function getArticlePreview(slug: string) {
-  return apiRequest<Article>(`${ARTICLE_BASE_URL}/${slug}/preview`, "GET");
+export async function getArticlePreview(id: number) {
+  return apiRequest<Article>(`${BASE_URL}/${id}/preview`, "GET");
 }

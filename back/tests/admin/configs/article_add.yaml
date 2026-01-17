@@ -29,7 +29,7 @@ files:
     }
   responses/ok/article_add.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title": "first",
       "slug": "first",
       "author":"metoo",
@@ -43,7 +43,7 @@ files:
     }
   responses/ok/article_add_draft.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title": "first",
       "slug": "first",
       "author":"metoo",
@@ -79,7 +79,7 @@ files:
     }
   responses/ok/article_add_prefix.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title": "first with prefix",
       "slug": "fr-fr/blog/first-with-prefix",
       "author":"metoo",

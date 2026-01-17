@@ -12,7 +12,7 @@ unit_tests:
 files:
   responses/ok/article_get.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title":"index",
       "author":"metoo",
       "slug":"index",
@@ -52,7 +52,7 @@ files:
 
   responses/ok/article_edit_metadata_update.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title":"Updated",
       "author":"Alice",
       "slug":"my-article",
@@ -122,7 +122,7 @@ files:
 
   responses/ok/article_edit_content_update.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title":"index",
       "author":"metoo",
       "slug":"index",

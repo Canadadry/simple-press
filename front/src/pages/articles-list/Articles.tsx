@@ -8,13 +8,10 @@ import {
   Button,
   TextField,
 } from "@radix-ui/themes";
-import {
-  getArticleList,
-  postArticleAdd,
-  type Article,
-} from "../../api/article";
+import { ArticleTree, getArticleTree, postArticleAdd } from "../../api/article";
 import Line from "./components/Line";
 import { useNavigate } from "react-router-dom";
+import { removeLastPathSegment } from "../../lib/tree";
 
 type SavingStatus = "untouched" | "touched" | "saving";
 
@@ -82,32 +79,85 @@ function Create({ count }: CreateProps) {
   );
 }
 
+// export default function Articles() {
+//   const [articles, setArticles] = useState<Article[]>([]);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function load() {
+//       try {
+//         const res = await getArticleList();
+//         setArticles(res.items);
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+//     load();
+//   }, []);
+
+//   if (loading) {
+//     return (
+//       <Flex direction="column" gap="4">
+//         <Text size="7" weight="bold">
+//           Liste des articles
+//         </Text>
+//         <Create count={0}></Create>
+//         <Flex align="center" justify="center" height="100vh">
+//           <Spinner />
+//         </Flex>
+//       </Flex>
+//     );
+//   }
+
+//   return (
+//     <Flex direction="column" gap="4">
+//       <Text size="7" weight="bold">
+//         Liste des articles
+//       </Text>
+//       <Create count={articles.length}></Create>
+//       <Card>
+//         <Flex direction="column">
+//           {articles.map((val, idx) => {
+//             return (
+//               <Line
+//                 key={idx}
+//                 index={idx}
+//                 article={val}
+//                 portalContainer={null}
+//               ></Line>
+//             );
+//           })}
+//         </Flex>
+//       </Card>
+//     </Flex>
+//   );
+// }
+
 export default function Articles() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [path, setPath] = useState<string>("");
+  const [tree, setTree] = useState<ArticleTree>({
+    path: "",
+    folders: [],
+    articles: [],
+  });
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await getArticleList();
-        setArticles(res.items);
+        const resTree = await getArticleTree(path);
+        setTree(resTree);
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, []);
+  }, [path]);
 
   if (loading) {
     return (
-      <Flex direction="column" gap="4">
-        <Text size="7" weight="bold">
-          Liste des articles
-        </Text>
-        <Create count={0}></Create>
-        <Flex align="center" justify="center" height="100vh">
-          <Spinner />
-        </Flex>
+      <Flex align="center" justify="center" height="100vh">
+        <Spinner />
       </Flex>
     );
   }
@@ -117,20 +167,55 @@ export default function Articles() {
       <Text size="7" weight="bold">
         Liste des articles
       </Text>
-      <Create count={articles.length}></Create>
+      <Create></Create>
       <Card>
-        <Flex direction="column">
-          {articles.map((val, idx) => {
-            return (
-              <Line
-                key={idx}
-                index={idx}
-                article={val}
-                portalContainer={null}
-              ></Line>
-            );
-          })}
-        </Flex>
+        <p>{path}</p>
+        {path === "" ? (
+          <></>
+        ) : (
+          <Button
+            onClick={() => {
+              setPath(removeLastPathSegment(path));
+            }}
+          >
+            ..
+          </Button>
+        )}
+        {tree.folders.map((f: string) => {
+          return (
+            <Button
+              onClick={() => {
+                setPath(path + "/" + f);
+              }}
+            >
+              {f}
+            </Button>
+          );
+        })}
+      </Card>
+      <Card>
+        {
+          <Flex direction="column">
+            {tree.articles.map((val, idx) => {
+              return (
+                <Line
+                  key={idx}
+                  index={idx}
+                  article={val}
+                  // path={path}
+                  // deleteFile={async (filename: string) => {
+                  //   await deleteFile(filename);
+                  //   setTree({
+                  //     ...tree,
+                  //     files: tree.files.filter((f) => f != filename),
+                  //   });
+                  // }}
+                  portalContainer={null}
+                ></Line>
+              );
+            })}
+          </Flex>
+        }
       </Card>
     </Flex>
   );

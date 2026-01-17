@@ -9,21 +9,7 @@ import {
 import Line from "./components/Line";
 import SingleFileUploader from "./components/Uploader";
 import { Button } from "@radix-ui/themes/dist/cjs/index.js";
-
-function removeLastPathSegment(path: string): string {
-  if (!path) {
-    return path;
-  }
-
-  const normalizedPath = path.replace(/\/+$/, "");
-  const lastSlashIndex = normalizedPath.lastIndexOf("/");
-
-  if (lastSlashIndex === -1) {
-    return "";
-  }
-
-  return normalizedPath.substring(0, lastSlashIndex);
-}
+import { removeLastPathSegment } from "../../lib/tree";
 
 export default function Files() {
   const [loading, setLoading] = useState<boolean>(true);

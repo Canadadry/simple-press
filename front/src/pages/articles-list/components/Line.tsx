@@ -42,7 +42,7 @@ export default function Line(line: LineProps) {
         onMouseLeave={() => setIsHovered(false)}
         onClick={(e) => {
           e.preventDefault();
-          navigate(`/articles/${line.article.slug}/edit`, {
+          navigate(`/articles/${line.article.id}/edit`, {
             replace: true,
           });
         }}

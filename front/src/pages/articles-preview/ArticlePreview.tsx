@@ -2,25 +2,25 @@ import { Link } from "@radix-ui/themes";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
-import { getArticleEdit } from "../../api/article";
+import { getArticle } from "../../api/article";
 import type { Article } from "../../api/article";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ArticlePreview() {
   const navigate = useNavigate();
-  const { slug } = useParams<{ slug: string }>();
+  const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<Article | null>(null);
   useEffect(() => {
     async function load() {
-      if (!slug) {
+      if (!id) {
         setArticle(null);
         return;
       }
-      const res = await getArticleEdit(slug);
+      const res = await getArticle(parseInt(id));
       setArticle(res);
     }
     load();
-  }, [slug]);
+  }, [id]);
 
   if (!article) {
     return (
@@ -39,7 +39,7 @@ export default function ArticlePreview() {
           mx={"2"}
           onClick={(e) => {
             e.preventDefault();
-            navigate(`/articles/${slug}/edit`, { replace: true });
+            navigate(`/articles/${id}/edit`, { replace: true });
           }}
         >
           <Pencil2Icon color={"#000"} width={20} height={20}></Pencil2Icon>
@@ -52,7 +52,7 @@ export default function ArticlePreview() {
             height: "400px",
           }}
           title={`preview of ${article.title}`}
-          src={`http://localhost:8080/admin/articles/${slug}/preview`}
+          src={`http://localhost:8080/admin/articles/${id}/preview`}
         ></iframe>
       </Card>
     </Flex>

@@ -47,7 +47,7 @@ files:
 
   responses/ok/article_before_edit.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title":"index",
       "author":"metoo",
       "slug":"index",
@@ -79,7 +79,7 @@ files:
 
   responses/ok/article_edited.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title":"index",
       "author":"metoo",
       "slug":"index",

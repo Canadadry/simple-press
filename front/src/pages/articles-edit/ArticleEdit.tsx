@@ -25,7 +25,7 @@ import { Label } from "@radix-ui/react-label";
 import { useEffect, useState, useCallback } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
 import {
-  getArticleEdit,
+  getArticle,
   postArticleEditMetadata,
   postArticleEditContent,
   postArticleEditBlockAdd,
@@ -116,7 +116,7 @@ function Metadata({ tabIndex, article, setArticle }: MetadataProps) {
         disabled={saving != "touched"}
         onClick={async () => {
           setSaving("saving");
-          await postArticleEditMetadata(article.slug, article);
+          await postArticleEditMetadata(article.id, article);
           setSaving("untouched");
         }}
       >
@@ -208,7 +208,7 @@ function Content({ tabIndex, article, setArticle }: ContentProps) {
                 onClick={async () => {
                   setSaving("saving");
                   await postArticleEditContent(
-                    article.slug,
+                    article.id,
                     article.content || "",
                   );
                   setSaving("untouched");
@@ -271,9 +271,9 @@ function AddBlock({ tabIndex, article, setArticle, count }: AddBlockProps) {
         disabled={saving != "touched"}
         onClick={async () => {
           setSaving("saving");
-          await postArticleEditBlockAdd(article.slug, Number(block), count);
+          await postArticleEditBlockAdd(article.id, Number(block), count);
           setSaving("touched");
-          const res = await getArticleEdit(article.slug);
+          const res = await getArticle(article.id);
           setArticle(res);
         }}
       >
@@ -285,20 +285,20 @@ function AddBlock({ tabIndex, article, setArticle, count }: AddBlockProps) {
 
 export default function Articles() {
   const navigate = useNavigate();
-  const { slug } = useParams<{ slug: string }>();
+  const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<Article | null>(null);
   const tabIndex = 1;
   useEffect(() => {
     async function load() {
-      if (!slug) {
+      if (!id) {
         setArticle(null);
         return;
       }
-      const res = await getArticleEdit(slug);
+      const res = await getArticle(parseInt(id));
       setArticle(res);
     }
     load();
-  }, [slug]);
+  }, [id]);
 
   const moveBlock = useCallback(async (block: BlockData, delta: number) => {
     const newPosition = block.position + delta;
@@ -318,7 +318,7 @@ export default function Articles() {
     });
   }, []);
 
-  if (!slug) {
+  if (!id) {
     navigate("/", { replace: true });
     return (
       <Flex align="center" justify="center" height="100vh">
@@ -344,7 +344,7 @@ export default function Articles() {
           mx={"2"}
           onClick={(e) => {
             e.preventDefault();
-            navigate(`/articles/${slug}/preview`, { replace: true });
+            navigate(`/articles/${id}/preview`, { replace: true });
           }}
         >
           <EyeOpenIcon color={"#000"} width={20} height={20}></EyeOpenIcon>

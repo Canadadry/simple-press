@@ -31,9 +31,9 @@ export default function App({ toggleTheme }: AppProps) {
           <Route path="/blocks" element={<Blocks />} />
           <Route path="/layouts/:slug/edit" element={<LayoutEdit />} />
           <Route path="/templates/:slug/edit" element={<TemplateEdit />} />
-          <Route path="/articles/:slug/edit" element={<ArticleEdit />} />
+          <Route path="/articles/:id/edit" element={<ArticleEdit />} />
           <Route path="/blocks/:slug/edit" element={<BlockEdit />} />
-          <Route path="/articles/:slug/preview" element={<ArticlePreview />} />
+          <Route path="/articles/:id/preview" element={<ArticlePreview />} />
           <Route path="/global/data" element={<GlobalData />} />
         </Routes>
       </AppLayout>

@@ -13,7 +13,7 @@ files:
 
   responses/article_list_item.json: >
     {
-      "id":"@number@.greaterThan(0)",
+      "id":"@number@.greaterThan(1)",
       "title": "@string@.isNotEmpty()",
       "date": "@string@",
       "author": "@string@.isNotEmpty()",
