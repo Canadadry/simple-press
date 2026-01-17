@@ -2,7 +2,13 @@ import { Box, Button, Link, Select, Grid } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
-import MDEditor, { type ICommand } from "@uiw/react-md-editor";
+import MDEditor, {
+  commands,
+  getCommands,
+  TextAreaTextApi,
+  TextState,
+  type ICommand,
+} from "@uiw/react-md-editor";
 
 import { useEffect, useState, useCallback } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
@@ -114,9 +120,27 @@ interface ContentProps {
   setArticle: (a: Article) => void;
 }
 
-function Content({ tabIndex, article, setArticle }: ContentProps) {
+function Content({ article, setArticle }: ContentProps) {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
-
+  const consoleLog: ICommand = {
+    name: "Console Log",
+    keyCommand: "consoleLog",
+    buttonProps: { "aria-label": "consoleLog" },
+    icon: (
+      <svg width="12" height="12" viewBox="0 0 20 20">
+        <path
+          fill="currentColor"
+          d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+        ></path>
+      </svg>
+    ),
+    execute: (state: TextState, api: TextAreaTextApi) => {
+      // setSaving("touched");
+      console.log("setArticle", setArticle);
+      setArticle({ ...article, content: state.text });
+      postArticleEditContent(article.id, state.text);
+    },
+  };
   return (
     <Box mb="4">
       <Label htmlFor="skirt-description">
@@ -143,6 +167,7 @@ function Content({ tabIndex, article, setArticle }: ContentProps) {
           <MDEditor
             preview="edit"
             value={article.content}
+            commands={[consoleLog, commands.divider, ...getCommands()]}
             onChange={(e) => {
               setSaving("touched");
               setArticle({ ...article, content: e || "" });
