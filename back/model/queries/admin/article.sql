@@ -57,6 +57,16 @@ WHERE
 LIMIT
     1;
 
+-- name: SelectArticleByID :many
+SELECT
+    *
+FROM
+    article
+WHERE
+    id = ?
+LIMIT
+    1;
+
 -- name: GetArticleList :many
 SELECT
     title,

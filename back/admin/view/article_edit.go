@@ -11,6 +11,7 @@ type LayoutSelector struct {
 }
 
 type ArticleEditData struct {
+	ID         int              `json:"id"`
 	Title      string           `json:"title"`
 	Author     string           `json:"author"`
 	Slug       string           `json:"slug"`

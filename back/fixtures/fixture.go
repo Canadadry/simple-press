@@ -67,21 +67,22 @@ func Run(client httpcaller.Caller, c clock.Clock, fd FixtureData) (environment.E
 	}
 
 	for i, a := range fd.Articles {
-		slug, err := api.AddArticle(a.Title, a.Author, filepath.Dir(a.Slug))
+		article, err := api.AddArticle(a.Title, a.Author, filepath.Dir(a.Slug))
 		if err != nil {
 			return env, fmt.Errorf("cannot add article %s : %w", a.Title, err)
 		}
-		env.Store(fmt.Sprintf("article_%d_slug", i), slug)
+		env.Store(fmt.Sprintf("article_%d_id", i), fmt.Sprint(article.ID))
 		if len(a.Content) > 0 {
-			err = api.EditArticleContent(slug, a.Content)
+			err = api.EditArticleContent(article.ID, a.Content)
 			if err != nil {
-				return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
+				return env, fmt.Errorf("cannot edit article %s : %w", article.Slug, err)
 			}
 		}
 		firstBlockID := 1
-		id, err := api.EditArticleBlockAdd(slug, firstBlockID, 2)
+		blockPosition := 2
+		id, err := api.EditArticleBlockAdd(article.ID, firstBlockID, blockPosition)
 		if err != nil {
-			return env, fmt.Errorf("cannot edit article %s : %w", slug, err)
+			return env, fmt.Errorf("cannot edit article %s : %w", article.Slug, err)
 		}
 		env.Store(fmt.Sprintf("block_data_%d_id", i), fmt.Sprintf("%d", id))
 

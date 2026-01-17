@@ -6,9 +6,9 @@ unit_tests:
     - { url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200, in: "ok/article_edit_block_edit",                   out: "ok/article_edit_block_edit" }
 scenario:
   edit_block_is_persisted:
-    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",          status: 200, out: "ok/article_before_edit" }
+    - { action: GET , url: "/admin/articles/#article_0_id#",          status: 200, out: "ok/article_before_edit" }
     - { action: PATCH, url: "/admin/articles/block/#block_data_0_id#/edit",  status: 200,  in: "ok/article_edit_block_edit" }
-    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",          status: 200, out: "ok/article_edited" }
+    - { action: GET , url: "/admin/articles/#article_0_id#",          status: 200, out: "ok/article_edited" }
   # bollean_in_edit_block_is_persisted:
   #   - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_edit",  status: 200, in: "ok/article_edit_block_edit_boolean" }
   #   - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,  out: "ok/article_edit_block_edit_boolean" }
@@ -47,6 +47,7 @@ files:
 
   responses/ok/article_before_edit.json: >
     {
+      "id":"@number@.greaterThan(0)",
       "title":"index",
       "author":"metoo",
       "slug":"index",
@@ -78,6 +79,7 @@ files:
 
   responses/ok/article_edited.json: >
     {
+      "id":"@number@.greaterThan(0)",
       "title":"index",
       "author":"metoo",
       "slug":"index",

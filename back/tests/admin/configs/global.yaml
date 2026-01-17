@@ -18,13 +18,13 @@ scenario:
     - { action: "PATCH", url: "/admin/global/definition" , status: 200, in: "global_definition_edit", out: "global_definition_edit" }
     - { action: "GET"  , url: "/admin/global/definition" , status: 200,                               out: "global_definition_edit" }
   page_preview_use_global:
-    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" }
+    - { action: "GET"  , url: "/admin/articles/#article_0_id#/preview", status: 200, ct_out: "text/html" }
     - { action: "POST" , url: "/admin/templates/baseof.html/edit", status: 200, in: "add_data_to_baseof"}
-    #- { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 409}
+    #- { action: "GET"  , url: "/admin/articles/#article_0_id#/preview", status: 409}
     - { action: "PATCH", url: "/admin/global/definition" , status: 200, in: "set_global_definition_baseof",  }
-    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_def.html"}
+    - { action: "GET"  , url: "/admin/articles/#article_0_id#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_def.html"}
     - { action: "PATCH", url: "/admin/global/data" , status: 200, in: "set_global_data_baseof",  }
-    - { action: "GET"  , url: "/admin/articles/#article_0_slug#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_data.html"}
+    - { action: "GET"  , url: "/admin/articles/#article_0_id#/preview", status: 200, ct_out: "text/html" ,out: "preview_article_data.html"}
   data_allways_up_to_date:
     - { action: "GET"  , url: "/admin/global/data"      , status: 200,                               out: "data_before_patch_def" }
     - { action: "PATCH", url: "/admin/global/definition", status: 200, in: "global_definition_edit", out: "global_definition_edit" }

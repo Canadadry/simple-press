@@ -11,8 +11,8 @@ import (
 )
 
 func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Request) error {
-	slug := router.GetField(r, 0)
-	article, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
+	id, _ := router.GetFieldAsInt(r, 0)
+	article, ok, err := c.Repository.SelectArticleByID(r.Context(), int64(id))
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
 	}
@@ -33,7 +33,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		return fmt.Errorf("cannot select all layouts : %w", err)
 	}
 
-	id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
+	block_id, err := c.Repository.CreateBlockData(r.Context(), repository.CreateBlockDataParams{
 		ArticleID: article.ID,
 		Block:     repository.Block{ID: a.AddedBlockID, Definition: block.Definition},
 		Position:  int64(a.Position.V),
@@ -42,7 +42,7 @@ func (c *Controller) PostArticleEditBlockAdd(w http.ResponseWriter, r *http.Requ
 		return fmt.Errorf("cannot add block %v to article : %w", a.AddedBlockID, err)
 	}
 	return view.BlockDataAddCreated(w, view.ArticleAddBlockData{
-		ID:       id,
+		ID:       block_id,
 		Name:     block.Name,
 		Data:     block.Definition,
 		Position: a.Position.V,

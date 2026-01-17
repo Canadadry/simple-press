@@ -43,7 +43,7 @@ type CreateArticleParams struct {
 	LayoutID int64
 }
 
-func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (string, error) {
+func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (int64, string, error) {
 	var draft int64
 	if a.Draft {
 		draft = 1
@@ -56,7 +56,7 @@ func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (
 		slug = slug + slugify(s) + "/"
 	}
 	slug = slug + slugify(a.Title)
-	_, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
+	id, err := adminmodel.New(r.Db).CreateArticle(ctx, adminmodel.CreateArticleParams{
 		Title:    a.Title,
 		Date:     r.Clock.Now(),
 		Author:   a.Author,
@@ -65,9 +65,9 @@ func (r *Repository) CreateArticle(ctx context.Context, a CreateArticleParams) (
 		LayoutID: a.LayoutID,
 	})
 	if err != nil {
-		return "", stacktrace.From(err)
+		return 0, "", stacktrace.From(err)
 	}
-	return slug, nil
+	return id, slug, nil
 }
 
 func (r *Repository) DeleteArticle(ctx context.Context, slug string) error {
@@ -100,6 +100,29 @@ func (r *Repository) GetArticleList(ctx context.Context, query string, limit, of
 			Draft:   a.Draft == 1,
 		}
 	}), nil
+}
+
+func (r *Repository) SelectArticleByID(ctx context.Context, id int64) (Article, bool, error) {
+	list, err := adminmodel.New(r.Db).SelectArticleByID(ctx, id)
+	if err != nil {
+		return Article{}, false, stacktrace.From(err)
+	}
+	if len(list) == 0 {
+		return Article{}, false, nil
+	}
+	fromModel := func(a adminmodel.Article) Article {
+		return Article{
+			ID:       a.ID,
+			Title:    a.Title,
+			Date:     a.Date,
+			Author:   a.Author,
+			Content:  a.Content,
+			Slug:     a.Slug,
+			Draft:    a.Draft == 1,
+			LayoutID: a.LayoutID,
+		}
+	}
+	return fromModel(list[0]), true, nil
 }
 
 func (r *Repository) SelectArticleBySlug(ctx context.Context, slug string) (Article, bool, error) {

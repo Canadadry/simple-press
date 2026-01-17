@@ -1,14 +1,14 @@
 unit_tests:
 
   POST:
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_empty",    out: "bad_request/article_edit_block_empty" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_unknown",    out: "bad_request/article_edit_block_unknown" }
-    - { url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 201, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
+    - { url: "/admin/articles/#article_0_id#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_empty",    out: "bad_request/article_edit_block_empty" }
+    - { url: "/admin/articles/#article_0_id#/edit/block_add",  status: 400, in: "bad_request/article_edit_block_unknown",    out: "bad_request/article_edit_block_unknown" }
+    - { url: "/admin/articles/#article_0_id#/edit/block_add",  status: 201, in: "ok/article_edit_block_add",                 out: "ok/article_edit_block_add" }
 
 scenarios:
   same_rsp_for_block_add_and_article_get:
-    - { action: POST, url: "/admin/articles/#article_0_slug#/edit/block_add",  status: 201, in: "ok/article_edit_block_add", out: "ok/article_edit_block_add" }
-    - { action: GET , url: "/admin/articles/#article_0_slug#/edit",            status: 200,                                  out: "ok/article_edit_block_add" }
+    - { action: POST, url: "/admin/articles/#article_0_id#/edit/block_add",  status: 201, in: "ok/article_edit_block_add", out: "ok/article_edit_block_add" }
+    - { action: GET , url: "/admin/articles/#article_0_id#/edit",            status: 200,                                  out: "ok/article_edit_block_add" }
 
 files:
 

@@ -24,5 +24,16 @@ files:
     {
       "path": "blog",
       "folders": [],
-      "articles": "article_list_item"
+      "articles": "article_list_item_blog"
+    }
+
+  responses/article_list_item_blog.json: >
+    {
+      "id":"@number@.greaterThan(0)",
+      "title": "@string@.isNotEmpty()",
+      "date": "@string@",
+      "author": "@string@.isNotEmpty()",
+      "content": "@string@.isNotEmpty()",
+      "slug": "@string@.isNotEmpty().startsWith('blog/')",
+      "draft": false
     }

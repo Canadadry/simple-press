@@ -9,9 +9,9 @@ import (
 	"net/http"
 )
 
-func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) error {
-	slug := router.GetField(r, 0)
-	a, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
+func (c *Controller) GetArticle(w http.ResponseWriter, r *http.Request) error {
+	id, _ := router.GetFieldAsInt(r, 0)
+	a, ok, err := c.Repository.SelectArticleByID(r.Context(), int64(id))
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
 	}
@@ -53,6 +53,7 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 	}
 
 	return view.ArticleOk(w, view.ArticleEditData{
+		ID:         int(a.ID),
 		Title:      a.Title,
 		Author:     a.Author,
 		Slug:       a.Slug,
@@ -66,8 +67,8 @@ func (c *Controller) GetArticleEdit(w http.ResponseWriter, r *http.Request) erro
 }
 
 func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Request) error {
-	slug := router.GetField(r, 0)
-	article, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
+	id, _ := router.GetFieldAsInt(r, 0)
+	article, ok, err := c.Repository.SelectArticleByID(r.Context(), int64(id))
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
 	}
@@ -89,9 +90,9 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 	if errors.HasError {
 		return httpresponse.BadRequest(w, errors)
 	}
-	err = c.Repository.UpdateArticle(r.Context(), slug, article)
+	err = c.Repository.UpdateArticle(r.Context(), article.Slug, article)
 	if err != nil {
-		return fmt.Errorf("cannot update %s article : %w", slug, err)
+		return fmt.Errorf("cannot update %s article : %w", article.Slug, err)
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())
@@ -141,8 +142,8 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 }
 
 func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Request) error {
-	slug := router.GetField(r, 0)
-	article, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
+	id, _ := router.GetFieldAsInt(r, 0)
+	article, ok, err := c.Repository.SelectArticleByID(r.Context(), int64(id))
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
 	}
@@ -161,9 +162,9 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		return httpresponse.BadRequest(w, errors)
 	}
 
-	err = c.Repository.UpdateArticle(r.Context(), slug, article)
+	err = c.Repository.UpdateArticle(r.Context(), article.Slug, article)
 	if err != nil {
-		return fmt.Errorf("cannot update %s article : %w", slug, err)
+		return fmt.Errorf("cannot update %s article : %w", article.Slug, err)
 	}
 
 	layouts, err := c.Repository.GetAllLayout(r.Context())

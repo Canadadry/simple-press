@@ -18,6 +18,7 @@ type ArticlesListData struct {
 }
 
 type ArticleListData struct {
+	ID      int64     `json:"id"`
 	Title   string    `json:"title"`
 	Date    time.Time `json:"date"`
 	Author  string    `json:"author"`

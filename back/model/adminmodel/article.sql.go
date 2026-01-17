@@ -159,6 +159,49 @@ func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) 
 	return items, nil
 }
 
+const selectArticleByID = `-- name: SelectArticleByID :many
+SELECT
+    id, title, date, author, content, slug, draft, layout_id
+FROM
+    article
+WHERE
+    id = ?
+LIMIT
+    1
+`
+
+func (q *Queries) SelectArticleByID(ctx context.Context, id int64) ([]Article, error) {
+	rows, err := q.db.QueryContext(ctx, selectArticleByID, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Article
+	for rows.Next() {
+		var i Article
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Date,
+			&i.Author,
+			&i.Content,
+			&i.Slug,
+			&i.Draft,
+			&i.LayoutID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const selectArticleBySlug = `-- name: SelectArticleBySlug :many
 SELECT
     id, title, date, author, content, slug, draft, layout_id

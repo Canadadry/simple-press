@@ -27,7 +27,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("need at leats one layout to create an article : %w", err)
 	}
 
-	slug, err := c.Repository.CreateArticle(r.Context(), repository.CreateArticleParams{
+	id, slug, err := c.Repository.CreateArticle(r.Context(), repository.CreateArticleParams{
 		Title:    a.Title,
 		Author:   a.Author,
 		Draft:    a.Draft.V,
@@ -38,6 +38,7 @@ func (c *Controller) PostArticleAdd(w http.ResponseWriter, r *http.Request) erro
 		return fmt.Errorf("cannot create article : %w", err)
 	}
 	return view.ArticleCreated(w, view.ArticleAddData{
+		ID:     int(id),
 		Title:  a.Title,
 		Author: a.Author,
 		Draft:  a.Draft.V && a.Draft.Valid,

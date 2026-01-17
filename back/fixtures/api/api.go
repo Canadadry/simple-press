@@ -18,7 +18,7 @@ func New(client httpcaller.Caller) *Client {
 	return &Client{client: client, ctx: context.Background()}
 }
 
-func (c *Client) AddArticle(title, author, folder string) (string, error) {
+func (c *Client) AddArticle(title, author, folder string) (view.ArticleAddData, error) {
 	article := view.ArticleAddData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
@@ -32,22 +32,22 @@ func (c *Client) AddArticle(title, author, folder string) (string, error) {
 		"folder": folder,
 	}, rsp)
 	if err != nil {
-		return "", fmt.Errorf("cannot add article : %w", err)
+		return article, fmt.Errorf("cannot add article : %w", err)
 	}
 	if st != http.StatusCreated {
-		return "", fmt.Errorf("cannot add article invalid status code  %d\n%v", st, errs)
+		return article, fmt.Errorf("cannot add article invalid status code  %d\n%v", st, errs)
 	}
-	return article.Slug, nil
+	return article, nil
 }
 
-func (c *Client) EditArticleContent(slug, content string) error {
+func (c *Client) EditArticleContent(id int, content string) error {
 	article := view.ArticleEditData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
 		http.StatusOK:         &article,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%s/edit/content", slug), view.ArticleEditData{
+	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%d/edit/content", id), view.ArticleEditData{
 		Content: content,
 	}, rsp)
 	if err != nil {
@@ -59,14 +59,14 @@ func (c *Client) EditArticleContent(slug, content string) error {
 	return nil
 }
 
-func (c *Client) EditArticleBlockAdd(slug string, id, position int) (int64, error) {
+func (c *Client) EditArticleBlockAdd(article_id, id, position int) (int64, error) {
 	data := view.ArticleAddBlockData{}
 	errs := map[string]any{}
 	rsp := map[int]any{
 		http.StatusCreated:    &data,
 		http.StatusBadRequest: &errs,
 	}
-	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%s/edit/block_add", slug), map[string]any{
+	st, err := c.client.Post(c.ctx, fmt.Sprintf("/admin/articles/%d/edit/block_add", article_id), map[string]any{
 		"new_block": id,
 		"position":  position,
 	}, rsp)

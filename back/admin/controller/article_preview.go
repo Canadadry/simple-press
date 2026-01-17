@@ -30,8 +30,8 @@ func (c *Controller) getPages(ctx context.Context, query string, offset, limit i
 }
 
 func (c *Controller) GetArticlePreview(w http.ResponseWriter, r *http.Request) error {
-	slug := router.GetField(r, 0)
-	a, ok, err := c.Repository.SelectArticleBySlug(r.Context(), slug)
+	id, _ := router.GetFieldAsInt(r, 0)
+	a, ok, err := c.Repository.SelectArticleByID(r.Context(), int64(id))
 	if err != nil {
 		return fmt.Errorf("cannot select article : %w", err)
 	}

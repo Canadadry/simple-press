@@ -1,17 +1,18 @@
 unit_tests:
   GET:
-    - { url: "/admin/articles/#article_0_slug#/edit", status: 200, out: "ok/article_get" }
+    - { url: "/admin/articles/#article_0_id#", status: 200, out: "ok/article_get" }
 
   POST:
-    - { url: "/admin/articles/#article_0_slug#/edit/metadata",   status: 200, in: "ok/article_edit_metadata_update",           out: "ok/article_edit_metadata_update" }
-    - { url: "/admin/articles/#article_0_slug#/edit/metadata",   status: 400, in: "bad_request/article_edit_no_title",         out: "bad_request/article_edit_no_title" }
-    - { url: "/admin/articles/#article_0_slug#/edit/metadata",   status: 400, in: "bad_request/article_edit_no_author",        out: "bad_request/article_edit_no_author" }
-    - { url: "/admin/articles/#article_0_slug#/edit/content",    status: 200, in: "ok/article_edit_content_update",            out: "ok/article_edit_content_update" }
-    - { url: "/admin/articles/#article_0_slug#/edit/content",    status: 400, in: "bad_request/article_edit_no_content",       out: "bad_request/article_edit_no_content" }
+    - { url: "/admin/articles/#article_0_id#/edit/metadata",   status: 200, in: "ok/article_edit_metadata_update",           out: "ok/article_edit_metadata_update" }
+    - { url: "/admin/articles/#article_0_id#/edit/metadata",   status: 400, in: "bad_request/article_edit_no_title",         out: "bad_request/article_edit_no_title" }
+    - { url: "/admin/articles/#article_0_id#/edit/metadata",   status: 400, in: "bad_request/article_edit_no_author",        out: "bad_request/article_edit_no_author" }
+    - { url: "/admin/articles/#article_0_id#/edit/content",    status: 200, in: "ok/article_edit_content_update",            out: "ok/article_edit_content_update" }
+    - { url: "/admin/articles/#article_0_id#/edit/content",    status: 400, in: "bad_request/article_edit_no_content",       out: "bad_request/article_edit_no_content" }
 
 files:
   responses/ok/article_get.json: >
     {
+      "id":"@number@.greaterThan(0)",
       "title":"index",
       "author":"metoo",
       "slug":"index",
@@ -51,6 +52,7 @@ files:
 
   responses/ok/article_edit_metadata_update.json: >
     {
+      "id":"@number@.greaterThan(0)",
       "title":"Updated",
       "author":"Alice",
       "slug":"my-article",
@@ -120,20 +122,21 @@ files:
 
   responses/ok/article_edit_content_update.json: >
     {
-    "title":"index",
-    "author":"metoo",
-    "slug":"index",
-    "content":"New body content",
-    "draft":false,
-    "layout_id":1,
-    "layouts":[
-        {"name":"list.html","value":2},
-        {"name":"single.html","value":1}
-    ],
-    "blocks":[
-      {"name":"first_block","value":1},
-      {"name":"nested_block","value":2}
-    ],
+      "id":"@number@.greaterThan(0)",
+      "title":"index",
+      "author":"metoo",
+      "slug":"index",
+      "content":"New body content",
+      "draft":false,
+      "layout_id":1,
+      "layouts":[
+          {"name":"list.html","value":2},
+          {"name":"single.html","value":1}
+      ],
+      "blocks":[
+        {"name":"first_block","value":1},
+        {"name":"nested_block","value":2}
+      ],
       "block_datas":[
         {
           "id":1,
