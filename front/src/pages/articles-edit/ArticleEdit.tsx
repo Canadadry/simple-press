@@ -1,26 +1,8 @@
-import {
-  Box,
-  IconButton,
-  Button,
-  TextArea,
-  Link,
-  Select,
-  Grid,
-} from "@radix-ui/themes";
+import { Box, Button, Link, Select, Grid } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
-import {
-  CrumpledPaperIcon,
-  FontBoldIcon,
-  FontItalicIcon,
-  ImageIcon,
-  MagicWandIcon,
-  EyeOpenIcon,
-  StrikethroughIcon,
-  TextAlignCenterIcon,
-  TextAlignLeftIcon,
-  TextAlignRightIcon,
-} from "@radix-ui/react-icons";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
+import MDEditor, { type ICommand } from "@uiw/react-md-editor";
 
 import { useEffect, useState, useCallback } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
@@ -143,7 +125,7 @@ function Content({ tabIndex, article, setArticle }: ContentProps) {
         </Text>
       </Label>
       <Box position="relative">
-        <TextArea
+        {/*<TextArea
           tabIndex={tabIndex}
           spellCheck={false}
           id="skirt-description"
@@ -156,69 +138,17 @@ function Content({ tabIndex, article, setArticle }: ContentProps) {
             setSaving("touched");
             setArticle({ ...article, content: e.target.value });
           }}
-        />
-        <Box position="absolute" m="2" top="0" left="0" right="0">
-          <Flex gap="4">
-            <Flex gap="1">
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <FontItalicIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <FontBoldIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <StrikethroughIcon />
-              </IconButton>
-            </Flex>
-
-            <Flex gap="1">
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <TextAlignLeftIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <TextAlignCenterIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <TextAlignRightIcon />
-              </IconButton>
-            </Flex>
-
-            <Flex gap="1">
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <MagicWandIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <ImageIcon />
-              </IconButton>
-
-              <IconButton tabIndex={tabIndex} variant="soft" highContrast>
-                <CrumpledPaperIcon />
-              </IconButton>
-            </Flex>
-            <Flex gap="1">
-              <Button
-                tabIndex={tabIndex}
-                size="2"
-                disabled={saving != "touched"}
-                onClick={async () => {
-                  setSaving("saving");
-                  await postArticleEditContent(
-                    article.id,
-                    article.content || "",
-                  );
-                  setSaving("untouched");
-                }}
-              >
-                {saving == "saving" ? <Spinner /> : "Save"}
-              </Button>
-            </Flex>
-          </Flex>
-        </Box>
+        />*/}
+        <div className="container">
+          <MDEditor
+            preview="edit"
+            value={article.content}
+            onChange={(e) => {
+              setSaving("touched");
+              setArticle({ ...article, content: e || "" });
+            }}
+          />
+        </div>
       </Box>
     </Box>
   );
