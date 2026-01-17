@@ -92,6 +92,7 @@ func (r *Repository) GetArticleList(ctx context.Context, query string, limit, of
 	}
 	return sqlutil.Map(list, func(a adminmodel.GetArticleListRow) Article {
 		return Article{
+			ID:      a.ID,
 			Title:   a.Title,
 			Date:    a.Date,
 			Author:  a.Author,
@@ -186,6 +187,7 @@ func (r *Repository) SelectArticleTree(ctx context.Context, name string) ([]Arti
 	}
 	out := sqlutil.Map(articles, func(from adminmodel.SelectArticlesInFolderArticleRow) Article {
 		return Article{
+			ID:      from.ID,
 			Title:   from.Title,
 			Date:    from.Date,
 			Author:  from.Author,

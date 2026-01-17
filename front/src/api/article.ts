@@ -53,7 +53,7 @@ export async function postArticleAdd(article: {
 }
 
 export async function getArticle(id: number) {
-  return apiRequest<Article>(`${BASE_URL}/${id}/edit`, "GET");
+  return apiRequest<Article>(`${BASE_URL}/${id}`, "GET");
 }
 
 export async function postArticleEditMetadata(id: number, metadata: Article) {

@@ -96,6 +96,7 @@ func (q *Queries) DeleteArticle(ctx context.Context, slug string) error {
 
 const getArticleList = `-- name: GetArticleList :many
 SELECT
+    id,
     title,
     date,
     author,
@@ -121,6 +122,7 @@ type GetArticleListParams struct {
 }
 
 type GetArticleListRow struct {
+	ID      int64
 	Title   string
 	Date    time.Time
 	Author  string
@@ -139,6 +141,7 @@ func (q *Queries) GetArticleList(ctx context.Context, arg GetArticleListParams) 
 	for rows.Next() {
 		var i GetArticleListRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Title,
 			&i.Date,
 			&i.Author,
@@ -247,6 +250,7 @@ func (q *Queries) SelectArticleBySlug(ctx context.Context, slug string) ([]Artic
 
 const selectArticlesInFolderArticle = `-- name: SelectArticlesInFolderArticle :many
 SELECT
+    id,
     title,
     substr(slug, length(?1) + 1) AS filename,
     date,
@@ -260,6 +264,7 @@ AND instr(substr(slug, length(?1) + 1), '/') = 0
 `
 
 type SelectArticlesInFolderArticleRow struct {
+	ID       int64
 	Title    string
 	Filename string
 	Date     time.Time
@@ -279,6 +284,7 @@ func (q *Queries) SelectArticlesInFolderArticle(ctx context.Context, path interf
 	for rows.Next() {
 		var i SelectArticlesInFolderArticleRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Title,
 			&i.Filename,
 			&i.Date,

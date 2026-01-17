@@ -69,6 +69,7 @@ LIMIT
 
 -- name: GetArticleList :many
 SELECT
+    id,
     title,
     date,
     author,
@@ -100,6 +101,7 @@ WHERE slug LIKE :path || '%'
 
 -- name: SelectArticlesInFolderArticle :many
 SELECT
+    id,
     title,
     substr(slug, length(:path) + 1) AS filename,
     date,

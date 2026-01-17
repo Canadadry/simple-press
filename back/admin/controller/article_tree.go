@@ -31,6 +31,7 @@ func (c *Controller) TreeArticle(w http.ResponseWriter, r *http.Request) error {
 		Path: path,
 		Articles: sqlutil.Map(articles, func(from repository.Article) view.ArticleListData {
 			return view.ArticleListData{
+				ID:      from.ID,
 				Title:   from.Title,
 				Date:    from.Date,
 				Author:  from.Author,

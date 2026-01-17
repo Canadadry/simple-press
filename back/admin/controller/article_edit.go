@@ -129,6 +129,7 @@ func (c *Controller) PostArticleEditMetadata(w http.ResponseWriter, r *http.Requ
 		})
 	}
 	return view.ArticleOk(w, view.ArticleEditData{
+		ID:         int(article.ID),
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
@@ -196,6 +197,7 @@ func (c *Controller) PostArticleEditContent(w http.ResponseWriter, r *http.Reque
 		blockDataView = append(blockDataView, view.BlockData{ID: p.ID, Name: p.BlockName, Data: p.Data})
 	}
 	return view.ArticleOk(w, view.ArticleEditData{
+		ID:         int(article.ID),
 		Title:      article.Title,
 		Author:     article.Author,
 		Slug:       article.Slug,
