@@ -9,6 +9,7 @@ import (
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/text"
 )
 
@@ -38,7 +39,13 @@ type Data struct {
 }
 
 func markdownify(inline bool) func(source string) template.HTML {
-	md := goldmark.New()
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			extension.NewTable(
+				extension.WithTableCellAlignMethod(extension.TableCellAlignDefault),
+			),
+		),
+	)
 
 	return func(source string) template.HTML {
 		var buf bytes.Buffer
