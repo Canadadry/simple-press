@@ -17,9 +17,7 @@ import {
   ListsToggle,
   markdownShortcutPlugin,
   MDXEditor,
-  quotePlugin,
   tablePlugin,
-  thematicBreakPlugin,
   toolbarPlugin,
   UndoRedo,
 } from "@mdxeditor/editor";
@@ -176,7 +174,15 @@ function Content({ article, setArticle }: ContentProps) {
             markdown={article.content}
             plugins={[
               linkDialogPlugin(),
-              imagePlugin(),
+              imagePlugin({
+                imagePreviewHandler: (source: string) => {
+                  console.log(source);
+                  const promised = async (str: string) => {
+                    return str;
+                  };
+                  return promised("http://localhost:8080/" + source);
+                },
+              }),
               listsPlugin(),
               linkPlugin(),
               headingsPlugin(),
