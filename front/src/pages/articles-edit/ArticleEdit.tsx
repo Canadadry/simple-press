@@ -2,13 +2,28 @@ import { Box, Button, Link, Select, Grid } from "@radix-ui/themes";
 import { TextField } from "@radix-ui/themes";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
-import MDEditor, {
-  commands,
-  getCommands,
-  TextAreaTextApi,
-  TextState,
-  type ICommand,
-} from "@uiw/react-md-editor";
+import {
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  CodeToggle,
+  CreateLink,
+  headingsPlugin,
+  imagePlugin,
+  InsertImage,
+  InsertTable,
+  linkDialogPlugin,
+  linkPlugin,
+  listsPlugin,
+  ListsToggle,
+  markdownShortcutPlugin,
+  MDXEditor,
+  quotePlugin,
+  tablePlugin,
+  thematicBreakPlugin,
+  toolbarPlugin,
+  UndoRedo,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
 
 import { useEffect, useState, useCallback } from "react";
 import { Text, Flex, Spinner, Card } from "@radix-ui/themes";
@@ -122,25 +137,25 @@ interface ContentProps {
 
 function Content({ article, setArticle }: ContentProps) {
   const [saving, setSaving] = useState<SavingStatus>("untouched");
-  const consoleLog: ICommand = {
-    name: "Console Log",
-    keyCommand: "consoleLog",
-    buttonProps: { "aria-label": "consoleLog" },
-    icon: (
-      <svg width="12" height="12" viewBox="0 0 20 20">
-        <path
-          fill="currentColor"
-          d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
-        ></path>
-      </svg>
-    ),
-    execute: (state: TextState, api: TextAreaTextApi) => {
-      // setSaving("touched");
-      console.log("setArticle", setArticle);
-      setArticle({ ...article, content: state.text });
-      postArticleEditContent(article.id, state.text);
-    },
-  };
+  // const consoleLog: ICommand = {
+  //   name: "Console Log",
+  //   keyCommand: "consoleLog",
+  //   buttonProps: { "aria-label": "consoleLog" },
+  //   icon: (
+  //     <svg width="12" height="12" viewBox="0 0 20 20">
+  //       <path
+  //         fill="currentColor"
+  //         d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+  //       ></path>
+  //     </svg>
+  //   ),
+  //   execute: (state: TextState, api: TextAreaTextApi) => {
+  //     // setSaving("touched");
+  //     console.log("setArticle", setArticle);
+  //     setArticle({ ...article, content: state.text });
+  //     postArticleEditContent(article.id, state.text);
+  //   },
+  // };
   return (
     <Box mb="4">
       <Label htmlFor="skirt-description">
@@ -149,25 +164,53 @@ function Content({ article, setArticle }: ContentProps) {
         </Text>
       </Label>
       <Box position="relative">
-        {/*<TextArea
-          tabIndex={tabIndex}
-          spellCheck={false}
-          id="skirt-description"
-          variant="soft"
-          rows={10}
-          style={{ paddingTop: 48 }}
-          value={article.content}
-          disabled={saving === "saving"}
-          onChange={(e) => {
-            setSaving("touched");
-            setArticle({ ...article, content: e.target.value });
+        <div
+          className="container"
+          style={{
+            border: "solid 1px",
+            borderColor: "#eeeeee",
+            borderRadius: "12px",
           }}
-        />*/}
-        <div className="container">
-          <MDEditor
-            preview="edit"
-            value={article.content}
-            commands={[consoleLog, commands.divider, ...getCommands()]}
+        >
+          <MDXEditor
+            markdown={article.content}
+            plugins={[
+              linkDialogPlugin(),
+              imagePlugin(),
+              listsPlugin(),
+              linkPlugin(),
+              headingsPlugin(),
+              tablePlugin(),
+              markdownShortcutPlugin(),
+              toolbarPlugin({
+                toolbarClassName: "my-classname",
+                toolbarContents: () => (
+                  <>
+                    <UndoRedo />
+                    <BoldItalicUnderlineToggles />
+                    <BlockTypeSelect />
+                    <CodeToggle />
+                    <CreateLink />
+                    <ListsToggle />
+                    <InsertImage />
+                    <InsertTable />
+                    <Button
+                      disabled={saving != "touched"}
+                      onClick={async () => {
+                        setSaving("saving");
+                        await postArticleEditContent(
+                          article.id,
+                          article.content,
+                        );
+                        setSaving("untouched");
+                      }}
+                    >
+                      {saving == "saving" ? <Spinner /> : <Text>Save</Text>}
+                    </Button>
+                  </>
+                ),
+              }),
+            ]}
             onChange={(e) => {
               setSaving("touched");
               setArticle({ ...article, content: e || "" });
